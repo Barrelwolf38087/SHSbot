@@ -46,7 +46,9 @@ client.on("message", (message) => {
 		require("./" + path.join(commandArr[0], "index.js"))({
 			directories: directories,
 			config: config,
-			configs: configs
+			configs: configs,
+			commandArr: commandArr.slice(1),
+			template: template
 		}).then(x=>message.reply(x));
 	}else{
 		message.reply(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix}));

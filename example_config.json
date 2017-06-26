@@ -1,0 +1,8 @@
+{
+	"token": "token here",
+	"prefix": "$",
+	"messages": {
+		"notFound": "I couldn't find the command \"{{command}}\". Try `{{prefix}}help`.",
+		"help": "Here are my commands:\n"
+	}
+}
