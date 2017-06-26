@@ -1,3 +1,4 @@
 {
-	"description": "Zalgoify your text! Use like {{prefix}}zalgo *n*, where n is a integer from 1 to 10"
+	"description": "Zalgoify the last message! Use like {{prefix}}zalgo *n*, where n is a integer from 1 to 10.",
+	"invalidNum": "You specified an invalid number (or something that isn't a number) in your command {{prefix}}zalgo {{subcommand}}. **Pro tip**: when I say \"an integer from 1 to 10\", I mean *one of* 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10."
 }

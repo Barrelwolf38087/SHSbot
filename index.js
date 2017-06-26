@@ -14,6 +14,7 @@ const template = function(str, obj){
 
 var directories = [];
 var configs = {};
+const last2messages = [];
 
 fs.readdir(__dirname, function (err, files) {
 	if (err) throw err;
@@ -33,14 +34,29 @@ fs.readdir(__dirname, function (err, files) {
 client.login(config.token);
 
 client.on("ready", () => {
-	console.log("I am ready!");
+	console.log("Ready!");
 });
 
 client.on("message", (message) => {
-	if(message.author.bot || message.content[0] !== config.prefix) return;
-	console.log(Object.entries(message), message.content);
+
+	console.log("last2messages is now", last2messages);
+
+	if(message.content[0] !== config.prefix){
+		last2messages.push(message.content);
+		if(last2messages.length === 3){
+			last2messages.shift();
+		}
+		return;
+	}
+
+	if(message.author.bot) return;
 
 	const commandArr = message.content.slice(1).split(" ");
+
+	if(!commandArr[0]){
+		message.channel.send(config.messages.nothing);
+		return;
+	}
 
 	if(directories.includes(commandArr[0])){
 		require("./" + path.join(commandArr[0], "index.js"))({
@@ -48,9 +64,24 @@ client.on("message", (message) => {
 			config: config,
 			configs: configs,
 			commandArr: commandArr.slice(1),
-			template: template
-		}).then(x=>message.reply(x));
+			template: template,
+			last2messages: last2messages
+		}).then(reply=>{
+			last2messages.push(reply);
+			if(last2messages.length === 3){
+				last2messages.shift();
+			}
+			console.log("replying with & added to last2messages", reply);
+			message.channel.send(reply);
+		}).catch(reply=>{
+			last2messages.push(reply);
+			if(last2messages.length === 3){
+				last2messages.shift();
+			}
+			console.log("replying with & added to last2messages", reply);
+			message.channel.send("Error: " + reply);
+		});
 	}else{
-		message.reply(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix}));
+		message.channel.send(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix}));
 	}
 });
