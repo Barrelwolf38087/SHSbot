@@ -14,7 +14,7 @@ const template = function(str, obj){
 
 var directories = [];
 var configs = {};
-const last2messages = [];
+var lastmessage = [];
 
 fs.readdir(__dirname, function (err, files) {
 	if (err) throw err;
@@ -22,7 +22,7 @@ fs.readdir(__dirname, function (err, files) {
 	files.forEach(function (file) {
 		if(file === "node_modules" || file === ".git") return;
 		fs.lstat(path.join(__dirname, file), function(err, stats) {
-			if (!err && stats.isDirectory()) {
+			if (!err && (stats.isDirectory() || stats.isSymbolicLink())) {
 				console.log("adding directory", file);
 				directories.push(file);
 				configs[file] = require(path.join(__dirname, file, "config.json"), "utf8");
@@ -39,13 +39,10 @@ client.on("ready", () => {
 
 client.on("message", (message) => {
 
-	console.log("last2messages is now", last2messages);
+
 
 	if(message.content[0] !== config.prefix){
-		last2messages.push(message.content);
-		if(last2messages.length === 3){
-			last2messages.shift();
-		}
+		lastmessage = message.content;
 		return;
 	}
 
@@ -65,19 +62,14 @@ client.on("message", (message) => {
 			configs: configs,
 			commandArr: commandArr.slice(1),
 			template: template,
-			last2messages: last2messages
+			lastmessage: lastmessage,
+			sendMessage: msg=>message.channel.send(msg)
 		}).then(reply=>{
-			last2messages.push(reply);
-			if(last2messages.length === 3){
-				last2messages.shift();
-			}
+			lastmessage = reply;
 			console.log("replying with & added to last2messages", reply);
 			message.channel.send(reply);
 		}).catch(reply=>{
-			last2messages.push(reply);
-			if(last2messages.length === 3){
-				last2messages.shift();
-			}
+			lastmessage = reply;
 			console.log("replying with & added to last2messages", reply);
 			message.channel.send("Error: " + reply);
 		});

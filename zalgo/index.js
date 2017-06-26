@@ -1,8 +1,5 @@
 const zalgoConfig = require("./config.json");
 
-
-
-
 const zalgoIt = function(str, num){
 	console.log("zalgoing", str, "x", num);
 	const chars = ["̍","̎","̄","̅","̿","̑","̆","̐","͒","͗","͑","̇","̈","̊","͂","̓","̈́","͊","͋","͌","̃","̂","̌","̀","́","̋","̏","̒","̓","̔","̽","̉","̾","͆","̚","̖","̗","̘","̙","̜","̝","̞","̟","̠","̤","̥","̦","̩","̪","̫","̬","̭","̮","̯","̰","̱","̲","̳","̹","̺","̻","̼","ͅ","͇","͈","͉","͍","͎","͓","͚","̣","̕","̛","̀","́","͘","̡","̢","̧","̨","̴","̵","̶","͏","͜","͝","͞","͟","͠","͢","̸","̷","͡","҉"];
@@ -24,9 +21,9 @@ module.exports = config => new Promise((resolve, reject)=>{
 	const num = parseInt(config.commandArr[0], 10);
 
 	if(isNaN(num)){
-		reject(config.template(zalgoConfig, {prefix: config.config.prefix, subcommand: config.commandArr.join("")}));
+		reject(config.template(zalgoConfig.invalidNum, {prefix: config.config.prefix, subcommand: config.commandArr.join("")}));
 	}
 
 
-	resolve(zalgoIt(config.last2messages[1], num));
+	resolve(zalgoIt(config.lastmessage, num));
 });
