@@ -6,7 +6,7 @@ module.exports = config=>new Promise(function(resolve, reject) {
 	}
 
 	const res = Array.from(config.lastmessage).map(char=>{
-		if(/^[a-z]$/i.test(char)){
+		if(/^[!-}]$/i.test(char)){
 			return String.fromCharCode(char.charCodeAt() + 65248);
 		}
 		if(char === " "){
