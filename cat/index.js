@@ -33,10 +33,7 @@ module.exports = config => new Promise(function(resolve, reject) {
 			config.sendMessage({file: {attachment: picked.img}}).then(message=>{
 				message.react("👍");
 				message.react("👎");
-<<<<<<< HEAD
 				message.react("⭐");
-=======
->>>>>>> cf491688e60b9763308af871ca3563024fc6fc42
 			});
 			resolve("(From " + picked.src + " )");
 		}).catch(reply);
