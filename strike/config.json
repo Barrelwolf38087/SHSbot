@@ -1,0 +1,4 @@
+{
+	"description": "Add a strikethough to your text that you can copy into other places!",
+	"empty": "Looks like there isn't anything to strikeout. Please post something, and then run {{prefix}}strike, instead of the other way around. (I can't see the future, the drivers are incompatable.)"
+}

@@ -14,7 +14,7 @@ const template = function(str, obj){
 
 var directories = [];
 var configs = {};
-var lastmessage = [];
+var lastmessage;
 
 fs.readdir(__dirname, function (err, files) {
 	if (err) throw err;
