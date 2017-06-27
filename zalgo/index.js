@@ -24,6 +24,11 @@ module.exports = config => new Promise((resolve, reject)=>{
 		reject(config.template(zalgoConfig.invalidNum, {prefix: config.config.prefix, subcommand: config.commandArr.join("")}));
 	}
 
+	const res = zalgoIt(config.lastmessage, num);
 
-	resolve(zalgoIt(config.lastmessage, num));
+	if(Array.from(res).length > 2000){
+		return reject(zalgoConfig.tooLong);
+	}
+
+	resolve(res);
 });

@@ -1,4 +1,5 @@
 {
-	"description": "Zalgoify the last message! Use like {{prefix}}zalgo *n*, where n is a integer from 1 to 10.",
-	"invalidNum": "You specified an invalid number (or something that isn't a number) in your command {{prefix}}zalgo {{subcommand}}. **Pro tip**: when I say \"an integer from 1 to 10\", I mean *one of* 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10."
+	"description": "Z͏a̙̞͑lg̫oì̥fy̳ the ̔̌l̫ḁ̯š͊t̥ me͆šsag̉e̴̅҉!̝̚͡ ͜U̝se ͎̳͌l̥̓i͑k̃e̦ ͓{{prefix}}za̙lgo ͘*̧̻̈́n*̖, ͬw̜͘he̖re n ̍i͎͊s a ̄i͝nt̀e̷ġ̷er͜ ͕f̔rȍ̉m̹ ͐1̇ͮ to 10.̷̒",
+	"invalidNum": "Y̬o̡u͢ ̉śp̵e͊c͏i̊f͝i͇e͒d̲ ̲a͜n̳ ͞ịn͎v̘aͅl̍îd̪ ̎n̎u̯m̼b͉ẻr̳ ͉(̾o̠r̒ ̡s̊ö́m̲e̳t̲h̔i͍n̓g̣ ̜t́h͑ȁt̋ ̾ȋs͇n͡'͢t͟ ͈a͡ ̀n̢u̕m̝b͜e̖r̆)̡ ͌i̯n̘ ̮y̕o̵u͊r͝ ͋c̱o͠m̌m̭a͗nͅd̞ ͉{{prefix}}zalgo {{subcommand}}.̋ ̼̈́͞**P̀r͓ö́ ̏ți̗p̣**̠̏:̪ ̵w͚h̊e̍n҉ ͓I̠ ̛s͢a̤y̴ ̷̽\"̕a̓n̢ ̣īn͟t͓e͢g̙e̞r̍ ̋f̩r̕o̵m͞ ̩1̤ ̤t͟o͋ ̈́1̓0̾̚\"̛,͊ ̧Ị ̳m҉ẽa̅n̚ ͏̓o͌n̚e͉ ̕òf̵̫ ̣1͞,̤ ̰2̍,̑ ̿3̰,̄ ̵4̄,̯ ̈5͎,̫ ̇6̆,̒ ̸7͡,̈ ̀8̶,̯ ͜9͍,̍ ̬o̸r͒ ͓1̕0̀.̱",
+	"tooLong": "T̞h̆e̜ ͚r͉e͗śu̻l̕t͠i̔n̝g͉ ͜z̔a͢l̕g̩o̕e̝ḏ ̗t̰e͈x́t̃ ̣w̩a̢s͊ ͂t͇o͗o͉ ̔m̦u͜c̻h͓ ͋f̙ór̗ ̥D͗ỉs̫c͑o͢r̗d̂ ͍t̍o͓ ͂h͎a̹n͉d̟l̛ë́.̉ ̉T̠r̬y̳ ̡z̻a̢l̲g̢o̎i̾n̤g͈ ̿a͇ ̊s͍h̿o͉r̵t̝e̍r̘ ͒m͡és̖s̜a͢g͊e͉ ̳ór̬ ͠w̝i̔t̸h̎ ̴l̛e҉s͌s̪ ͟z͝a̔l̊g͋õ.̃"
 }
