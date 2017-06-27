@@ -114,5 +114,6 @@
 	  "⁆": "⁅",
 	  "∵": "∴"
 	},
-	"empty": "Looks like there isn't anything to make big letters. Please post something, and then run {{prefix}}upsidedown, instead of the other way around."
+	"empty": "Looks like there isn't anything to make big letters. Please post something, and then run {{prefix}}upsidedown, instead of the other way around.",
+	"description": "¡uʍop-ǝpısdn ʇxǝʇ ɹnoʎ ǝʞɐW"
 }
