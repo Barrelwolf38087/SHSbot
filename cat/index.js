@@ -30,7 +30,10 @@ module.exports = config => new Promise(function(resolve, reject) {
 		const picked = images[Math.floor(Math.random() * images.length)];
 		fetch(picked.img).then(()=>{
 			if(config.lastmessage) config.sendMessage(config.lastmessage);
-			config.sendMessage({file: {attachment: picked.img}});
+			config.sendMessage({file: {attachment: picked.img}}).then(message=>{
+				message.react("👍");
+				message.react("👎");
+			});
 			resolve("(From " + picked.src + " )");
 		}).catch(reply);
 	};
