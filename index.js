@@ -4,6 +4,8 @@ const config = require("./config.json");
 const fs = require("fs");
 const path = require("path");
 
+
+
 const template = function(str, obj){
 	Object.keys(obj).forEach(key=>{
 			const regex = new RegExp("\\{\\{" + (key + "").replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "\\}\\}", "g");
@@ -35,6 +37,9 @@ fs.readdir(__dirname, function (err, files) {
 client.login(config.token);
 
 client.on("ready", () => {
+
+	console.log(client.deleteMessage, Discord.deleteMessage, Object.keys(client), Object.keys(Discord));
+	client.user.setGame(`run $help for help`);
 	console.log("Ready!");
 });
 
@@ -66,7 +71,8 @@ client.on("message", (message) => {
 			template: template,
 			lastmessage: lastmessage,
 			sendMessage: msg=>message.channel.send(msg),
-			msgHistory: msgHistory
+			msgHistory: msgHistory,
+			delete: msg=>client.deleteMessage(msg)
 		}).then(reply=>{
 			lastmessage = reply;
 			console.log("replying with & added to last2messages", reply);

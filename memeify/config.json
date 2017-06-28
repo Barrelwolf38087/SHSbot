@@ -95,5 +95,7 @@
 		"|": 27,
 		"}": 37,
 		"~": 53
-	}
+	},
+	"description": "Need more memes? Combines the last message & the last picture.",
+	"noCaption": "You actually need a caption for your meme before you can memeify it."
 }

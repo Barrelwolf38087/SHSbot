@@ -5,6 +5,9 @@ const gm = require("gm").subClass({imageMagick: true});
 const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
 module.exports = config => new Promise(function(resolve, reject) {
+	var msg;
+	config.sendMessage("Memeifying...").then(message=>msg = message);
+
 	const callback = ()=>{
 		console.log("done");
 		gm(file).size(function (err, size) {
@@ -12,12 +15,17 @@ module.exports = config => new Promise(function(resolve, reject) {
 			if(err) return reject(err);
 			var lastText;
 			config.msgHistory.reverse().some(message=>{
-				if(!URLregex.test(message) && message[0] !== config.config.prefix){
+				if(!URLregex.test(message) && message[0] !== config.config.prefix && message !== "Memeifying..."){
 					lastText = message;
 					console.log("Caption: ", message);
 					return true;
 				}
 			});
+
+			if(!lastText){
+				return reject(cfg.noCaption);
+			}
+			lastText = lastText.toUpperCase();
 
 			//console.log("font size:", size.width * size.height * 0.0001875 - (lastText.length / 0.7), "length", lastText.length);
 
@@ -33,8 +41,8 @@ module.exports = config => new Promise(function(resolve, reject) {
 				});
 				const percent = width / size.width;
 				console.log("Width:", width, "percent", percent);
-				if((percent > 0.8 && percent < 0.95) || fontSize / size.width > 0.25){
-					console.log("Works! (gived up)", fontSize / size.width > 0.25);
+				if((percent > 0.8 && percent < 0.95) || fontSize / size.width > 0.2){
+					console.log("Works! (gived up)", fontSize / size.width > 0.2);
 					return;
 				}
 				fontSize++;
@@ -43,7 +51,7 @@ module.exports = config => new Promise(function(resolve, reject) {
 
 			getSize();
 
-			fs.writeFile("temp.svg", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+			fs.writeFile("temp/temp.svg", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 			<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<image xlink:href="${file}" id="svg_3" height="${size.width}" width="${size.height}" y="0" x="0"/>
 		<text id="svg_1" fill="#000000" stroke-width="2" stroke="#ffffff" x="${size.height / 2}" y="${size.height - 30}" font-size="${fontSize}" width="${size.width}" font-family="Impact" text-anchor="middle">${lastText}</text>
@@ -67,7 +75,13 @@ module.exports = config => new Promise(function(resolve, reject) {
 					// Send the buffer or you can put it into a var
 					stdout.on("end", function () {
 						//fs.writeFile("done.png", Buffer.concat(chunks), ()=>{});
-						resolve({file: {attachment: Buffer.concat(chunks)}});
+						config.sendMessage({file: {attachment: Buffer.concat(chunks)}}).then(message=>{
+							message.react("👍");
+							message.react("👎");
+							message.react("❤");
+							msg.delete();
+						}).catch(console.error);
+						resolve("Is it a spicy meme?");
 					});
 				});
 			});
