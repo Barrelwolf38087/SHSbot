@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
+const cfg = require("./config.json");
 const gm = require("gm").subClass({imageMagick: true});
 const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
@@ -18,15 +19,40 @@ module.exports = config => new Promise(function(resolve, reject) {
 				}
 			});
 
+			//console.log("font size:", size.width * size.height * 0.0001875 - (lastText.length / 0.7), "length", lastText.length);
+
+			var fontSize = 1;
+
+			const getSize = function(){
+				console.log("Trying a fontSize of", fontSize);
+				var width = 0;
+				lastText.split("").forEach(char=>{
+					if(cfg.map[char]){
+						width += cfg.map[char] / 100 * fontSize;
+					}
+				});
+				const percent = width / size.width;
+				console.log("Width:", width, "percent", percent);
+				if((percent > 0.8 && percent < 0.95) || fontSize / size.width > 0.25){
+					console.log("Works! (gived up)", fontSize / size.width > 0.25);
+					return;
+				}
+				fontSize++;
+				return getSize();
+			};
+
+			getSize();
+
 			fs.writeFile("temp.svg", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 			<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<image xlink:href="${file}" id="svg_3" height="${size.width}" width="${size.height}" y="0" x="0"/>
-		<text id="svg_1" fill="#000000" stroke-width="2" stroke="#ffffff" x="${size.height / 2}" y="${size.height - 50}" font-size="30" font-family="Impact" text-anchor="middle">${lastText}</text>
-		<text id="svg_2" fill="#000000" stroke="#ffffff" x="${size.height / 2}" y="50" font-size="30" font-family="Impact" stroke-width="2" text-anchor="middle">${lastText}</text>
+		<text id="svg_1" fill="#000000" stroke-width="2" stroke="#ffffff" x="${size.height / 2}" y="${size.height - 30}" font-size="${fontSize}" width="${size.width}" font-family="Impact" text-anchor="middle">${lastText}</text>
+
+		<text id="svg_2" fill="#000000" stroke="#ffffff" x="${size.height / 2}" y="${30 + fontSize}" font-size="${fontSize}" width="${size.width}" font-family="Impact" stroke-width="2" text-anchor="middle">${lastText}</text>
 	</svg>`, (err)=>{
 				if(err) return reject(err);
 
-				gm("temp.svg").stream("png", function (err, stdout, stderr) {
+				gm("temp/temp.svg").stream("png", function (err, stdout, stderr) {
 					const chunks = [];
 
 					stderr.on("data", function (chunk) {
@@ -66,13 +92,13 @@ module.exports = config => new Promise(function(resolve, reject) {
 		fetch(config.msgHistory[counter]).then(resp=>{
 			const type = resp.headers.get("content-type");
 			if(type === "image/svg"){
-				file = "TEMP.svg";
+				file = "temp/TEMP.svg";
 				return resp.buffer();
 			}else if(type === "image/png"){
-				file = "TEMP.png";
+				file = "temp/TEMP.png";
 				return resp.buffer();
 			}else if(type === "image/jpeg"){
-				file = "TEMP.jpeg";
+				file = "temp/TEMP.jpeg";
 				return resp.buffer();
 			}else{
 				console.log("Not an image");

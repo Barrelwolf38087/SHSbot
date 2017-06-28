@@ -67,3 +67,5 @@ typings/
 #config file
 /config.json
 /art/files.json
+
+temp/

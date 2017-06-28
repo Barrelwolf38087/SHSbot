@@ -21,7 +21,7 @@ fs.readdir(__dirname, function (err, files) {
 	if (err) throw err;
 
 	files.forEach(function (file) {
-		if(file === "node_modules" || file === ".git") return;
+		if(file === "node_modules" || file === ".git" || file === "temp") return;
 		fs.lstat(path.join(__dirname, file), function(err, stats) {
 			if (!err && (stats.isDirectory() || stats.isSymbolicLink())) {
 				console.log("adding directory", file);
