@@ -27,14 +27,12 @@ module.exports = config => new Promise(function(resolve, reject) {
 			}
 			lastText = lastText.toUpperCase();
 
-			//console.log("font size:", size.width * size.height * 0.0001875 - (lastText.length / 0.7), "length", lastText.length);
-
 			var fontSize = 1;
 
-			const getSize = function(){
+			const getSize = function(str){
 				console.log("Trying a fontSize of", fontSize);
 				var width = 0;
-				lastText.split("").forEach(char=>{
+				str.split("").forEach(char=>{
 					if(cfg.map[char]){
 						width += cfg.map[char] / 100 * fontSize;
 					}
@@ -43,21 +41,32 @@ module.exports = config => new Promise(function(resolve, reject) {
 				console.log("Width:", width, "percent", percent);
 				if((percent > 0.8 && percent < 0.95) || fontSize / size.width > 0.2){
 					console.log("Works! (gived up)", fontSize / size.width > 0.2);
-					return;
+					return fontSize;
 				}
 				fontSize++;
-				return getSize();
+				return getSize(str);
 			};
 
-			getSize();
-
-			fs.writeFile("temp/temp.svg", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+			var svgString = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 			<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		<image xlink:href="${file}" id="svg_3" height="${size.width}" width="${size.height}" y="0" x="0"/>
-		<text id="svg_1" fill="#000000" stroke-width="2" stroke="#ffffff" x="${size.height / 2}" y="${size.height - 30}" font-size="${fontSize}" width="${size.width}" font-family="Impact" text-anchor="middle">${lastText}</text>
+		<image xlink:href="${file}" id="svg_3" height="${size.width}" width="${size.height}" y="0" x="0"/>`;
+			const split = lastText.split("|");
+			if(split[0]){
+				getSize(split[0]);
+				svgString += `<text fill="#000000" stroke-width="2" stroke="#ffffff" x="${size.height / 2}" y="${size.height - 30}" font-size="${fontSize}" width="${size.width}" font-family="Impact" text-anchor="middle">${split[0]}</text>`;
+			}
+			if(split[1]){
+				getSize(split[1]);
+				svgString += `<text fill="#000000" stroke="#ffffff" x="${size.height / 2}" y="${30 + fontSize}" font-size="${fontSize}" width="${size.width}" font-family="Impact" stroke-width="2" text-anchor="middle">${split[1]}</text>`;
+			}
 
-		<text id="svg_2" fill="#000000" stroke="#ffffff" x="${size.height / 2}" y="${30 + fontSize}" font-size="${fontSize}" width="${size.width}" font-family="Impact" stroke-width="2" text-anchor="middle">${lastText}</text>
-	</svg>`, (err)=>{
+			if(!split[0] && !split[1]){
+				
+			}
+
+			svgString += "</svg>";
+
+			fs.writeFile("temp/temp.svg", svgString, (err)=>{
 				if(err) return reject(err);
 
 				gm("temp/temp.svg").stream("png", function (err, stdout, stderr) {

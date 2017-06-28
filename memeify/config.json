@@ -96,6 +96,6 @@
 		"}": 37,
 		"~": 53
 	},
-	"description": "Need more memes? Combines the last message & the last picture.",
+	"description": "Need more memes? Combines the last text message & the last picture. Use a | to seperate the top and bottom captions.",
 	"noCaption": "You actually need a caption for your meme before you can memeify it."
 }
