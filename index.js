@@ -14,6 +14,7 @@ const template = function(str, obj){
 
 var directories = [];
 var configs = {};
+var msgHistory = [];
 var lastmessage;
 
 fs.readdir(__dirname, function (err, files) {
@@ -38,8 +39,9 @@ client.on("ready", () => {
 });
 
 client.on("message", (message) => {
-	console.log(message);
+	//console.log(message);
 
+	msgHistory.push(message.content);
 
 	if(message.content[0] !== config.prefix){
 		lastmessage = message.content;
@@ -63,7 +65,8 @@ client.on("message", (message) => {
 			commandArr: commandArr.slice(1),
 			template: template,
 			lastmessage: lastmessage,
-			sendMessage: msg=>message.channel.send(msg)
+			sendMessage: msg=>message.channel.send(msg),
+			msgHistory: msgHistory
 		}).then(reply=>{
 			lastmessage = reply;
 			console.log("replying with & added to last2messages", reply);
