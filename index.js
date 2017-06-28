@@ -37,8 +37,6 @@ fs.readdir(__dirname, function (err, files) {
 client.login(config.token);
 
 client.on("ready", () => {
-
-	console.log(client.deleteMessage, Discord.deleteMessage, Object.keys(client), Object.keys(Discord));
 	client.user.setGame(`run $help for help`);
 	console.log("Ready!");
 });
