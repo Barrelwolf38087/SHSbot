@@ -59,6 +59,7 @@ client.on("message", (message) => {
 
 	if(isRunning[message.author.id]){
 		console.log(message.author.id, "already running");
+		isRunning[message.author.id] = false;
 		return message.reply(config.messages.alreadyRunning);
 	}
 
@@ -68,11 +69,13 @@ client.on("message", (message) => {
 		console.log("simple backoff");
 		if(!warned[message.author.id]){
 			warned[message.author.id] = true;
-			backoff[message.author.id] = Date.now() + config.penalty;
+			backoff[message.author.id] = Datenow() + config.penalty;
+			isRunning[message.author.id] = false;
 			return message.reply(config.messages.backoff);
 		}else{
 			console.log("already warned.");
 			backoff[message.author.id] = Date.now() + config.penalty;
+			isRunning[message.author.id] = false;
 			return;
 		}
 	}else{
@@ -87,9 +90,11 @@ client.on("message", (message) => {
 			console.log("advanced");
 			advancedBackoff[message.author.id].messages.push(Date.now() + config.penalty);
 			if(!advancedBackoff[message.author.id].warned){
+				isRunning[message.author.id] = false;
 				return message.reply(config.messages.backoff);
 			}else{
 				console.log("already warned");
+				isRunning[message.author.id] = false;
 				return;
 			}
 		}else{
