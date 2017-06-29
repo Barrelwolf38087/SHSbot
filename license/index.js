@@ -1,0 +1,1 @@
+module.exports = c=>Promise.resolve(" This chat bot Copyright (c) 2017 Max Hogan. It is licensed under the terms of the GNU GPL v3, which can be found here: https://www.gnu.org/licenses/gpl-3.0.en.html . The source code can be accessed by running `" + c.config.prefix + "github` .");
