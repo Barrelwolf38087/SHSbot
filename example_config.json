@@ -4,7 +4,12 @@
 	"messages": {
 		"notFound": "I couldn't find the command \"{{command}}\". Try `{{prefix}}help`. (If you don't want your message to be treated as a command, add a \\\\ before it.)",
 		"help": "Here are my commands:\n",
-		"nothing": "You actually need to specify a command (shocker). If you don't want your message to be treated as a command, add a \\\\ before it."
+		"nothing": "You actually need to specify a command (shocker). If you don't want your message to be treated as a command, add a \\\\ before it.",
+		"backoff": "You have been running too many commands at once. Please try again in a minute.",
+		"alreadyRunning": "You already have a command running. Try again later."
 	},
-	"timeout": 1000
+	"timeout": 3000,
+	"advancedTimeout": 5000,
+	"penalty": 1000,
+	"owner": 327877746883559435
 }
