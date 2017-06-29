@@ -1,0 +1,1 @@
+module.exports = ()=>Promise.resolve("You can suggest a feature on github: https://github.com/maxh65000/discord-bot/issues/new?title=Feature+Request:&body=I+have+an+idea+for+a+cool+feature: or private message or ping @maxhogan#1514 .");
