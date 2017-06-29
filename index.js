@@ -24,6 +24,8 @@ var warned = {};
 
 var advancedBackoff = {};
 
+var isRunning = {};
+
 fs.readdir(__dirname, function (err, files) {
 	if (err) throw err;
 
@@ -40,7 +42,6 @@ fs.readdir(__dirname, function (err, files) {
 });
 
 client.login(config.token);
-
 client.on("ready", () => {
 	client.user.setGame(`run $help for help`);
 	console.log("Ready!");
@@ -50,13 +51,20 @@ client.on("message", (message) => {
 	msgHistory.push(message.content);
 
 	if(message.author.bot) return;
-	
+
 	if(message.content[0] !== config.prefix){
 		lastmessage = message.content;
 		return;
 	}
 
-	if(backoff[message.author.id] && Date.now() - backoff[message.author.id] <= config.timeout){
+	if(isRunning[message.author.id]){
+		console.log(message.author.id, "already running");
+		return message.reply(config.messages.alreadyRunning);
+	}
+
+	isRunning[message.author.id] = true;
+
+	if(backoff[message.author.id] && Date.now() - backoff[message.author.id] <= config.timeout && message.author.id.toString() !== config.owner.toString()){
 		console.log("simple backoff");
 		if(!warned[message.author.id]){
 			warned[message.author.id] = true;
@@ -71,7 +79,7 @@ client.on("message", (message) => {
 		warned[message.author.id] = false;
 	}
 
-	if(advancedBackoff[message.author.id]){
+	if(advancedBackoff[message.author.id] && message.author.id.toString() !== config.owner.toString()){
 		advancedBackoff[message.author.id].messages = advancedBackoff[message.author.id].messages.filter(x=>Date.now() - x <= config.advancedTimeout);
 		advancedBackoff[message.author.id].messages.push(Date.now());
 
@@ -118,12 +126,13 @@ client.on("message", (message) => {
 			lastmessage = reply;
 			console.log("replying with & added to last2messages", reply);
 			message.channel.send(reply);
+			isRunning[message.author.id] = false;
 		}).catch(reply=>{
 			lastmessage = reply;
 			console.log("replying with & added to last2messages", reply);
 			message.channel.send("Error: " + reply);
 		});
 	}else{
-		message.channel.send(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix}));
+		message.channel.send(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix})).then(x=>isRunning[message.author.id] = false);
 	}
 });
