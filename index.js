@@ -57,7 +57,7 @@ client.on("message", (message) => {
 		return;
 	}
 
-	if(isRunning[message.author.id]){
+	if(isRunning[message.author.id] && message.author.id.toString() !== config.owner.toString()){
 		console.log(message.author.id, "already running");
 		isRunning[message.author.id] = false;
 		return message.reply(config.messages.alreadyRunning);
@@ -69,7 +69,7 @@ client.on("message", (message) => {
 		console.log("simple backoff");
 		if(!warned[message.author.id]){
 			warned[message.author.id] = true;
-			backoff[message.author.id] = Datenow() + config.penalty;
+			backoff[message.author.id] = Date.now() + config.penalty;
 			isRunning[message.author.id] = false;
 			return message.reply(config.messages.backoff);
 		}else{
@@ -136,6 +136,7 @@ client.on("message", (message) => {
 			lastmessage = reply;
 			console.log("replying with & added to last2messages", reply);
 			message.channel.send("Error: " + reply);
+			isRunning[message.author.id] = false;
 		});
 	}else{
 		message.channel.send(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix})).then(x=>isRunning[message.author.id] = false);
