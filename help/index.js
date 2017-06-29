@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 module.exports = config => new Promise((resolve, reject)=>{
-	var str = `\`\`\`${config.config.messages.help}`;
+	var str = `${config.config.messages.help}\`\`\``;
 
 	config.directories.forEach(dir=>{
 
