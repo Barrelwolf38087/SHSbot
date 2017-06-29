@@ -19,6 +19,11 @@ var configs = {};
 var msgHistory = [];
 var lastmessage;
 
+var backoff = {};
+var warned = {};
+
+var advancedBackoff = {};
+
 fs.readdir(__dirname, function (err, files) {
 	if (err) throw err;
 
@@ -42,16 +47,54 @@ client.on("ready", () => {
 });
 
 client.on("message", (message) => {
-	//console.log(message);
-
 	msgHistory.push(message.content);
 
+	if(message.author.bot) return;
+	
 	if(message.content[0] !== config.prefix){
 		lastmessage = message.content;
 		return;
 	}
 
-	if(message.author.bot) return;
+	if(backoff[message.author.id] && Date.now() - backoff[message.author.id] <= config.timeout){
+		console.log("simple backoff");
+		if(!warned[message.author.id]){
+			warned[message.author.id] = true;
+			backoff[message.author.id] = Date.now() + config.penalty;
+			return message.reply(config.messages.backoff);
+		}else{
+			console.log("already warned.");
+			backoff[message.author.id] = Date.now() + config.penalty;
+			return;
+		}
+	}else{
+		warned[message.author.id] = false;
+	}
+
+	if(advancedBackoff[message.author.id]){
+		advancedBackoff[message.author.id].messages = advancedBackoff[message.author.id].messages.filter(x=>Date.now() - x <= config.advancedTimeout);
+		advancedBackoff[message.author.id].messages.push(Date.now());
+
+		if(advancedBackoff[message.author.id].messages.length >= 5){
+			console.log("advanced");
+			advancedBackoff[message.author.id].messages.push(Date.now() + config.penalty);
+			if(!advancedBackoff[message.author.id].warned){
+				return message.reply(config.messages.backoff);
+			}else{
+				console.log("already warned");
+				return;
+			}
+		}else{
+			advancedBackoff[message.author.id].warned = false;
+		}
+	}else{
+		advancedBackoff[message.author.id] = {messages: [Date.now()]};
+	}
+
+	console.log("author:", message.author.id, "backoff", backoff, "away", Date.now() - backoff[message.author.id], "advancedBackoff", advancedBackoff);
+
+	backoff[message.author.id] = Date.now();
+
 
 	const commandArr = message.content.slice(1).split(" ");
 

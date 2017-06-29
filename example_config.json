@@ -1,8 +1,10 @@
 {
-	"token": "token here",
+	"token": "INSERT_TOKEN_HERE",
 	"prefix": "$",
 	"messages": {
-		"notFound": "I couldn't find the command \"{{command}}\". Try `{{prefix}}help`.",
-		"help": "Here are my commands:\n"
-	}
+		"notFound": "I couldn't find the command \"{{command}}\". Try `{{prefix}}help`. (If you don't want your message to be treated as a command, add a \\\\ before it.)",
+		"help": "Here are my commands:\n",
+		"nothing": "You actually need to specify a command (shocker). If you don't want your message to be treated as a command, add a \\\\ before it."
+	},
+	"timeout": 1000
 }
