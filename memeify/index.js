@@ -53,15 +53,15 @@ module.exports = config => new Promise(function(resolve, reject) {
 			const split = lastText.split("|");
 			if(split[0]){
 				getSize(split[0]);
-				svgString += `<text fill="#000000" stroke-width="2" stroke="#ffffff" x="${size.height / 2}" y="${size.height - 30}" font-size="${fontSize}" width="${size.width}" font-family="Impact" text-anchor="middle">${split[0]}</text>`;
+				svgString += `<text fill="#000000" stroke="#ffffff" x="${size.height / 2}" y="${30 + fontSize}" font-size="${fontSize}" width="${size.width}" font-family="Impact" stroke-width="2" text-anchor="middle">${split[0]}</text>`;
 			}
 			if(split[1]){
 				getSize(split[1]);
-				svgString += `<text fill="#000000" stroke="#ffffff" x="${size.height / 2}" y="${30 + fontSize}" font-size="${fontSize}" width="${size.width}" font-family="Impact" stroke-width="2" text-anchor="middle">${split[1]}</text>`;
+				svgString += `<text fill="#000000" stroke-width="2" stroke="#ffffff" x="${size.height / 2}" y="${size.height - 30}" font-size="${fontSize}" width="${size.width}" font-family="Impact" text-anchor="middle">${split[1]}</text>`;
 			}
 
 			if(!split[0] && !split[1]){
-				
+				return reject("Couldn't find the text to memeify, are you trying to create a wordless meme?");
 			}
 
 			svgString += "</svg>";
