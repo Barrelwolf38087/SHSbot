@@ -1,3 +1,7 @@
 {
-	"description": "Mess with pictures! Run {{prefex}}pict help for more."
+	"description": "Mess with pictures! Run {{prefex}}pict help for more.",
+	"messages": {
+		"notFound": "Hmm, I couldn't find that subcommand. Run `{{prefix}}pict help` for a list of commands.",
+		"empty": "You didn't specify a subcommand. Run `{{prefix}}pict help` for a list of commands."
+	}
 }
