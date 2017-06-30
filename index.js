@@ -48,7 +48,13 @@ client.on("ready", () => {
 });
 
 client.on("message", (message) => {
-	msgHistory.push(message.content);
+	if(message.content){
+		msgHistory.push(message.content);
+	}else{
+		try{
+			msgHistory.push(message.attachments.values().next().value.url);
+		}catch(e){}
+	}
 
 	if(message.author.bot) return;
 
@@ -126,7 +132,8 @@ client.on("message", (message) => {
 			lastmessage: lastmessage,
 			sendMessage: msg=>message.channel.send(msg),
 			msgHistory: msgHistory,
-			delete: msg=>client.deleteMessage(msg)
+			delete: msg=>client.deleteMessage(msg),
+			id: message.id
 		}).then(reply=>{
 			lastmessage = reply;
 			console.log("replying with & added to last2messages", reply);
