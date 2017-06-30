@@ -10,6 +10,11 @@ const getDirs = () => new Promise(function(resolve, reject) {
 		const stat = util.promisify(fs.lstat);
 		files.forEach(function (file) {
 			console.log("file", file);
+
+			if(file === "help"){
+				return;
+			}
+
 			promises.push(new Promise((resolve2, reject)=>{
 				stat(path.join(path.join(__dirname, ".."), file)).then(stats=>{
 					if(err) return reject(err);
@@ -45,7 +50,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 			if(dir[0] === "." || !cfg){
 				return;
 			}
-			str += `\`${config.config.prefix}${dir}\`: ${config.template(cfg.description, config.config)}\n\n`;
+			str += `\`${config.config.prefix}pict ${dir}\`: ${config.template(cfg.description, config.config)}\n\n`;
 		});
 
 		str += "";
