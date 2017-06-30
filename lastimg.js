@@ -1,7 +1,8 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
-const gm = require("gm")//.subClass({imageMagick: true});
+const gm = require("gm");
 const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+
 
 function gmToBuffer (data) {//https://github.com/aheckmann/gm/issues/572#issuecomment-293768810
   return new Promise((resolve, reject) => {
@@ -17,27 +18,33 @@ function gmToBuffer (data) {//https://github.com/aheckmann/gm/issues/572#issueco
   });
 }
 
-module.exports = (config, prom) => new Promise(function(resolve, reject) {
+module.exports = (config, prom, hush) => new Promise(function(resolve, reject) {
+	const log = function(){
+		if(!hush){
+			console.log.apply(undefined, ["lastimg.js:"].concat(Array.from(arguments)));
+		}
+	};
+
 	var file;
 	var counter = config.msgHistory.length - 1;
 
 	const num = parseInt(config.commandArr[0], 10) || 1;
 
-	console.log(config.msgHistory);
+	log(config.msgHistory);
 
 	const doit = function(){
-		console.log("Trying out", config.msgHistory[counter]);
+		log("Trying out", config.msgHistory[counter]);
 		if(!config.msgHistory[counter]){
 			return reject("No image found!");
 		}
 
 		if(!URLregex.test(config.msgHistory[counter])){//http://www.regexpal.com/94502
-			console.log("Invalid regex");
+			log("Invalid regex");
 			counter--;
 			return doit();
 		}
 
-		console.log("fetching...");
+		log("fetching...");
 		fetch(config.msgHistory[counter]).then(resp=>{
 			const type = resp.headers.get("content-type");
 			if(type === "image/svg"){
@@ -49,20 +56,23 @@ module.exports = (config, prom) => new Promise(function(resolve, reject) {
 			}else if(type === "image/jpeg"){
 				file = "temp/TEMP.jpeg";
 				return resp.buffer();
+			}else if(type === "image/gif"){
+				file = "temp/TEMP.gif";
+				return resp.buffer();
 			}else{
-				console.log("Not an image");
+				log("Not an image", type);
 				counter--;
 				doit();
 			}
 		}).then(buffer=>{
 			if(!buffer) return;
-			console.log("got text", buffer, "and writing to", file);
+			log("got text", buffer, "and writing to", file);
 			fs.writeFile(file, buffer, (err)=>{
 				if(err) return reject(err);
-				console.log("done!");
+				log("done!");
 				prom(file).then(gmObj=>{
 					gmToBuffer(gmObj).then(buff=>{
-						console.log("got buffer", buff);
+						log("got buffer", buff);
 						resolve({file: {attachment: buff}});
 					}).catch(reject);
 				});

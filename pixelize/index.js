@@ -9,5 +9,5 @@ module.exports = config => new Promise(function(resolve, reject) {
 		console.log("num is", num, "down", scaleDown + "%", "up", scaleUp + "%");
 		var scaled = gm(file).scale(scaleDown + "%").scale(scaleUp + "%");
 		resolve(scaled);
-	})).then(resolve).catch(reject);
+	}), true).then(resolve).catch(reject);
 });

@@ -26,6 +26,12 @@ var advancedBackoff = {};
 
 var isRunning = {};
 
+const log = function(){
+	if(process.argv[2] === "--log"){
+		console.log.apply(undefined, ["index.js:"].concat(Array.from(arguments)));
+	}
+};
+
 fs.readdir(__dirname, function (err, files) {
 	if (err) throw err;
 
@@ -33,7 +39,7 @@ fs.readdir(__dirname, function (err, files) {
 		if(file === "node_modules" || file === ".git" || file === "temp") return;
 		fs.lstat(path.join(__dirname, file), function(err, stats) {
 			if (!err && (stats.isDirectory() || stats.isSymbolicLink())) {
-				console.log("adding directory", file);
+				log("adding directory", file);
 				directories.push(file);
 				configs[file] = require(path.join(__dirname, file, "config.json"), "utf8");
 			}
@@ -64,7 +70,7 @@ client.on("message", (message) => {
 	}
 
 	if(isRunning[message.author.id] && message.author.id.toString() !== config.owner.toString()){
-		console.log(message.author.id, "already running");
+		log(message.author.id, "already running");
 		isRunning[message.author.id] = false;
 		return message.reply(config.messages.alreadyRunning);
 	}
@@ -72,14 +78,14 @@ client.on("message", (message) => {
 	isRunning[message.author.id] = true;
 
 	if(backoff[message.author.id] && Date.now() - backoff[message.author.id] <= config.timeout && message.author.id.toString() !== config.owner.toString()){
-		console.log("simple backoff");
+		log("simple backoff");
 		if(!warned[message.author.id]){
 			warned[message.author.id] = true;
 			backoff[message.author.id] = Date.now() + config.penalty;
 			isRunning[message.author.id] = false;
 			return message.reply(config.messages.backoff);
 		}else{
-			console.log("already warned.");
+			log("already warned.");
 			backoff[message.author.id] = Date.now() + config.penalty;
 			isRunning[message.author.id] = false;
 			return;
@@ -93,13 +99,13 @@ client.on("message", (message) => {
 		advancedBackoff[message.author.id].messages.push(Date.now());
 
 		if(advancedBackoff[message.author.id].messages.length >= 5){
-			console.log("advanced");
+			log("advanced");
 			advancedBackoff[message.author.id].messages.push(Date.now() + config.penalty);
 			if(!advancedBackoff[message.author.id].warned){
 				isRunning[message.author.id] = false;
 				return message.reply(config.messages.backoff);
 			}else{
-				console.log("already warned");
+				log("already warned");
 				isRunning[message.author.id] = false;
 				return;
 			}
@@ -110,7 +116,7 @@ client.on("message", (message) => {
 		advancedBackoff[message.author.id] = {messages: [Date.now()]};
 	}
 
-	console.log("author:", message.author.id, "backoff", backoff, "away", Date.now() - backoff[message.author.id], "advancedBackoff", advancedBackoff);
+	log("author:", message.author.id, "backoff", backoff, "away", Date.now() - backoff[message.author.id], "advancedBackoff", advancedBackoff);
 
 	backoff[message.author.id] = Date.now();
 
@@ -136,12 +142,12 @@ client.on("message", (message) => {
 			id: message.id
 		}).then(reply=>{
 			lastmessage = reply;
-			console.log("replying with & added to last2messages", reply);
+			log("replying with & added to last2messages", reply);
 			message.channel.send(reply);
 			isRunning[message.author.id] = false;
 		}).catch(reply=>{
 			lastmessage = reply;
-			console.log("replying with & added to last2messages", reply);
+			log("replying with & added to last2messages", reply);
 			message.channel.send("Error: " + reply);
 			isRunning[message.author.id] = false;
 		});
