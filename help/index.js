@@ -4,7 +4,9 @@ module.exports = config => new Promise((resolve, reject)=>{
 	var str = `${config.config.messages.help}\n`;
 
 	config.directories.forEach(dir=>{
-
+		if(dir[0] === "."){
+			return;
+		}
 		str += `\`${config.config.prefix}${dir}\`: ${config.template(config.configs[dir].description, config.config)}\n\n`;
 	});
 

@@ -36,12 +36,14 @@ fs.readdir(__dirname, function (err, files) {
 	if (err) throw err;
 
 	files.forEach(function (file) {
-		if(file === "node_modules" || file === ".git" || file === "temp") return;
+		if(file === "node_modules" || file === "temp") return;
 		fs.lstat(path.join(__dirname, file), function(err, stats) {
 			if (!err && (stats.isDirectory() || stats.isSymbolicLink())) {
 				log("adding directory", file);
 				directories.push(file);
-				configs[file] = require(path.join(__dirname, file, "config.json"), "utf8");
+				try{
+					configs[file] = require(path.join(__dirname, file, "config.json"), "utf8");
+				}catch(e){}
 			}
 		});
 	});
@@ -127,8 +129,12 @@ client.on("message", (message) => {
 		message.channel.send(config.messages.nothing);
 		return;
 	}
+	const isHidden = !directories.includes(commandArr[0]) && directories.includes("." + commandArr[0]);
 
-	if(directories.includes(commandArr[0])){
+	if((directories.includes(commandArr[0]) || isHidden) && commandArr[0][0] !== "."){
+		if(isHidden){
+			commandArr[0] = "." + commandArr[0];
+		}
 		require("./" + path.join(commandArr[0], "index.js"))({
 			directories: directories,
 			config: config,
