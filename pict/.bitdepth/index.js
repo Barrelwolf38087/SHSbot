@@ -1,4 +1,4 @@
-const gm = require("gm").subClass({imageMagik: true});
+const gm = require("gm");
 
 module.exports = config => new Promise(function(resolve, reject) {
 	require("../../lastimg.js")(config, file=>new Promise(function(resolve) {
