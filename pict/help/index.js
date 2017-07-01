@@ -11,7 +11,7 @@ const getDirs = () => new Promise(function(resolve, reject) {
 		files.forEach(function (file) {
 			console.log("file", file);
 
-			if(file === "help"){
+			if(file === "help" || file[0] === "."){
 				return;
 			}
 
