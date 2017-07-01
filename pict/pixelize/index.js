@@ -1,4 +1,3 @@
-const fs = require("fs");
 const gm = require("gm");
 
 module.exports = config => new Promise(function(resolve, reject) {

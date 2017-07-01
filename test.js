@@ -1,21 +1,3 @@
-process.stdin.resume();
-process.stdin.setEncoding('utf8');
+const gm = require("gm").subClass({imageMagick: true});
 
-var lingeringLine = "";
-
-const processLine = str=>{
-	
-};
-
-process.stdin.on('data', function(chunk) {
-    lines = chunk.split("\n");
-
-    lines[0] = lingeringLine + lines[0];
-    lingeringLine = lines.pop();
-
-    lines.forEach(processLine);
-});
-
-process.stdin.on('end', function() {
-    processLine(lingeringLine);
-});
+gm("temp/bitdepth.png").bitdepth(32).write("temp/done.png", ()=>{});

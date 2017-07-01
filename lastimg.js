@@ -1,19 +1,18 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
-const gm = require("gm");
-const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&"\(\)\*\+,;=.]+$/;
 
-
-function gmToBuffer (data) {//https://github.com/aheckmann/gm/issues/572#issuecomment-293768810
+//https://github.com/aheckmann/gm/issues/572#issuecomment-293768810
+function gmToBuffer(data) {
   return new Promise((resolve, reject) => {
     data.stream((err, stdout, stderr) => {
       if (err) { return reject(err); }
       const chunks = [];
-      stdout.on('data', (chunk) => { chunks.push(chunk); });
-      // these are 'once' because they can and do fire multiple times for multiple errors,
-      // but this is a promise so you'll have to deal with them one at a time
-      stdout.once('end', () => { resolve(Buffer.concat(chunks)); });
-      stderr.once('data', (data) => { reject(String(data)); });
+      stdout.on("data", (chunk) => { chunks.push(chunk); });
+      // these are "once" because they can and do fire multiple times for multiple errors,
+      // but this is a promise so you"ll have to deal with them one at a time
+      stdout.once("end", () => { resolve(Buffer.concat(chunks)); });
+      stderr.once("data", (data) => { reject(String(data)); });
     });
   });
 }
@@ -26,9 +25,7 @@ module.exports = (config, prom, hush) => new Promise(function(resolve, reject) {
 	};
 
 	var file;
-	var counter = config.msgHistory.length - 1;
-
-	const num = parseInt(config.commandArr[0], 10) || 1;
+	var counter = config.msgHistory.length - 1
 
 	log(config.msgHistory);
 
@@ -68,7 +65,9 @@ module.exports = (config, prom, hush) => new Promise(function(resolve, reject) {
 			if(!buffer) return;
 			log("got text", buffer, "and writing to", file);
 			fs.writeFile(file, buffer, (err)=>{
-				if(err) return reject(err);
+				if(err){
+					return reject(err)
+			 	}
 				log("done!");
 				prom(file).then(gmObj=>{
 					gmToBuffer(gmObj).then(buff=>{
