@@ -5,7 +5,7 @@ const util = require("util");
 var directories = [];
 const getDirs = () => new Promise(function(resolve, reject) {
 	fs.readdir(path.join(__dirname, ".."), function (err, files) {
-		if (err) return reject(err);
+		if (err){ return reject(err); }
 		var promises = [];
 		const stat = util.promisify(fs.lstat);
 		files.forEach(function (file) {
@@ -17,7 +17,7 @@ const getDirs = () => new Promise(function(resolve, reject) {
 
 			promises.push(new Promise((resolve2, reject)=>{
 				stat(path.join(path.join(__dirname, ".."), file)).then(stats=>{
-					if(err) return reject(err);
+					if (err){ return reject(err); }
 					if (stats.isDirectory() || stats.isSymbolicLink()) {
 						directories.push(file);
 						console.log("resolving");

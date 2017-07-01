@@ -33,10 +33,10 @@ const log = function(){
 };
 
 fs.readdir(__dirname, function (err, files) {
-	if (err) throw err;
+	if (err) { throw err; }
 
 	files.forEach(function (file) {
-		if(file === "node_modules" || file === "temp") return;
+		if(file === "node_modules" || file === "temp"){ return; }
 		fs.lstat(path.join(__dirname, file), function(err, stats) {
 			if (!err && (stats.isDirectory() || stats.isSymbolicLink())) {
 				log("adding directory", file);
@@ -64,7 +64,7 @@ client.on("message", (message) => {
 		}catch(e){}
 	}
 
-	if(message.author.bot) return;
+	if(message.author.bot){ return; }
 
 	if(message.content[0] !== config.prefix){
 		lastmessage = message.content;
@@ -158,6 +158,6 @@ client.on("message", (message) => {
 			isRunning[message.author.id] = false;
 		});
 	}else{
-		message.channel.send(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix})).then(x=>isRunning[message.author.id] = false);
+		message.channel.send(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix})).then(()=>isRunning[message.author.id] = false);
 	}
 });
