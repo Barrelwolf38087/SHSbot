@@ -13,7 +13,7 @@ const refreshImgs = function(){
 			try{
 				//console.log(parseString(text));
 				JSON.parse(parseString(text)).response.data.images.image.forEach(image=>{
-					images.push({src: image.source_url, img: image.url})
+					images.push({src: image.source_url, img: image.url});
 				});
 				resolve();
 			}catch(e){
@@ -25,11 +25,10 @@ const refreshImgs = function(){
 
 refreshImgs();
 
-module.exports = config => new Promise(function(resolve, reject) {
+module.exports = config => new Promise(function(resolve) {
 	const reply = ()=>{
 		const picked = images[Math.floor(Math.random() * images.length)];
 		fetch(picked.img).then(()=>{
-			if(config.lastmessage) config.sendMessage(config.lastmessage);
 			config.sendMessage({file: {attachment: picked.img}}).then(message=>{
 				message.react("👍");
 				message.react("👎");
