@@ -1,18 +1,22 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
 const cfg = require("./config.json");
-const gm = require("gm").subClass({imageMagick: true});
+const gm = require("gm");
 const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
 module.exports = config => new Promise(function(resolve, reject) {
 	var msg;
 	config.sendMessage("Memeifying...").then(message=>msg = message);
+	var file;
+	var imgType;
 
 	const callback = ()=>{
 		console.log("done");
 		gm(file).size(function (err, size) {
 			console.log("size is", size);
-			if(err) return reject(err);
+			if(err){
+				return reject(err);
+			}
 			var lastText;
 			config.msgHistory.reverse().some(message=>{
 				if(!URLregex.test(message) && message[0] !== config.config.prefix && message !== "Memeifying..."){
@@ -38,8 +42,8 @@ module.exports = config => new Promise(function(resolve, reject) {
 					}
 				});
 				const percent = width / size.width;
-				console.log("Width:", width, "percent", percent);
-				if((percent > 0.8 && percent < 0.95) || fontSize / size.width > 0.2){
+				console.log("Width:", width, "size", size, "percent", percent);
+				if((percent > 0.7 && percent < 0.95) || fontSize / size.width > 0.2){
 					console.log("Works! (gived up)", fontSize / size.width > 0.2);
 					return fontSize;
 				}
@@ -48,17 +52,19 @@ module.exports = config => new Promise(function(resolve, reject) {
 			};
 
 			var svgString = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-			<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		<image xlink:href="${file}" id="svg_3" height="${size.width}" width="${size.height}" y="0" x="0"/>`;
+			<svg width="${size.width}" height="${size.height}" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<image xlink:href="${file}" id="svg_3" height="${size.height}" width="${size.width}" y="0" x="0"/>`;
 			const split = lastText.split("|");
 			if(split[0]){
 				getSize(split[0]);
-				svgString += `<text fill="#000000" stroke="#ffffff" x="${size.height / 2}" y="${30 + fontSize}" font-size="${fontSize}" width="${size.width}" font-family="Impact" stroke-width="2" text-anchor="middle">${split[0]}</text>`;
+				svgString += `<text fill="#000000" stroke="#ffffff" x="${size.width / 2}" y="${30 + fontSize}" font-size="${fontSize}" width="${size.width}" font-family="Impact" stroke-width="2" text-anchor="middle">${split[0]}</text>`;
 			}
 			if(split[1]){
 				getSize(split[1]);
-				svgString += `<text fill="#000000" stroke-width="2" stroke="#ffffff" x="${size.height / 2}" y="${size.height - 30}" font-size="${fontSize}" width="${size.width}" font-family="Impact" text-anchor="middle">${split[1]}</text>`;
+				svgString += `<text fill="#000000" stroke-width="2" stroke="#ffffff" x="${size.width / 2}" y="${size.height - 30}" font-size="${fontSize}" width="${size.width}" font-family="Impact" text-anchor="middle">${split[1]}</text>`;
 			}
+
+			console.log(svgString);
 
 			if(!split[0] && !split[1]){
 				return reject("Couldn't find the text to memeify, are you trying to create a wordless meme?");
@@ -66,10 +72,12 @@ module.exports = config => new Promise(function(resolve, reject) {
 
 			svgString += "</svg>";
 
-			fs.writeFile("temp/temp.svg", svgString, (err)=>{
-				if(err) return reject(err);
-
-				gm("temp/temp.svg").stream("png", function (err, stdout, stderr) {
+			fs.writeFile("temp.svg", svgString, (err)=>{
+				if(err){
+					return reject(err);
+				}
+				console.log("Image type", imgType);
+				gm("temp.svg").stream(imgType, function (err, stdout, stderr) {
 					const chunks = [];
 
 					stderr.on("data", function (chunk) {
@@ -98,7 +106,6 @@ module.exports = config => new Promise(function(resolve, reject) {
 	};
 
 	var counter = config.msgHistory.length - 1;
-	var file;
 	const doit = function(){
 		console.log("Trying out", config.msgHistory[counter]);
 		if(!config.msgHistory[counter]){
@@ -116,15 +123,22 @@ module.exports = config => new Promise(function(resolve, reject) {
 			const type = resp.headers.get("content-type");
 			if(type === "image/svg"){
 				file = "temp/TEMP.svg";
+				imgType = "svg";
 				return resp.buffer();
 			}else if(type === "image/png"){
 				file = "temp/TEMP.png";
+				imgType = "png";
 				return resp.buffer();
 			}else if(type === "image/jpeg"){
 				file = "temp/TEMP.jpeg";
+				imgType = "jpeg";
+				return resp.buffer();
+			}else if(type === "image/gif"){
+				file = "temp/TEMP.gif";
+				imgType = "gif";
 				return resp.buffer();
 			}else{
-				console.log("Not an image");
+				console.log("Not an image, type", type);
 				counter--;
 				doit();
 			}
@@ -132,8 +146,10 @@ module.exports = config => new Promise(function(resolve, reject) {
 			if(!buffer) return;
 			console.log("got text", buffer, "and writing to", file);
 			fs.writeFile(file, buffer, (err)=>{
-				if(err) return reject(err);
-				console.log("done!")
+				if(err){
+					return reject(err);
+				}
+				console.log("done!");
 				callback();
 			});
 		});
