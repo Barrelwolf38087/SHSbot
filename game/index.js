@@ -1,12 +1,15 @@
 const msgs = ["hi", "\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_", "￣￣￣|￣￣￣|￣￣￣"];
 
 var emitter;
+var reacted;
 
 var board = [
 	["X", "", "O"],
 	["", "X", "O"],
 	["O", "X", ""]
 ];
+
+const underline = str=>Array.from(str).map(x=>x + "\u0332").join("");
 
 var boardMsg = [{}, {}, {}];
 
@@ -25,13 +28,26 @@ const func = config=>new Promise((resolve, reject)=>{
 	if(!emitter){
 		emitter = true;
 		config.reactions.on("reaction", (react, auth)=>{
-			const correctMsg = boardMsg.some(x=>x.id === react.message.id);
-			const empty = /empty/.test(react.emoji.toString());
-			if(auth.bot || !empty || !correctMsg){
-				console.log("bot or not empty or wrong message", auth.bot, empty, !correctMsg);
+			var row;
+			const correctMsg = boardMsg.some((msg, idx)=>{
+				if(msg.id === react.message.id){
+					row = idx;
+					console.log("row", row);
+					return true;
+				}
+			});
+			const empty = /empty/.test(react.emoji.name);
+			if(auth.bot || !empty || !correctMsg || reacted){
+				console.log("bot or not empty or wrong message or reacted", auth.bot, empty, !correctMsg, reacted);
 				return;
 			}
-			console.log("legit reaction!" + react.emoji);
+			reacted = true;
+			console.log("legit reaction!" + react.emoji.name);
+			boardMsg.forEach(msg=>msg.delete());
+			var str = board.reduce((row, str)=>{
+				return str + " " + row[0] + " | " + row[1] + " | " + row[2];
+			}, "");
+			console.log(str);
 		});
 	}
 	//console.log(emojis);
