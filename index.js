@@ -3,6 +3,7 @@ const client = new Discord.Client();
 const config = require("./config.json");
 const fs = require("fs");
 const path = require("path");
+const EventEmitter = require("events");
 
 
 
@@ -53,6 +54,13 @@ client.login(config.token);
 client.on("ready", () => {
 	client.user.setGame(`run $help for help`);
 	console.log("Ready!");
+});
+
+class __class extends EventEmitter {}
+
+const reactionEmitter = new __class();
+client.on("messageReactionAdd", (reaction, user) => {
+	reactionEmitter.emit("reaction", reaction, user);
 });
 
 client.on("message", (message) => {
@@ -135,7 +143,8 @@ client.on("message", (message) => {
 		if(isHidden){
 			commandArr[0] = "." + commandArr[0];
 		}
-		require("./" + path.join(commandArr[0], "index.js"))({
+		var file = require("./" + path.join(commandArr[0], "index.js"));
+		file({
 			directories: directories,
 			config: config,
 			configs: configs,
@@ -145,7 +154,9 @@ client.on("message", (message) => {
 			sendMessage: msg=>message.channel.send(msg),
 			msgHistory: msgHistory,
 			delete: msg=>client.deleteMessage(msg),
-			id: message.id
+			id: message.id,
+			emojis: message.channel.guild.emojis.array(),
+			reactions: file.listenForReactions ? reactionEmitter : undefined
 		}).then(reply=>{
 			lastmessage = reply;
 			log("replying with & added to last2messages", reply);
