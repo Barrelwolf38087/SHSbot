@@ -1,4 +1,4 @@
-const msgs = ["hi", "\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_", "￣￣￣|￣￣￣|￣￣￣"];
+const msgs = ["Ready?", "\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_", "￣￣￣|￣￣￣|￣￣￣"];
 
 var emitter;
 var reacted;
@@ -7,6 +7,19 @@ var board = [
 	["X", "", "O"],
 	["", "X", "O"],
 	["O", "X", ""]
+];
+
+var winners = [
+	[[0, 0], [0, 1], [0, 2]],
+	[[1, 0], [1, 1], [1, 2]],
+	[[2, 0], [2, 1], [2, 2]],
+
+	[[0, 0], [1, 0], [2, 0]],
+	[[0, 1], [1, 1], [2, 1]],
+	[[0, 2], [1, 2], [2, 2]],
+
+	[[0, 0], [1, 1], [2, 2]],
+	[[0, 2], [1, 1], [2, 0]]
 ];
 
 const underline = str=>Array.from(str).map(x=>x + "\u0332").join("");
@@ -41,13 +54,32 @@ const func = config=>new Promise((resolve, reject)=>{
 				console.log("bot or not empty or wrong message or reacted", auth.bot, empty, !correctMsg, reacted);
 				return;
 			}
-			reacted = true;
+			//reacted = true;
 			console.log("legit reaction!" + react.emoji.name);
 			boardMsg.forEach(msg=>msg.delete());
-			var str = board.reduce((row, str)=>{
-				return str + " " + row[0] + " | " + row[1] + " | " + row[2];
-			}, "");
-			console.log(str);
+			board[row][react.emoji.identifier.split(":")[0].slice(-1) - 1] = "X";
+
+			var winner;
+
+			const won = winners.some(combo=>{
+				console.log(board[combo[0][0]][combo[0][1]] + "===" +  board[combo[1][0]][combo[1][1]] + "===" + board[combo[2][0]][combo[2][1]]);
+				const right = board[combo[0][0]][combo[0][1]] === board[combo[1][0]][combo[1][1]] && board[combo[1][0]][combo[1][1]]=== board[combo[2][0]][combo[2][1]];
+				if(right){
+					console.log("right!");
+					winner = board[combo[0][0]][combo[0][1]];
+				}
+				return right;
+			});
+			if(won){
+				console.log("won!");
+				config.sendMessage(winner + " won!");
+			}else{
+				var str = board.reduce((str, row, index)=>{
+					console.log("row", row, "str", str);
+					return str + (index < 2 ? underline : x=>x)(" " + (row[0] || " ") + " | " + (row[1] || " ") + " | " + (row[2] || " ") + " ") + "\n";
+				}, "Here's the new board:\n```\n");
+				config.sendMessage(str + "```");
+			}
 		});
 	}
 	//console.log(emojis);
