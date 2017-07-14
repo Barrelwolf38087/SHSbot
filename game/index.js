@@ -1,4 +1,4 @@
-const msgs = ["Ready? It's {{player}}'s turn!", "\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_", "￣￣￣|￣￣￣|￣￣￣"];
+const msgs = ["Ready? It's {{author}} ({{role}})'s turn!", "\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_", "￣￣￣|￣￣￣|￣￣￣"];
 
 var emitter;
 var reacted;
@@ -40,11 +40,21 @@ const underline = str=>Array.from(str).map(x=>x + "\u0332").join("");
 var boardMsg = [{}, {}, {}];
 
 const func = config=>new Promise((resolve, reject)=>{
+	console.log(config.author + "");
 	if(state === 2){
 		console.log("resetting...");
 		resetBoard();
 		state = 0;
 	}
+	if(state === 0.5){
+		if(playerX.tag === config.author.tag){
+			config.sendMessage("You want to play Tick-Tack-Toe *by yourself*? Oookkk...");
+		}
+		state = 1;
+		playerY = config.author;
+		config.sendMessage("Starting Tick-Tack-Toe between " + playerX + " (X) and " + playerY + " (O)");
+	}
+
 	if(state === 1){
 		isX = !isX;
 		var emojis = config.emojis.map(x=>{
@@ -69,6 +79,9 @@ const func = config=>new Promise((resolve, reject)=>{
 					}
 				});
 				const empty = /empty/.test(react.emoji.name);
+				if((isX && config.author.tag !== playerX.tag) || (!isX && config.author.tag !== playerY.tag)){
+					return;
+				}
 				if(auth.bot || !empty || !correctMsg || reacted){
 					console.log("bot or not empty or wrong message or reacted", auth.bot, empty, !correctMsg, reacted);
 					return;
@@ -120,7 +133,7 @@ const func = config=>new Promise((resolve, reject)=>{
 		}
 		//console.log(emojis);
 		board.forEach((row, idx)=>{
-			const message = idx ? msgs[idx] : config.template(msgs[idx], {player: isX ? "X" : "O"});
+			const message = idx ? msgs[idx] : config.template(msgs[idx], {role: isX ? "X" : "O", author: config.author});
 			config.sendMessage(message).then(msg=>{
 				boardMsg[idx] = msg ;
 				var promise = Promise.resolve();
@@ -140,11 +153,8 @@ const func = config=>new Promise((resolve, reject)=>{
 		});
 	}else if(state === 0){
 		config.sendMessage("Ok, you're X. The next person to send `$game` gets to be O.");
-		playerX = config.author.tag;
-	}else if(state === 0.5){
-		state = 1;
-		console.log("resetting...");
-		resetBoard();
+		playerX = config.author;
+		state = 0.5;
 	}
 });
 
