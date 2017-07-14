@@ -156,8 +156,12 @@ client.on("message", (message) => {
 			delete: msg=>client.deleteMessage(msg),
 			id: message.id,
 			emojis: message.channel.guild.emojis.array(),
+			author: message.author,
 			reactions: file.listenForReactions ? reactionEmitter : undefined
 		}).then(reply=>{
+			if(!reply){
+				return;
+			}
 			lastmessage = reply;
 			log("replying with & added to last2messages", reply);
 			message.channel.send(reply);
