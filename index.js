@@ -152,6 +152,7 @@ client.on("message", (message) => {
 			template: template,
 			lastmessage: lastmessage,
 			sendMessage: msg=>message.channel.send(msg),
+			channelId: message.channel.id,
 			msgHistory: msgHistory,
 			delete: msg=>client.deleteMessage(msg),
 			id: message.id,
