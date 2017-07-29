@@ -79,8 +79,8 @@ client.on("message", (message) => {
 		return;
 	}
 
-	if(isRunning[message.author.id] && message.author.id.toString() !== config.owner.toString()){
-		log(message.author.id, "already running");
+	if(isRunning[message.author.id] && message.author.id.toString() !== config.owner){
+		log(message.author.id, "already running", isRunning);
 		isRunning[message.author.id] = false;
 		return message.reply(config.messages.alreadyRunning);
 	}
@@ -160,13 +160,13 @@ client.on("message", (message) => {
 			author: message.author,
 			reactions: file.listenForReactions ? reactionEmitter : undefined
 		}).then(reply=>{
+			isRunning[message.author.id] = false;
 			if(!reply){
 				return;
 			}
 			lastmessage = reply;
 			log("replying with & added to last2messages", reply);
 			message.channel.send(reply);
-			isRunning[message.author.id] = false;
 		}).catch(reply=>{
 			lastmessage = reply;
 			log("replying with & added to last2messages", reply);
