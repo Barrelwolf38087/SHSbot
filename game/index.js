@@ -69,7 +69,9 @@ const func = config=>new Promise((resolve, reject)=>{
 		}, {});
 		if(!emitter){
 			emitter = true;
+			console.log("got emitter!");
 			config.reactions.on("reaction", (react, auth)=>{
+				console.log("reaction!");
 				var row;
 				const correctMsg = boardMsg.some((msg, idx)=>{
 					if(msg.id === react.message.id){
@@ -79,7 +81,8 @@ const func = config=>new Promise((resolve, reject)=>{
 					}
 				});
 				const empty = /empty/.test(react.emoji.name);
-				if((isX && config.author.tag !== playerX.tag) || (!isX && config.author.tag !== playerY.tag)){
+				if((isX && auth.tag !== playerX.tag) || (!isX && auth.tag !== playerY.tag)){
+					console.log("wrong player combo: ", auth.tag, "X", playerX.tag, "y",  playerY.tag);
 					return;
 				}
 				if(auth.bot || !empty || !correctMsg || reacted){
@@ -125,15 +128,19 @@ const func = config=>new Promise((resolve, reject)=>{
 				}
 
 				var str = board.reduce((str, row, index)=>{
-					console.log("row", row, "str", str);
-					return str + (index < 2 ? underline : x=>x)(" " + (row[0] || " ") + " | " + (row[1] || " ") + " | " + (row[2] || " ") + " ") + "\n";
+					var res = ("_" + (row[0] || "_") + "_|_" + (row[1] || "_") + "_|_" + (row[2] || "_") + "_");
+					if(index == 2){
+						res = res.replace(/_/g, " ");
+					}
+					return str + res + "\n";
 				}, msg + "\n```\n");
-				config.sendMessage(str + "```").then(()=>resolve());
+				console.log("new board:\n", str);
+				config.sendMessage(str + "```Send `$game` for the next " + won ? "turn!").then(()=>resolve());
 			});
 		}
 		//console.log(emojis);
 		board.forEach((row, idx)=>{
-			const message = idx ? msgs[idx] : config.template(msgs[idx], {role: isX ? "X" : "O", author: config.author});
+			const message = idx ? msgs[idx] : config.template(msgs[idx], {role: isX ? "X" : "O", author: isX ? playerX : playerY});
 			config.sendMessage(message).then(msg=>{
 				boardMsg[idx] = msg ;
 				var promise = Promise.resolve();
