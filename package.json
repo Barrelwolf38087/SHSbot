@@ -9,8 +9,10 @@
   "author": "",
   "license": "GPL-3.0",
   "dependencies": {
+    "ascii-table": "0.0.9",
     "discord.js": "^11.1.0",
     "gm": "^1.23.0",
+    "markov": "0.0.7",
     "node-fetch": "^1.7.1",
     "ws": "^3.0.0",
     "xml2json": "^0.11.0"
