@@ -11,7 +11,7 @@ const limitStr = (str, limit) => {
 const maxLength = 150;
 
 module.exports = config => new Promise((resolve)=>{
-	fetch("https://api.wolframalpha.com/v2/query?input=" + encodeURIComponent(config.commandArr.join(" ")) + "&appid=3797QR-TYTV53QGGG&format=plaintext&ignorecase=true&output=json").then(x=>x.json()).then(obj=>{
+	fetch("https://api.wolframalpha.com/v2/query?input=" + encodeURIComponent(config.commandArr.join(" ")) + "&appid=" + config.config.wolframKey + "&format=plaintext&ignorecase=true&output=json").then(x=>x.json()).then(obj=>{
 		var str = "https://www.wolframalpha.com/input/?i=" + encodeURIComponent(config.commandArr.join(" ")) + "\n";
 		console.log(obj);
 		try{
