@@ -159,7 +159,35 @@ client.on("message", (message) => {
 		if(isHidden){
 			commandArr[0] = "." + commandArr[0];
 		}
+		console.log("teh config", configs[commandArr[0]]);
 		var file = require("./" + path.join(commandArr[0], "index.js"));
+
+		permission: {
+			if(configs[commandArr[0]] && configs[commandArr[0]].permissions){
+				const admin = (configs[commandArr[0]].permissions + "")[0] === "1";
+				const everyone = ((configs[commandArr[0]].permissions + "")[1] || "1") === "1";
+				if(everyone){//everyone
+					console.log(".*");
+					break permission;
+				}
+				if(message.member.hasPermission("ADMINISTRATOR") && admin){//admin
+					console.log("admin");
+					break permission;
+				}
+				if(message.author.id + "" === config.owner){//owner
+					console.log("owner");
+					break permission;
+				}
+				const reply = "You don't have permission to execute this command.";
+				lastmessage = reply;
+				log("replying with & added to last2messages", reply);
+				message.channel.send("Error: " + reply);
+				isRunning[message.author.id] = false;
+				console.log(403);
+				return;
+			}
+		}
+
 		file({
 			directories: directories,
 			config: config,
