@@ -5,7 +5,13 @@ const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
 
+var coins = require("./coins.json");
 
+const writeCoins = ()=>{
+	fs.writeFile("coins.json", JSON.stringify(coins), ()=>{});
+};
+
+setInterval(writeCoins, 5000);
 
 const template = function(str, obj){
 	Object.keys(obj).forEach(key=>{
@@ -82,6 +88,8 @@ client.on("messageReactionAdd", (reaction, user) => {
 });
 
 client.on("message", (message) => {
+	console.log(message.content);
+
 	if(message.content){
 		msgHistory.push(message.content);
 	}else{
@@ -96,6 +104,8 @@ client.on("message", (message) => {
 		lastmessage = message.content;
 		return;
 	}
+
+	coins[message.author.id] = coins[message.author.id] || 100;
 
 	if(isRunning[message.author.id] && message.author.id.toString() !== config.owner){
 		log(message.author.id, "already running", isRunning);
@@ -204,7 +214,9 @@ client.on("message", (message) => {
 			id: message.id,
 			emojis: message.channel.guild.emojis.array(),
 			author: message.author,
-			reactions: file.listenForReactions ? reactionEmitter : undefined
+			reactions: file.listenForReactions ? reactionEmitter : undefined,
+			writeCoins: ()=>writeCoins(),
+			coins: coins
 		}).then(reply=>{
 			isRunning[message.author.id] = false;
 			if(!reply){
@@ -212,11 +224,11 @@ client.on("message", (message) => {
 			}
 			lastmessage = reply;
 			log("replying with & added to last2messages", reply);
-			message.channel.send(reply);
+			message.channel.send(reply).catch(console.error);
 		}).catch(reply=>{
 			lastmessage = reply;
 			log("replying with & added to last2messages", reply);
-			message.channel.send("Error: " + reply);
+			message.channel.send("Error: " + reply.catch(console.error));
 			isRunning[message.author.id] = false;
 		});
 	}else{
