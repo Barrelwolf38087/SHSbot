@@ -54,4 +54,6 @@ temp/
 
 /temp.svg
 
-/points.json
+# ignore the coins
+
+/coins.json
