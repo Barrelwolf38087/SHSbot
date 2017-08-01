@@ -54,21 +54,23 @@ client.login(config.token);
 client.on("ready", () => {
 	client.user.setGame(`run $help for help`);
 	console.log("Ready!");
-	client.guilds.array().filter(g=>g.available).forEach(g=>g.defaultChannel.send("Back up!"));
-	const die = ()=>{//jshint ignore: line
-		var promises = [];
-		client.guilds.array().filter(g=>g.available).forEach(g=>{
-			promises.push(g.defaultChannel.send("Going down :("));
-		});
-		Promise.all(promises).then(()=>process.exit(0)).catch(e=>{
-			console.error(e);
-			process.exit(1);
-		});
-	};
-	process.on("SIGINT", die);
-	process.on("SIGTERM", die);
-	process.on("SIGBREAK", die);
-	process.on("SIGHUP", die);
+	if(config.sendOnOff){
+		client.guilds.array().filter(g=>g.available).forEach(g=>g.defaultChannel.send("Back up!"));
+		const die = ()=>{//jshint ignore: line
+			var promises = [];
+			client.guilds.array().filter(g=>g.available).forEach(g=>{
+				promises.push(g.defaultChannel.send("Going down :("));
+			});
+			Promise.all(promises).then(()=>process.exit(0)).catch(e=>{
+				console.error(e);
+				process.exit(1);
+			});
+		};
+		process.on("SIGINT", die);
+		process.on("SIGTERM", die);
+		process.on("SIGBREAK", die);
+		process.on("SIGHUP", die);
+	}
 });
 
 

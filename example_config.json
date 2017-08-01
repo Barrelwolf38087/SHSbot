@@ -1,5 +1,5 @@
 {
-	"token": "INSERT_TOKEN_HERE",
+	"token": "INSERT_DISCORD_TOKEN_HERE",
 	"prefix": "$",
 	"messages": {
 		"notFound": "I couldn't find the command \"{{command}}\". Try `{{prefix}}help`. (If you don't want your message to be treated as a command, add a \\\\ before it.)",
@@ -11,5 +11,9 @@
 	"timeout": 3000,
 	"advancedTimeout": 5000,
 	"penalty": 1000,
-	"owner": 327877746883559435
+	"#Comment": "The owner is subject to no penalties / timeouts, and has full permissions for everything.",
+	"owner": "INSERT_OWNER_USER_ID_HERE",
+	"wolframKey": "INSERT_WOLFRAM_ALPHA_KEY_HERE",
+	"wuKey": "INSERT_WEATHER_UNDERGROUND_KEY_HERE",
+	"sendOnOff": false
 }
