@@ -1,4 +1,7 @@
 const msgs = ["Ready? It's {{author}} ({{role}})'s turn!", "\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_", "￣￣￣|￣￣￣|￣￣￣"];
+const cents = "¢";
+
+const coinReward = coins => Math.min(Math.round((coins - 100) / 20 + 1), 20);
 
 var emitter;
 
@@ -59,11 +62,12 @@ const func = config=>new Promise((resolve, reject)=>{
 	}
 	if(o.state === 0.5){
 		if(o.playerX.tag === config.author.tag){
-			config.sendMessage("You want to play Tick-Tack-Toe *by yourself*? Oookkk...");
+			config.sendMessage("You want to play Tick-Tack-Toe *by yourself*? You don't get any coins.");
 		}
 		o.state = 1;
 		o.playerY = config.author;
-		config.sendMessage("Starting Tick-Tack-Toe between " + o.playerX + " (X) and " + o.playerY + " (O)");
+		console.log("ID:", o.playerX.id);
+		config.sendMessage(`Starting Tick-Tack-Toe between ${o.playerX} ${config.coins[o.playerX.id]}¢ (X) and ${o.playerY} ${config.coins[o.playerY.id]}¢ (O)`);
 	}
 
 	if(o.state === 1){
@@ -127,7 +131,31 @@ const func = config=>new Promise((resolve, reject)=>{
 				if(won){
 					console.log("won!");
 					o.state = 2;
-					config.sendMessage(winner + " won!").then(()=>resolve());
+
+					const winnerPlayer = o.isX ? o.playerX : o.playerY;
+
+					var loser;
+
+					if(o.playerX === winner){
+						loser = o.playerY;
+					}else{
+						loser = o.playerX;
+					}
+
+					const reward = coinReward(config.coins[loser.id]);
+
+					var msg2;
+
+					if(o.playerX.id === o.playerY.id){
+						msg2 = winner + " won the game!";
+					}else{
+						msg2 = winner + " (" + winnerPlayer + ") won the game and " + reward + cents + "!";
+
+						config.coins[winnerPlayer.id] += reward;
+						console.log("gave " + winnerPlayer, reward, "coins");
+					}
+
+					config.sendMessage(msg2).catch(console.error);
 					msg = "The winning board:";
 				}
 
@@ -151,11 +179,11 @@ const func = config=>new Promise((resolve, reject)=>{
 					return str + res + "\n";
 				}, msg + "\n```\n");
 				console.log("str", str);
-				config.sendMessage(str + "```Send `" + config.config.prefix + "game` for the next " + (won || draw ? "game!" : "turn!")).then(()=>resolve());
+				config.sendMessage(str + "```Send `" + config.config.prefix + "game` for the next " + (won || draw ? "game!" : "turn!")).then(()=>resolve()).catch(console.error);
 
 			});
 		}
-		//console.log(emojis);
+
 		o.board.forEach((row, idx)=>{
 			const message = idx ? msgs[idx] : config.template(msgs[idx], {role: o.isX ? "X" : "O", author: o.isX ? o.playerX : o.playerY});
 			config.sendMessage(message).then(msg=>{
