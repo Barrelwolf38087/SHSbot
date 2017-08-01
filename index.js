@@ -11,6 +11,8 @@ const writeCoins = ()=>{
 	fs.writeFile("coins.json", JSON.stringify(coins), ()=>{});
 };
 
+coins[config.owner] = coins[config.owner] || config.authorBonus;
+
 setInterval(writeCoins, 5000);
 
 const template = function(str, obj){
@@ -224,11 +226,13 @@ client.on("message", (message) => {
 			}
 			lastmessage = reply;
 			log("replying with & added to last2messages", reply);
-			message.channel.send(reply).catch(console.error);
+			if(reply && (typeof reply !== "string" || reply.trim())){
+				message.channel.send(reply).catch(console.error);
+			}
 		}).catch(reply=>{
 			lastmessage = reply;
 			log("replying with & added to last2messages", reply);
-			message.channel.send("Error: " + reply.catch(console.error));
+			message.channel.send("Error: " + reply).catch(console.error);
 			isRunning[message.author.id] = false;
 		});
 	}else{
