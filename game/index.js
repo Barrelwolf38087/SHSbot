@@ -1,5 +1,4 @@
 const msgs = ["Ready? It's {{author}} ({{role}})'s turn!", "\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_|\\_\\_\\_\\_\\_\\_", "￣￣￣|￣￣￣|￣￣￣"];
-const cents = "¢";
 
 const coinReward = coins => Math.min(Math.round((coins - 100) / 20 + 1), 20);
 
@@ -46,6 +45,8 @@ var ChannelFactory = function(){
 var channelObjs = [];
 
 const func = config=>new Promise((resolve, reject)=>{
+	const cents = config.config.coin;
+
 	const o = channelObjs[config.channelId] || new ChannelFactory();
 	channelObjs[config.channelId] = o;
 
@@ -68,10 +69,10 @@ const func = config=>new Promise((resolve, reject)=>{
 		o.playerY = config.author;
 		console.log("ID:", o.playerX.id);
 		config.sendMessage(`Starting Tick-Tack-Toe between ${o.playerX} ${config.coins[o.playerX.id]}¢ (X) and ${o.playerY} ${config.coins[o.playerY.id]}¢ (O)`);
+		o.isX = !o.isX;
 	}
 
 	if(o.state === 1){
-		o.isX = !o.isX;
 		var emojis = config.emojis.map(x=>{
 			//console.log({id: x.id, name: x.name});
 			return {id: x.id, name: x.name};
@@ -110,6 +111,7 @@ const func = config=>new Promise((resolve, reject)=>{
 					console.log("bot or not empty or wrong message", auth.bot, empty, !correctMsg);
 					return;
 				}
+
 
 				console.log("legit reaction!" + react.emoji.name);
 				o.boardMsg.forEach(msg=>msg && msg.delete && msg.delete().catch());
@@ -161,6 +163,8 @@ const func = config=>new Promise((resolve, reject)=>{
 
 				const draw = o.board.every(row=>row.every(sq=>sq.trim()));
 
+				o.isX = !o.isX;
+
 				if(draw){
 					console.log("draw");
 					o.state = 2;
@@ -179,8 +183,7 @@ const func = config=>new Promise((resolve, reject)=>{
 					return str + res + "\n";
 				}, msg + "\n```\n");
 				console.log("str", str);
-				config.sendMessage(str + "```Send `" + config.config.prefix + "game` for the next " + (won || draw ? "game!" : "turn!")).then(()=>resolve()).catch(console.error);
-
+				config.sendMessage(str + "```Send `" + config.config.prefix + "game` for the next " + (won || draw ? "game!" : "turn!"));
 			});
 		}
 
@@ -201,12 +204,13 @@ const func = config=>new Promise((resolve, reject)=>{
 						}
 					})()).catch());
 				});
+				promise.then(resolve);
 			}).catch(reject);
 		});
 	}else if(o.state === 0){
-		config.sendMessage("Ok, you're X. The next person to send `$game` gets to be O.");
 		o.playerX = config.author;
 		o.state = 0.5;
+		return resolve("Ok, you're X. The next person to send `$game` gets to be O.");
 	}
 });
 
