@@ -15,5 +15,6 @@
 	"owner": "INSERT_OWNER_USER_ID_HERE",
 	"wolframKey": "INSERT_WOLFRAM_ALPHA_KEY_HERE",
 	"wuKey": "INSERT_WEATHER_UNDERGROUND_KEY_HERE",
+	"bookKey": "INSERT_GOOGLE_BOOKS_KEY_HERE",
 	"sendOnOff": false
 }
