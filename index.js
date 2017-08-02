@@ -45,14 +45,18 @@ fs.readdir(__dirname, function (err, files) {
 	if (err) { throw err; }
 
 	files.forEach(function (file) {
-		if(file === "node_modules" || file === "temp"){ return; }
+		if(file === "node_modules" || file === "temp" || file[0] === "."){
+			return;
+		}
 		fs.lstat(path.join(__dirname, file), function(err, stats) {
 			if (!err && (stats.isDirectory() || stats.isSymbolicLink())) {
 				log("adding directory", file);
 				directories.push(file);
 				try{
 					configs[file] = require(path.join(__dirname, file, "config.json"), "utf8");
-				}catch(e){}
+				}catch(e){
+					console.error("Config for", file, "got", e);
+				}
 			}
 		});
 	});
