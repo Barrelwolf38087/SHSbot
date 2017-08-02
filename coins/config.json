@@ -1,1 +1,3 @@
-{}
+{
+	"description": "Get the coins of you or someone else! Try `{{prefix}}coins` or `{{prefix coins @Someone}}`"
+}
