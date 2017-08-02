@@ -239,7 +239,10 @@ client.on("message", (message) => {
 			author: message.author,
 			reactions: file.listenForReactions ? reactionEmitter : undefined,
 			writeCoins: ()=>writeCoins(),
-			coins: coins
+			coins: coins,
+			searchForUser: name=>message.channel.guild.members.filter(x=>{
+				return x.displayName.replace(/ /g, "").toLowerCase() === name;
+			}).first()
 		}).then(reply=>{
 			isRunning[message.author.id] = false;
 			if(!reply){

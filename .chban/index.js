@@ -3,7 +3,17 @@ const path = require("path");
 
 module.exports = config => new Promise((resolve, reject)=>{
 	const command = config.commandArr[0];
-	const user = config.commandArr[1];
+	var user = config.commandArr[1];
+	if(isNaN(parseInt(user))){
+		user = user.replace(/ /g, "").toLowerCase();
+		user = config.searchForUser(user);
+		console.log(user, user[0], user.id);
+		if(user && user.id){
+			user = user.id;
+		}else{
+			return reject("I couldn't find that user");
+		}
+	}
 	const permission = config.commandArr[2] === "1";
 	var config2 = config.configs[command];
 	if(!config2){
