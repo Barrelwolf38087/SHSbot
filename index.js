@@ -194,6 +194,8 @@ client.on("message", (message) => {
 					log("admin");
 					hasPermission = true;
 				}
+			}else{
+				hasPermission = true;
 			}
 		}else{
 			hasPermission = true;
