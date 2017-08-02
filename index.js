@@ -45,7 +45,7 @@ fs.readdir(__dirname, function (err, files) {
 	if (err) { throw err; }
 
 	files.forEach(function (file) {
-		if(file === "node_modules" || file === "temp" || file[0] === "."){
+		if(file === "node_modules" || file === "temp" || file[0] === ".git"){
 			return;
 		}
 		fs.lstat(path.join(__dirname, file), function(err, stats) {
