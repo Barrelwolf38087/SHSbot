@@ -1,6 +1,4 @@
-const fs = require("fs");
-
-module.exports = config => new Promise((resolve, reject)=>{
+module.exports = config => new Promise((resolve)=>{
 	var str = `${config.config.messages.help}\n`;
 
 	config.directories.forEach(dir=>{
