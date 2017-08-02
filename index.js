@@ -181,16 +181,19 @@ client.on("message", (message) => {
 		var file = require("./" + path.join(commandArr[0], "index.js"));
 
 		var hasPermission = false;
-		if(configs[commandArr[0]] && configs[commandArr[0]].permissions){
-			const admin = (configs[commandArr[0]].permissions + "")[0] === "1";
-			const everyone = ((configs[commandArr[0]].permissions + "")[1] || "1") === "1";
-			log("admin", admin, "everyone", everyone);
-			if(everyone){//everyone
-				log(".*");
-				hasPermission = true;
-			}else if(message.member.hasPermission("ADMINISTRATOR") && admin){//admin
-				log("admin");
-				hasPermission = true;
+		if(configs[commandArr[0]]){
+			const perms = configs[commandArr[0]].permissionsOverride || configs[commandArr[0]].permissions;
+			if(perms){
+				const admin = (perms + "")[0] === "1";
+				const everyone = ((perms + "")[1] || "1") === "1";
+				log("admin", admin, "everyone", everyone);
+				if(everyone){
+					log(".*");
+					hasPermission = true;
+				}else if(message.member.hasPermission("ADMINISTRATOR") && admin){
+					log("admin");
+					hasPermission = true;
+				}
 			}
 		}else{
 			hasPermission = true;
