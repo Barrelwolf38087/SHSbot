@@ -180,31 +180,44 @@ client.on("message", (message) => {
 		console.log("teh config", configs[commandArr[0]]);
 		var file = require("./" + path.join(commandArr[0], "index.js"));
 
-		permission: {
-			if(configs[commandArr[0]] && configs[commandArr[0]].permissions){
-				const admin = (configs[commandArr[0]].permissions + "")[0] === "1";
-				const everyone = ((configs[commandArr[0]].permissions + "")[1] || "1") === "1";
-				if(everyone){//everyone
-					console.log(".*");
-					break permission;
-				}
-				if(message.member.hasPermission("ADMINISTRATOR") && admin){//admin
-					console.log("admin");
-					break permission;
-				}
-				if(message.author.id + "" === config.owner){//owner
-					console.log("owner");
-					break permission;
-				}
-				const reply = "You don't have permission to execute this command.";
-				lastmessage = reply;
-				log("replying with & added to last2messages", reply);
-				message.channel.send("Error: " + reply);
-				isRunning[message.author.id] = false;
-				console.log(403);
-				return;
+		var hasPermission = false;
+		if(configs[commandArr[0]] && configs[commandArr[0]].permissions){
+			const admin = (configs[commandArr[0]].permissions + "")[0] === "1";
+			const everyone = ((configs[commandArr[0]].permissions + "")[1] || "1") === "1";
+			log("admin", admin, "everyone", everyone);
+			if(everyone){//everyone
+				log(".*");
+				hasPermission = true;
+			}else if(message.member.hasPermission("ADMINISTRATOR") && admin){//admin
+				log("admin");
+				hasPermission = true;
 			}
+		}else{
+			hasPermission = true;
 		}
+
+		if(configs[commandArr[0]] && configs[commandArr[0]].guilds && configs[commandArr[0]].guilds[message.channel.guild.id] && configs[commandArr[0]].guilds[message.channel.guild.id].userOverrides && configs[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id]){
+			log("override", configs[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id]);
+			hasPermission = configs[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id];
+		}
+
+		if(message.author.id + "" === config.owner){//owner
+			log("owner");
+			hasPermission = true;
+		}
+
+		if(!hasPermission){
+			const reply = "You don't have permission to execute this command.";
+			lastmessage = reply;
+			log("replying with & added to last2messages", reply);
+			message.channel.send("Error: " + reply);
+			isRunning[message.author.id] = false;
+			log(403);
+			return;
+		}
+
+
+
 
 		file({
 			directories: directories,
@@ -216,6 +229,7 @@ client.on("message", (message) => {
 			sendMessage: msg=>message.channel.send(msg),
 			channelId: message.channel.id,
 			msgHistory: msgHistory,
+			guildId: message.channel.guild.id,
 			delete: msg=>client.deleteMessage(msg),
 			id: message.id,
 			emojis: message.channel.guild.emojis.array(),
