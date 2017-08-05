@@ -1,6 +1,6 @@
 {
 	"404": "**404 MEME NOT FOUND** \n Looks like you are trying to get a category of memes that dosen't exist. Try {{prefix}}meme and any one of {{list}}",
-	"description": "Get a random meme! Try \"{{prefix}}memes\" or \"{{prefix}}memes linux\"!",
+	"description": "Get a random meme! Try `{{prefix}}memes` or `{{prefix}}memes linux`!",
 	"memes": {
 		"linux": [
 			"https://imgs.xkcd.com/comics/tar.png",
