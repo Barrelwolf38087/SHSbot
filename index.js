@@ -184,8 +184,10 @@ client.on("message", (message) => {
 		var file = require("./" + path.join(commandArr[0], "index.js"));
 
 		var hasPermission = false;
+		var o = overrides[commandArr[0]];
+
 		if(configs[commandArr[0]]){
-			const perms = (overrides[commandArr[0]] && overrides[commandArr[0]].permissionsOverride) || configs[commandArr[0]].permissions;
+			const perms = (o && o.permissionsOverride) || configs[commandArr[0]].permissions;
 			if(perms){
 				const admin = (perms + "")[0] === "1";
 				const everyone = ((perms + "")[1] || "1") === "1";
@@ -198,15 +200,17 @@ client.on("message", (message) => {
 					hasPermission = true;
 				}
 			}else{
+				log("no perms");
 				hasPermission = true;
 			}
 		}else{
+			log("no configs");
 			hasPermission = true;
 		}
 
-		if(overrides[commandArr[0]] && overrides[commandArr[0]].guilds && overrides[commandArr[0]].guilds[message.channel.guild.id] && overrides[commandArr[0]].guilds[message.channel.guild.id].userOverrides && overrides[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id]){
-			log("override", overrides[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id]);
-			hasPermission = overrides[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id];
+		if(o && o.guilds && o.guilds[message.channel.guild.id] && o.guilds[message.channel.guild.id].userOverrides && o.guilds[message.channel.guild.id].userOverrides[message.author.id] !== undefined){
+			log("override", o.guilds[message.channel.guild.id].userOverrides[message.author.id]);
+			hasPermission = o.guilds[message.channel.guild.id].userOverrides[message.author.id];
 		}
 
 		if(message.author.id + "" === config.owner){//owner
@@ -245,6 +249,7 @@ client.on("message", (message) => {
 			reactions: file.listenForReactions ? reactionEmitter : undefined,
 			writeCoins: ()=>writeCoins(),
 			coins: coins,
+			overrides: overrides,
 			searchForUser: name=>message.channel.guild.members.filter(x=>{
 				return x.displayName.replace(/ /g, "").toLowerCase() === name;
 			}).first()
