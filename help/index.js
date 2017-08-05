@@ -9,6 +9,5 @@ module.exports = config => new Promise((resolve)=>{
 	});
 
 	str += "";
-	console.log("Sending help", str);
 	resolve(str);
 });
