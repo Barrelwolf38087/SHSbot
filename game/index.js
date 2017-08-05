@@ -144,6 +144,8 @@ const func = config=>new Promise((resolve, reject)=>{
 						loser = o.playerX;
 					}
 
+					console.log("loser", loser, "coins", config.coins[loser.id]);
+
 					const reward = coinReward(config.coins[loser.id]);
 
 					var msg2;
