@@ -24,7 +24,8 @@ const template = function(str, obj){
 };
 
 var directories = [];
-var configs = {};
+var configs = Object.create(null);
+var overrides = Object.create(null);
 var msgHistory = [];
 var lastmessage;
 
@@ -41,25 +42,27 @@ const log = function(){
 	}
 };
 
-fs.readdir(__dirname, function (err, files) {
-	if (err) { throw err; }
+var files = fs.readdirSync(__dirname);
 
-	files.forEach(function (file) {
-		if(file === "node_modules" || file === "temp" || file[0] === ".git"){
-			return;
-		}
-		fs.lstat(path.join(__dirname, file), function(err, stats) {
-			if (!err && (stats.isDirectory() || stats.isSymbolicLink())) {
-				log("adding directory", file);
-				directories.push(file);
-				try{
-					configs[file] = require(path.join(__dirname, file, "config.json"), "utf8");
-				}catch(e){
-					console.error("Config for", file, "got", e);
-				}
+files.forEach(function (file) {
+	if(file === "node_modules" || file === "temp" || file[0] === ".git"){
+		return;
+	}
+	try{
+		var stats = fs.lstatSync(path.join(__dirname, file));
+		if ((stats.isDirectory() || stats.isSymbolicLink())) {
+			log("adding directory", file);
+			directories.push(file);
+			try{
+				configs[file] = require(path.join(__dirname, file, "config.json"));
+				overrides[file] = require(path.join(__dirname, file, "perm-overrides.json"));
+			}catch(e){
+				console.error("Config for", file, "got", e);
 			}
-		});
-	});
+		}
+	}catch(e){
+		console.error("Config for", file, "got", e);
+	}
 });
 
 client.login(config.token);
@@ -182,7 +185,7 @@ client.on("message", (message) => {
 
 		var hasPermission = false;
 		if(configs[commandArr[0]]){
-			const perms = configs[commandArr[0]].permissionsOverride || configs[commandArr[0]].permissions;
+			const perms = (overrides[commandArr[0]] && overrides[commandArr[0]].permissionsOverride) || configs[commandArr[0]].permissions;
 			if(perms){
 				const admin = (perms + "")[0] === "1";
 				const everyone = ((perms + "")[1] || "1") === "1";
@@ -201,9 +204,9 @@ client.on("message", (message) => {
 			hasPermission = true;
 		}
 
-		if(configs[commandArr[0]] && configs[commandArr[0]].guilds && configs[commandArr[0]].guilds[message.channel.guild.id] && configs[commandArr[0]].guilds[message.channel.guild.id].userOverrides && configs[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id]){
-			log("override", configs[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id]);
-			hasPermission = configs[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id];
+		if(overrides[commandArr[0]] && overrides[commandArr[0]].guilds && overrides[commandArr[0]].guilds[message.channel.guild.id] && overrides[commandArr[0]].guilds[message.channel.guild.id].userOverrides && overrides[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id]){
+			log("override", overrides[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id]);
+			hasPermission = overrides[commandArr[0]].guilds[message.channel.guild.id].userOverrides[message.author.id];
 		}
 
 		if(message.author.id + "" === config.owner){//owner
