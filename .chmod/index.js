@@ -12,7 +12,9 @@ module.exports = config => new Promise((resolve, reject)=>{
 	if(config2.permissions && config2.permissions[2] === "0"){
 		return reject("Sticky bit set");
 	}
-	override.permissionsOverride = permissions;
+	override.guilds = override.guilds || {};
+	override.guilds[config.guildId] = override.guilds[config.guildId] || {};
+	override.guilds[config.guildId].permissionsOverride = permissions;
 	config.overrides[command] = override;
 	console.log("write", JSON.stringify(override), "to", path.join(__dirname, "..", command, "perm-overrides.json"));
 	fs.writeFile(path.join(__dirname, "..", command, "perm-overrides.json"), JSON.stringify(override), err=>err ? reject(err) : resolve("Completed"));

@@ -26,6 +26,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 	override.guilds[config.guildId] = override.guilds[config.guildId] || {};
 	override.guilds[config.guildId].userOverrides = override.guilds[config.guildId].userOverrides || {};
 	override.guilds[config.guildId].userOverrides[user] = permission;
+	config.overrides[command] = override;
 	console.log("write", JSON.stringify(override), "to", path.join(__dirname, "..", command, "perm-overrides.json"));
 	fs.writeFile(path.join(__dirname, "..", command, "perm-overrides.json"), JSON.stringify(override), err=>err ? reject(err) : resolve("Completed."));
 });
