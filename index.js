@@ -250,6 +250,7 @@ client.on("message", (message) => {
 			writeCoins: ()=>writeCoins(),
 			coins: coins,
 			overrides: overrides,
+			setOvr: o=>overrides = o,
 			searchForUser: name=>message.channel.guild.members.filter(x=>{
 				return x.displayName.replace(/ /g, "").toLowerCase() === name;
 			}).first()
