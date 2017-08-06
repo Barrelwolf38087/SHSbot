@@ -6,6 +6,11 @@ const path = require("path");
 const EventEmitter = require("events");
 
 var coins = require("./coins.json");
+var bans = {};
+
+try{
+	bans = require("./bans.json");
+}catch(e){}
 
 const writeCoins = ()=>{
 	fs.writeFile("coins.json", JSON.stringify(coins), ()=>{});
@@ -97,6 +102,15 @@ client.on("messageReactionAdd", (reaction, user) => {
 });
 
 client.on("message", (message) => {
+	if(bans.global && bans.global[message.author.id]){
+		log(message.author.id, "banned");
+		return;
+	}
+	if(bans[message.channel.guild.id] && bans[message.channel.guild.id][message.author.id]){
+		log(message.author.id, "banned");
+		return;
+	}
+
 	console.log(message.content);
 
 	if(message.content){
@@ -246,11 +260,12 @@ client.on("message", (message) => {
 			id: message.id,
 			emojis: message.channel.guild.emojis.array(),
 			author: message.author,
-			reactions: file.listenForReactions ? reactionEmitter : undefined,
+			reactions: file.listenForReactionbanss ? reactionEmitter : undefined,
 			writeCoins: ()=>writeCoins(),
 			coins: coins,
 			overrides: overrides,
 			setOvr: o=>overrides = o,
+			bans: bans,
 			searchForUser: name=>message.channel.guild.members.filter(x=>{
 				return x.displayName.replace(/ /g, "").toLowerCase() === name;
 			}).first()
