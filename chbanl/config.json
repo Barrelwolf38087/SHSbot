@@ -1,0 +1,4 @@
+{
+	"permissions": "10",
+	"description": "Ban/unban a user from using SHSbot on your server. Try `{{prefix}}chbanl user`"
+}
