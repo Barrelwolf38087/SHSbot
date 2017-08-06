@@ -31,3 +31,7 @@ temp/
 # permission overrides
 
 perm-overrides.json
+
+# bans
+
+/bans.json
