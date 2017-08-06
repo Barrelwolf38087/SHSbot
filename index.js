@@ -201,7 +201,7 @@ client.on("message", (message) => {
 		var o = overrides[commandArr[0]];
 
 		if(configs[commandArr[0]]){
-			const perms = (o && o.guilds && o.guilds[config.guildId] && o.guilds[config.guildId].permissionsOverride) || configs[commandArr[0]].permissions;
+			const perms = (o && o.guilds && o.guilds[config.guildId] && o.guilds[config.guildId].permissionsOverride) || (o && o.permissionsOverride) || configs[commandArr[0]].permissions;
 			if(perms){
 				const admin = (perms + "")[0] === "1";
 				const everyone = ((perms + "")[1] || "1") === "1";
