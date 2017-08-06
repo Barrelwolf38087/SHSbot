@@ -102,11 +102,11 @@ client.on("messageReactionAdd", (reaction, user) => {
 });
 
 client.on("message", (message) => {
-	if(bans.global && bans.global[message.author.id]){
+	if(bans.global && bans.global[message.author.id] && message.author.id !== config.owner){
 		log(message.author.id, "banned");
 		return;
 	}
-	if(bans[message.channel.guild.id] && bans[message.channel.guild.id][message.author.id]){
+	if(bans[message.channel.guild.id] && bans[message.channel.guild.id][message.author.id] && message.author.id !== config.owner){
 		log(message.author.id, "banned");
 		return;
 	}
