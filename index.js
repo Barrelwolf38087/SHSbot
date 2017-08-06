@@ -50,7 +50,7 @@ const log = function(){
 var files = fs.readdirSync(__dirname);
 
 files.forEach(function (file) {
-	if(file === "node_modules" || file === "temp" || file[0] === ".git"){
+	if(file === "node_modules" || file === "temp" || file === ".git"){
 		return;
 	}
 	try{
@@ -102,190 +102,212 @@ client.on("messageReactionAdd", (reaction, user) => {
 });
 
 client.on("message", (message) => {
-	if(bans.global && bans.global[message.author.id] && message.author.id !== config.owner){
-		log(message.author.id, "banned");
-		return;
-	}
-	if(bans[message.channel.guild.id] && bans[message.channel.guild.id][message.author.id] && message.author.id !== config.owner){
-		log(message.author.id, "banned");
-		return;
-	}
+	const fail2 = e => {
+		console.error(e);
+		try {
+			message.author.send("Sorry, there was an unexpected error. SHSbot might not have permissions to send or read messages.").catch(console.error);
+		} catch (e) {
+			console.error(e);
+		}
+	};
 
-	console.log(message.content);
+	const fail1 = e => {
+		console.error(e);
+		try {
+			message.channel.send("Sorry, there was an unexpected error.").catch(fail2);
+		} catch (e) {
+			fail2();
+		}
+	};
 
-	if(message.content){
-		msgHistory.push(message.content);
-	}else{
-		try{
-			msgHistory.push(message.attachments.values().next().value.url);
-		}catch(e){}
-	}
-
-	if(message.author.bot){ return; }
-
-	if(message.content[0] !== config.prefix){
-		lastmessage = message.content;
-		return;
-	}
-
-	coins[message.author.id] = coins[message.author.id] || 100;
-
-	if(isRunning[message.author.id] && message.author.id.toString() !== config.owner){
-		log(message.author.id, "already running", isRunning);
-		isRunning[message.author.id] = false;
-		return message.reply(config.messages.alreadyRunning);
-	}
-
-	isRunning[message.author.id] = true;
-
-	if(backoff[message.author.id] && Date.now() - backoff[message.author.id] <= config.timeout && message.author.id.toString() !== config.owner.toString()){
-		log("simple backoff");
-		if(!warned[message.author.id]){
-			warned[message.author.id] = true;
-			backoff[message.author.id] = Date.now() + config.penalty;
-			isRunning[message.author.id] = false;
-			return message.reply(config.messages.backoff);
-		}else{
-			log("already warned.");
-			backoff[message.author.id] = Date.now() + config.penalty;
-			isRunning[message.author.id] = false;
+	try{
+		if(bans.global && bans.global[message.author.id] && message.author.id !== config.owner){
+			log(message.author.id, "banned");
 			return;
 		}
-	}else{
-		warned[message.author.id] = false;
-	}
+		if(bans[message.channel.guild.id] && bans[message.channel.guild.id][message.author.id] && message.author.id !== config.owner){
+			log(message.author.id, "banned");
+			return;
+		}
 
-	if(advancedBackoff[message.author.id] && message.author.id.toString() !== config.owner.toString()){
-		advancedBackoff[message.author.id].messages = advancedBackoff[message.author.id].messages.filter(x=>Date.now() - x <= config.advancedTimeout);
-		advancedBackoff[message.author.id].messages.push(Date.now());
+		console.log(message.content);
 
-		if(advancedBackoff[message.author.id].messages.length >= 5){
-			log("advanced");
-			advancedBackoff[message.author.id].messages.push(Date.now() + config.penalty);
-			if(!advancedBackoff[message.author.id].warned){
+		if(message.content){
+			msgHistory.push(message.content);
+		}else{
+			try{
+				msgHistory.push(message.attachments.values().next().value.url);
+			}catch(e){}
+		}
+
+		if(message.author.bot){ return; }
+
+		if(message.content[0] !== config.prefix){
+			lastmessage = message.content;
+			return;
+		}
+
+		coins[message.author.id] = coins[message.author.id] || 100;
+
+		if(isRunning[message.author.id] && message.author.id.toString() !== config.owner){
+			log(message.author.id, "already running", isRunning);
+			isRunning[message.author.id] = false;
+			return message.reply(config.messages.alreadyRunning);
+		}
+
+		isRunning[message.author.id] = true;
+
+		if(backoff[message.author.id] && Date.now() - backoff[message.author.id] <= config.timeout && message.author.id.toString() !== config.owner.toString()){
+			log("simple backoff");
+			if(!warned[message.author.id]){
+				warned[message.author.id] = true;
+				backoff[message.author.id] = Date.now() + config.penalty;
 				isRunning[message.author.id] = false;
 				return message.reply(config.messages.backoff);
 			}else{
-				log("already warned");
+				log("already warned.");
+				backoff[message.author.id] = Date.now() + config.penalty;
 				isRunning[message.author.id] = false;
 				return;
 			}
 		}else{
-			advancedBackoff[message.author.id].warned = false;
+			warned[message.author.id] = false;
 		}
-	}else{
-		advancedBackoff[message.author.id] = {messages: [Date.now()]};
-	}
 
-	log("author:", message.author.id, "backoff", backoff, "away", Date.now() - backoff[message.author.id], "advancedBackoff", advancedBackoff);
+		if(advancedBackoff[message.author.id] && message.author.id.toString() !== config.owner.toString()){
+			advancedBackoff[message.author.id].messages = advancedBackoff[message.author.id].messages.filter(x=>Date.now() - x <= config.advancedTimeout);
+			advancedBackoff[message.author.id].messages.push(Date.now());
 
-	backoff[message.author.id] = Date.now();
-
-
-	const commandArr = message.content.slice(1).split(" ");
-
-	if(!commandArr[0]){
-		message.channel.send(config.messages.nothing);
-		return;
-	}
-	const isHidden = !directories.includes(commandArr[0]) && directories.includes("." + commandArr[0]);
-
-	if((directories.includes(commandArr[0]) || isHidden) && commandArr[0][0] !== "."){
-		if(isHidden){
-			commandArr[0] = "." + commandArr[0];
+			if(advancedBackoff[message.author.id].messages.length >= 5){
+				log("advanced");
+				advancedBackoff[message.author.id].messages.push(Date.now() + config.penalty);
+				if(!advancedBackoff[message.author.id].warned){
+					isRunning[message.author.id] = false;
+					return message.reply(config.messages.backoff);
+				}else{
+					log("already warned");
+					isRunning[message.author.id] = false;
+					return;
+				}
+			}else{
+				advancedBackoff[message.author.id].warned = false;
+			}
+		}else{
+			advancedBackoff[message.author.id] = {messages: [Date.now()]};
 		}
-		console.log("teh config", configs[commandArr[0]]);
-		var file = require("./" + path.join(commandArr[0], "index.js"));
 
-		var hasPermission = false;
-		var o = overrides[commandArr[0]];
+		log("author:", message.author.id, "backoff", backoff, "away", Date.now() - backoff[message.author.id], "advancedBackoff", advancedBackoff);
 
-		if(configs[commandArr[0]]){
-			const perms = (o && o.guilds && o.guilds[config.guildId] && o.guilds[config.guildId].permissionsOverride) || (o && o.permissionsOverride) || configs[commandArr[0]].permissions;
-			if(perms){
-				const admin = (perms + "")[0] === "1";
-				const everyone = ((perms + "")[1] || "1") === "1";
-				log("admin", admin, "everyone", everyone);
-				if(everyone){
-					log(".*");
-					hasPermission = true;
-				}else if(message.member.hasPermission("ADMINISTRATOR") && admin){
-					log("admin");
+		backoff[message.author.id] = Date.now();
+
+
+		const commandArr = message.content.slice(1).split(" ");
+
+		if(!commandArr[0]){
+			message.channel.send(config.messages.nothing);
+			return;
+		}
+		const isHidden = !directories.includes(commandArr[0]) && directories.includes("." + commandArr[0]);
+
+		if((directories.includes(commandArr[0]) || isHidden) && commandArr[0][0] !== "."){
+			if(isHidden){
+				commandArr[0] = "." + commandArr[0];
+			}
+			console.log("teh config", configs[commandArr[0]]);
+			var file = require("./" + path.join(commandArr[0], "index.js"));
+
+			var hasPermission = false;
+			var o = overrides[commandArr[0]];
+
+			if(configs[commandArr[0]]){
+				const perms = (o && o.guilds && o.guilds[config.guildId] && o.guilds[config.guildId].permissionsOverride) || (o && o.permissionsOverride) || configs[commandArr[0]].permissions;
+				if(perms){
+					const admin = (perms + "")[0] === "1";
+					const everyone = ((perms + "")[1] || "1") === "1";
+					log("admin", admin, "everyone", everyone);
+					if(everyone){
+						log(".*");
+						hasPermission = true;
+					}else if(message.member.hasPermission("ADMINISTRATOR") && admin){
+						log("admin");
+						hasPermission = true;
+					}
+				}else{
+					log("no perms");
 					hasPermission = true;
 				}
 			}else{
-				log("no perms");
+				log("no configs");
 				hasPermission = true;
 			}
-		}else{
-			log("no configs");
-			hasPermission = true;
-		}
 
-		if(o && o.guilds && o.guilds[message.channel.guild.id] && o.guilds[message.channel.guild.id].userOverrides && o.guilds[message.channel.guild.id].userOverrides[message.author.id] !== undefined){
-			log("override", o.guilds[message.channel.guild.id].userOverrides[message.author.id]);
-			hasPermission = o.guilds[message.channel.guild.id].userOverrides[message.author.id];
-		}
+			if(o && o.guilds && o.guilds[message.channel.guild.id] && o.guilds[message.channel.guild.id].userOverrides && o.guilds[message.channel.guild.id].userOverrides[message.author.id] !== undefined){
+				log("override", o.guilds[message.channel.guild.id].userOverrides[message.author.id]);
+				hasPermission = o.guilds[message.channel.guild.id].userOverrides[message.author.id];
+			}
 
-		if(message.author.id + "" === config.owner){//owner
-			log("owner");
-			hasPermission = true;
-		}
+			if(message.author.id + "" === config.owner){//owner
+				log("owner");
+				hasPermission = true;
+			}
 
-		if(!hasPermission){
-			const reply = "You don't have permission to execute this command.";
-			lastmessage = reply;
-			log("replying with & added to last2messages", reply);
-			message.channel.send("Error: " + reply);
-			isRunning[message.author.id] = false;
-			log(403);
-			return;
-		}
-
-
-
-
-		file({
-			directories: directories,
-			config: config,
-			configs: configs,
-			commandArr: commandArr.slice(1),
-			template: template,
-			lastmessage: lastmessage,
-			sendMessage: msg=>message.channel.send(msg),
-			channelId: message.channel.id,
-			msgHistory: msgHistory,
-			guildId: message.channel.guild.id,
-			delete: msg=>client.deleteMessage(msg),
-			id: message.id,
-			emojis: message.channel.guild.emojis.array(),
-			author: message.author,
-			reactions: file.listenForReactionbanss ? reactionEmitter : undefined,
-			writeCoins: ()=>writeCoins(),
-			coins: coins,
-			overrides: overrides,
-			setOvr: o=>overrides = o,
-			bans: bans,
-			searchForUser: name=>message.channel.guild.members.filter(x=>{
-				return x.displayName.replace(/ /g, "").toLowerCase() === name;
-			}).first()
-		}).then(reply=>{
-			isRunning[message.author.id] = false;
-			if(!reply){
+			if(!hasPermission){
+				const reply = "You don't have permission to execute this command.";
+				lastmessage = reply;
+				log("replying with & added to last2messages", reply);
+				message.channel.send("Error: " + reply);
+				isRunning[message.author.id] = false;
+				log(403);
 				return;
 			}
-			lastmessage = reply;
-			log("replying with & added to last2messages", reply);
-			if(reply && (typeof reply !== "string" || reply.trim())){
-				message.channel.send(reply).catch(console.error);
-			}
-		}).catch(reply=>{
-			lastmessage = reply;
-			log("replying with & added to last2messages", reply);
-			message.channel.send("Error: " + reply).catch(console.error);
-			isRunning[message.author.id] = false;
-		});
-	}else{
-		message.channel.send(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix})).then(()=>isRunning[message.author.id] = false);
+
+
+
+
+			file({
+				directories: directories,
+				config: config,
+				configs: configs,
+				commandArr: commandArr.slice(1),
+				template: template,
+				lastmessage: lastmessage,
+				sendMessage: msg=>message.channel.send(msg),
+				channelId: message.channel.id,
+				msgHistory: msgHistory,
+				guildId: message.channel.guild.id,
+				delete: msg=>client.deleteMessage(msg),
+				id: message.id,
+				emojis: message.channel.guild.emojis.array(),
+				author: message.author,
+				reactions: file.listenForReactionbanss ? reactionEmitter : undefined,
+				writeCoins: ()=>writeCoins(),
+				coins: coins,
+				overrides: overrides,
+				setOvr: o=>overrides = o,
+				bans: bans,
+				searchForUser: name=>message.channel.guild.members.filter(x=>{
+					return x.displayName.replace(/ /g, "").toLowerCase() === name;
+				}).first()
+			}).then(reply=>{
+				isRunning[message.author.id] = false;
+				if(!reply){
+					return;
+				}
+				lastmessage = reply;
+				log("replying with & added to last2messages", reply);
+				if(reply && (typeof reply !== "string" || reply.trim())){
+					message.channel.send(reply).catch(console.error);
+				}
+			}).catch(reply=>{
+				lastmessage = reply;
+				log("replying with & added to last2messages", reply);
+				message.channel.send("Error: " + reply).catch(console.error);
+				isRunning[message.author.id] = false;
+			});
+		}else{
+			message.channel.send(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix})).then(()=>isRunning[message.author.id] = false).catch(fail1);
+		}
+	}catch(e){
+		fail1(e);
 	}
 });
