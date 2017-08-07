@@ -1,4 +1,4 @@
 {
 	"permissions": "10",
-	"description": "Allow / disallow a certian user from "
+	"description": "Allow / disallow a certian user from using a command. This will take precedence over the default permissions of a command or ones set with `{{prefix}}chmodl`. Use it like `{{prefix}}chperml help Someuser 0`. That would ban Someuser from using `{{prefix}}help`. Change last `0` to `1` for when you want to allow instead of ban them from using the command, and change `help` to the desired command."
 }
