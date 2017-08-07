@@ -25,7 +25,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 	}
 	if(global){
 		override.userOverrides = override.userOverrides || {};
-		override.userOverrides[user] = permission; 
+		override.userOverrides[user] = permission;
 	}else{
 		override.guilds = override.guilds || {};
 		override.guilds[config.guildId] = override.guilds[config.guildId] || {};
