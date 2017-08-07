@@ -1,4 +1,5 @@
 #!/usr/bin/node
+//shbangs for the win
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
@@ -221,23 +222,29 @@ client.on("message", (message) => {
 			var hasPermission = false;
 			var o = overrides[commandArr[0]];
 
+			const guildId = message.channel.guild.id;
+
 			var perms;
 
 			const globalPerms = () => {
 				if(configs[commandArr[0]] && configs[commandArr[0]].permissions){
+					log("global");
 					perms = configs[commandArr[0]].permissions;
 				}
 			};
 
 			const globalPermsOverride = () => {
+				log("o is", o);
 				if(o && o.permissionsOverride){
+					log("command-specific");
 					perms = o.permissionsOverride;
 				}
 			};
 
 			const guildSpecificPerms = () => {
-				if(o && o.guilds && o.guilds[config.guildId]){
-					perms = o.guilds[config.guildId];
+				if(o && o.guilds && o.guilds[guildId]){
+					log("guild-specific");
+					perms = o.guilds[guildId].permissionsOverride;
 				}
 			};
 
