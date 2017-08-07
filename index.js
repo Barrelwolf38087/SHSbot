@@ -221,37 +221,83 @@ client.on("message", (message) => {
 			var hasPermission = false;
 			var o = overrides[commandArr[0]];
 
-			if(configs[commandArr[0]]){
-				const perms = (o && o.guilds && o.guilds[config.guildId] && o.guilds[config.guildId].permissionsOverride) || (o && o.permissionsOverride) || configs[commandArr[0]].permissions;
-				if(perms){
-					const admin = (perms + "")[0] === "1";
-					const everyone = ((perms + "")[1] || "1") === "1";
-					log("admin", admin, "everyone", everyone);
-					if(everyone){
-						log(".*");
-						hasPermission = true;
-					}else if(message.member.hasPermission("ADMINISTRATOR") && admin){
-						log("admin");
+			var perms;
+
+			const globalPerms = () => {
+				if(configs[commandArr[0]] && configs[commandArr[0]].permissions){
+					perms = configs[commandArr[0]].permissions;
+				}
+			};
+
+			const globalPermsOverride = () => {
+				if(o && o.permissionsOverride){
+					perms = o.permissionsOverride;
+				}
+			};
+
+			const guildSpecificPerms = () => {
+				if(o && o.guilds && o.guilds[config.guildId]){
+					perms = o.guilds[config.guildId];
+				}
+			};
+
+			const allPerms = () => {
+				if(configs[commandArr[0]]){
+					if(perms){
+						const admin = (perms + "")[0] === "1";
+						const everyone = ((perms + "")[1] || "1") === "1";
+						log("admin", admin, "everyone", everyone);
+						if(everyone){
+							log(".*");
+							hasPermission = true;
+						}else if(message.member.hasPermission("ADMINISTRATOR") && admin){
+							log("admin");
+							hasPermission = true;
+						}
+					}else{
+						log("no perms");
 						hasPermission = true;
 					}
 				}else{
-					log("no perms");
+					log("no configs");
 					hasPermission = true;
 				}
-			}else{
-				log("no configs");
-				hasPermission = true;
-			}
+			};
 
-			if(o && o.guilds && o.guilds[message.channel.guild.id] && o.guilds[message.channel.guild.id].userOverrides && o.guilds[message.channel.guild.id].userOverrides[message.author.id] !== undefined){
-				log("override", o.guilds[message.channel.guild.id].userOverrides[message.author.id]);
-				hasPermission = o.guilds[message.channel.guild.id].userOverrides[message.author.id];
-			}
+			const guildSpecificUserOverride = () =>{
+				var thisGuild;
+				if(o && o.gulds && o.guilds[message.channel.guild.id]){
+					thisGuild = o.guilds[message.channel.guild.id];
+				}
+				if(o && o.guilds && thisGuild && thisGuild.userOverrides && thisGuild.userOverrides[message.author.id] !== undefined){
+					log("override", thisGuild.userOverrides[message.author.id]);
+					hasPermission = thisGuild.userOverrides[message.author.id];
+				}
+			};
 
-			if(message.author.id + "" === config.owner){//owner
-				log("owner");
-				hasPermission = true;
-			}
+			const globalUserOverride = () => {
+				if(o && o.userOverrides && o.userOverrides[message.author.id]){
+					hasPermission = o.userOverrides[message.author.id];
+				}
+			};
+
+			const owner = () => {
+				if(message.author.id + "" === config.owner){//owner
+					log("owner");
+					hasPermission = true;
+				}
+			};
+
+				globalPerms();
+				globalPermsOverride();
+				guildSpecificPerms();
+			allPerms();
+
+			guildSpecificUserOverride();
+
+			globalUserOverride();
+
+			owner();
 
 			if(!hasPermission){
 				const reply = "You don't have permission to execute this command.";
