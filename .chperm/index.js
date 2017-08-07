@@ -4,7 +4,8 @@ const path = require("path");
 module.exports = config => new Promise((resolve, reject)=>{
 	const command = config.commandArr[0];
 	var user = config.commandArr[1];
-	const global = config.commandArr[2];
+	const permission = config.commandArr[2];
+	const global = config.commandArr[3];
 	if(isNaN(parseInt(user))){
 		user = user.replace(/ /g, "").toLowerCase();
 		user = config.searchForUser(user);
@@ -14,7 +15,6 @@ module.exports = config => new Promise((resolve, reject)=>{
 			return reject("I couldn't find that user");
 		}
 	}
-	const permission = config.commandArr[2] === "1";
 	var config2 = config.configs[command];
 	var override = config.overrides[command] || {};
 	if(!config2){
