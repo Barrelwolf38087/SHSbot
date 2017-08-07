@@ -273,10 +273,11 @@ client.on("message", (message) => {
 
 			const guildSpecificUserOverride = () =>{
 				var thisGuild;
-				if(o && o.gulds && o.guilds[message.channel.guild.id]){
+				if(o && o.guilds && o.guilds[message.channel.guild.id]){
 					thisGuild = o.guilds[message.channel.guild.id];
+						log("thisGuild", thisGuild, "id", message.channel.guild.id);
 				}
-				if(o && o.guilds && thisGuild && thisGuild.userOverrides && thisGuild.userOverrides[message.author.id] !== undefined){
+				if(thisGuild && thisGuild.userOverrides && thisGuild.userOverrides[message.author.id] !== undefined){
 					log("override", thisGuild.userOverrides[message.author.id]);
 					hasPermission = thisGuild.userOverrides[message.author.id];
 				}
