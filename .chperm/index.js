@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = config => new Promise((resolve, reject)=>{
-	const command = config.commandArr[0];
-	var user = config.commandArr[1];
+	var user = config.commandArr[0];
+	const command = config.commandArr[1];
 	const permission = config.commandArr[2] === "1";
 	const global = config.commandArr[3];
 	if(isNaN(parseInt(user))){
