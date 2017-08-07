@@ -4,6 +4,7 @@ const path = require("path");
 module.exports = config => new Promise((resolve, reject)=>{
 	const command = config.commandArr[0];
 	var user = config.commandArr[1];
+	const global = config.commandArr[2];
 	if(isNaN(parseInt(user))){
 		user = user.replace(/ /g, "").toLowerCase();
 		user = config.searchForUser(user);
@@ -22,10 +23,15 @@ module.exports = config => new Promise((resolve, reject)=>{
 	if(config2.permissions && config2.permissions[2] === "0"){
 		return reject("Sticky bit set");
 	}
-	override.guilds = override.guilds || {};
-	override.guilds[config.guildId] = override.guilds[config.guildId] || {};
-	override.guilds[config.guildId].userOverrides = override.guilds[config.guildId].userOverrides || {};
-	override.guilds[config.guildId].userOverrides[user] = permission;
+	if(global){
+		override.userOverrides = override.userOverrides || {};
+		override.userOverrides[user] = permission; 
+	}else{
+		override.guilds = override.guilds || {};
+		override.guilds[config.guildId] = override.guilds[config.guildId] || {};
+		override.guilds[config.guildId].userOverrides = override.guilds[config.guildId].userOverrides || {};
+		override.guilds[config.guildId].userOverrides[user] = permission;
+	}
 	config.overrides[command] = override;
 	console.log("write", JSON.stringify(override), "to", path.join(__dirname, "..", command, "perm-overrides.json"));
 	fs.writeFile(path.join(__dirname, "..", command, "perm-overrides.json"), JSON.stringify(override), err=>err ? reject(err) : resolve("Completed."));
