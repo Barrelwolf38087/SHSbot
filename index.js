@@ -77,7 +77,7 @@ client.on("ready", () => {
 	client.user.setGame(`run $help for help`);
 	console.log("Ready!");
 	if(config.sendOnOff){
-		client.guilds.array().filter(g=>g.available).forEach(g=>g.defaultChannel.send("Back up!"));
+		client.guilds.array().filter(g=>g.available).forEach(g=>g.defaultChannel.send(config.messages.startupMsg));
 		const die = ()=>{//jshint ignore: line
 			var promises = [];
 			client.guilds.array().filter(g=>g.available).forEach(g=>{
