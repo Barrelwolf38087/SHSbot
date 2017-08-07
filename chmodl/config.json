@@ -1,4 +1,4 @@
 {
 	"permissions": "10",
-	"description": "Change the permissions of a command. For instance, `{{prefix}}chmodl help 10` would make `{{prefix}}help` only runnable by server admins. The first digit in `10` controls whether admins can run the command (`1` = yes, `0` = no). The second digit in `10` controls whether everyone can run it (`1` = yes, `0` = no)"
+	"description": "Change the permissions of a command. For instance, `{{prefix}}chmodl cat 10` would make `{{prefix}}cat` only runnable by server admins. The first digit in `10` controls whether admins can run the command (`1` = yes, `0` = no). The second digit in `10` controls whether everyone can run it (`1` = yes, `0` = no)"
 }
