@@ -27,7 +27,7 @@ module.exports = config => new Promise((resolve, reject) => {
 			resolve("Completed!", config.overrides[command] = {}));
 		}else{
 			console.log("rmlocaling", command);
-			rmLocal(command).then(resolve).catch(reject);
+			rmLocal(command).then(()=>resolve("Success!")).catch(reject);
 		}
 	}else{
 		console.log("resetting everything...");
@@ -41,7 +41,7 @@ module.exports = config => new Promise((resolve, reject) => {
 					reject(console.error("Could not reset perms of ${commnad}.", err))  :
 				resolve("Completed!", config.overrides[command] = {}));
 			}else{
-				rmLocal(command).then(resolve).catch(reject);
+				rmLocal(command).then(()=>resolve("Success!")).catch(reject);
 			}
 		});
 
