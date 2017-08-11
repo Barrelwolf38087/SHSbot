@@ -207,7 +207,6 @@ client.on("message", (message) => {
 
 		const commandArr = message.content.slice(1).split(" ");
 
-		message.channel.startTyping(1);
 
 		if(!commandArr[0]){
 			message.channel.send(config.messages.nothing);
@@ -322,9 +321,7 @@ client.on("message", (message) => {
 				return;
 			}
 
-
-
-
+			message.channel.startTyping(1);
 			file({
 				directories: directories,
 				config: config,
