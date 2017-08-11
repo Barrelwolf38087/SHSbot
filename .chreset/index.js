@@ -11,6 +11,8 @@ module.exports = config => new Promise((resolve, reject) => {
 			delete config.overrides[command].guilds[config.guildId];
 			console.log("local wipe of", command);
 			fs.writeFile(path.join(command, "perm-overrides.json"), JSON.stringify(config.overrides[command]), err => err ? reject(err) : resolve());
+		}else{
+			resolve();
 		}
 	});
 
@@ -19,13 +21,16 @@ module.exports = config => new Promise((resolve, reject) => {
 			return reject("Command not found.");
 		}
 		if(global){
+			console.log("global");
 			fs.unlink(path.join(command, "perm-overrides.json"), err => err ?
 				reject("Could not reset perms of that command.", console.error(err))  :
 			resolve("Completed!", config.overrides[command] = {}));
 		}else{
-			rmLocal(command);
+			console.log("rmlocaling", command);
+			rmLocal(command).then(resolve).catch(reject);
 		}
 	}else{
+		console.log("resetting everything...");
 		const promRm = command => new Promise((resolve) => {
 			if(!config.configs[command]){
 				return resolve("Not a command");
