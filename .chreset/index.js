@@ -3,22 +3,41 @@ const path = require("path");
 
 module.exports = config => new Promise((resolve, reject) => {
 	const command = config.commandArr[0];
+	const global = config.commandArr[1];
 	console.log("wiping perms of command", command);
-	if(command){
+
+	const rmLocal = command => new Promise((resolve, reject) => {
+		if(config.overrides[command] && config.overrides[command].guilds  && config.overrides[command].guilds[config.guildId]){
+			delete config.overrides[command].guilds[config.guildId];
+			console.log("local wipe of", command);
+			fs.writeFile(path.join(command, "perm-overrides.json"), JSON.stringify(config.overrides[command]), err => err ? reject(err) : resolve());
+		}
+	});
+
+	if(command && command !== "*"){
 		if(!config.configs[command]){
 			return reject("Command not found.");
 		}
-		fs.unlink(path.join(command, "perm-overrides.json"), err => err ?
-			reject("Could not reset perms of that command.", console.error(err))  :
-		resolve("Completed!", config.overrides[command] = {}));
+		if(global){
+			fs.unlink(path.join(command, "perm-overrides.json"), err => err ?
+				reject("Could not reset perms of that command.", console.error(err))  :
+			resolve("Completed!", config.overrides[command] = {}));
+		}else{
+			rmLocal(command);
+		}
 	}else{
 		const promRm = command => new Promise((resolve) => {
 			if(!config.configs[command]){
 				return resolve("Not a command");
 			}
-			fs.unlink(path.join(command, "perm-overrides.json"), err => (err && err.code !== "ENOENT") ?
-				reject(console.error("Could not reset perms of ${commnad}.", err))  :
-			resolve("Completed!", config.overrides[command] = {}));
+
+			if(global){
+				fs.unlink(path.join(command, "perm-overrides.json"), err => (err && err.code !== "ENOENT") ?
+					reject(console.error("Could not reset perms of ${commnad}.", err))  :
+				resolve("Completed!", config.overrides[command] = {}));
+			}else{
+				rmLocal(command).then(resolve).catch(reject);
+			}
 		});
 
 		fs.readdir(".", (err, files) => {
