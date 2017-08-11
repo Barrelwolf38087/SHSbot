@@ -118,6 +118,7 @@ client.on("message", (message) => {
 		console.error(e);
 		try {
 			message.channel.send("Sorry, there was an unexpected error.").catch(fail2);
+			message.channel.stopTyping(true);
 		} catch (e) {
 			fail2();
 		}
@@ -206,6 +207,8 @@ client.on("message", (message) => {
 
 		const commandArr = message.content.slice(1).split(" ");
 
+		message.channel.startTyping(1);
+
 		if(!commandArr[0]){
 			message.channel.send(config.messages.nothing);
 			return;
@@ -284,7 +287,8 @@ client.on("message", (message) => {
 			};
 
 			const globalUserOverride = () => {
-				if(o && o.userOverrides && o.userOverrides[message.author.id]){
+				if(o && o.userOverrides && o.userOverrides[message.author.id] !== undefined){
+					log("global user overrides");
 					hasPermission = o.userOverrides[message.author.id];
 				}
 			};
@@ -314,6 +318,7 @@ client.on("message", (message) => {
 				message.channel.send("Error: " + reply);
 				isRunning[message.author.id] = false;
 				log(403);
+				message.channel.stopTyping(true);
 				return;
 			}
 
@@ -347,6 +352,7 @@ client.on("message", (message) => {
 			}).then(reply=>{
 				isRunning[message.author.id] = false;
 				if(!reply){
+					message.channel.stopTyping(true);
 					return;
 				}
 				lastmessage = reply;
@@ -354,14 +360,17 @@ client.on("message", (message) => {
 				if(reply && (typeof reply !== "string" || reply.trim())){
 					message.channel.send(reply).catch(console.error);
 				}
+				message.channel.stopTyping(true);
 			}).catch(reply=>{
 				lastmessage = reply;
 				log("replying with & added to last2messages", reply);
 				message.channel.send("Error: " + reply).catch(console.error);
 				isRunning[message.author.id] = false;
+				message.channel.stopTyping(true);
 			});
 		}else{
 			message.channel.send(template(config.messages.notFound, {command: commandArr[0], prefix: config.prefix})).then(()=>isRunning[message.author.id] = false).catch(fail1);
+			message.channel.stopTyping(true);
 		}
 	}catch(e){
 		fail1(e);
