@@ -23,6 +23,7 @@ module.exports = config => new Promise(function(resolve, reject) {
 		sendMessage: config.sendMessage,
 		msgHistory: config.msgHistory,
 		delete: config.delete,
-		id: config.id
+		id: config.id,
+		privateMessage: config.privateMessage
 	}).then(resolve).catch(reject);
 });

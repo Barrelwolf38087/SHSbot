@@ -9,7 +9,7 @@ module.exports = config => new Promise(function(resolve, reject) {
 		resolve({file: {attachment: picked}});
 	}else if(config.commandArr.length !== 1 || !cfg.memes[config.commandArr[0]]){
 		if(config.commandArr[0] === "allofthem"){
-			config.privateMessage("You found an easter egg! (Code: 0c1de26286651)");
+			config.privateMessage(":tada: Congradulations! You found an easter egg! (Code: 0c1de26286651)");
 		}
 		reject(config.template(cfg[404], {prefix: config.config.prefix, list: Object.keys(cfg.memes).join(", ")}));
 	}else{
