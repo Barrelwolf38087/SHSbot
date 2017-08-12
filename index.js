@@ -116,11 +116,13 @@ client.on("message", (message) => {
 
 	const fail1 = e => {
 		console.error(e);
-		try {
-			message.channel.send("Sorry, there was an unexpected error.").catch(fail2);
-			message.channel.stopTyping(true);
-		} catch (e) {
-			fail2();
+		if(message.channel && message.channel.guild && message.channel.guild.id){
+			try {
+				message.channel.send("Sorry, there was an unexpected error.").catch(fail2);
+				message.channel.stopTyping(true);
+			} catch (e) {
+				fail2();
+			}
 		}
 	};
 
@@ -335,6 +337,7 @@ client.on("message", (message) => {
 				guildId: message.channel.guild.id,
 				delete: msg=>client.deleteMessage(msg),
 				id: message.id,
+				privateMessage: msg => message.author.send(msg).catch(console.error),
 				emojis: message.channel.guild.emojis.array(),
 				author: message.author,
 				reactions: file.listenForReactions ? reactionEmitter : undefined,
