@@ -5,7 +5,7 @@ var m = markov(1);
 
 var hasInit = false;
 
-const init = ()=>new Promise((resolve)=>{
+const init = () => new Promise((resolve)=>{
 	if(hasInit){
 		resolve();
 	}else{
