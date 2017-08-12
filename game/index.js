@@ -91,7 +91,7 @@ const func = config=>new Promise((resolve, reject)=>{
 
 		if(!emitter){
 			emitter = true;
-			console.log("got emitter!");
+			console.log("got emitter!", config.reactions);
 			config.reactions.on("reaction", (react, auth)=>{
 				console.log("reaction!");
 				var row;

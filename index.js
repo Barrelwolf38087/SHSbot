@@ -337,7 +337,7 @@ client.on("message", (message) => {
 				id: message.id,
 				emojis: message.channel.guild.emojis.array(),
 				author: message.author,
-				reactions: file.listenForReactionbanss ? reactionEmitter : undefined,
+				reactions: file.listenForReactions ? reactionEmitter : undefined,
 				writeCoins: ()=>writeCoins(),
 				coins: coins,
 				overrides: overrides,
