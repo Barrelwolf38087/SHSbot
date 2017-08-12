@@ -7,8 +7,11 @@ module.exports = config => new Promise(function(resolve, reject) {
 		const picked = randElem(allofthem);
 		console.log("Sending meme", picked);
 		resolve({file: {attachment: picked}});
-	}else if(config.commandArr.length > 1 || !cfg.memes[config.commandArr[0]]){
-		reject(config.template(cfg["404"], {prefix: config.config.prefix, list: Object.keys(cfg.memes).join(", ")}));
+	}else if(config.commandArr.length !== 1 || !cfg.memes[config.commandArr[0]]){
+		if(config.commandArr[0] === "allofthem"){
+			config.privateMessage("You found an easter egg! (Code: 0c1de26286651)");
+		}
+		reject(config.template(cfg[404], {prefix: config.config.prefix, list: Object.keys(cfg.memes).join(", ")}));
 	}else{
 		const picked = randElem(cfg.memes[config.commandArr[0]]);
 		console.log("Sending meme", picked, "from category", config.commandArr[0]);
