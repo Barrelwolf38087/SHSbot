@@ -8,8 +8,12 @@ const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
 
-var coins = require("./coins.json");
+var coins = {};
 var bans = {};
+
+try {
+	coins = require("./coins.json")
+} catch (e){}
 
 try{
 	bans = require("./bans.json");
