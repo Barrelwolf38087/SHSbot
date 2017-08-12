@@ -12,7 +12,7 @@ var coins = {};
 var bans = {};
 
 try {
-	coins = require("./coins.json")
+	coins = require("./coins.json");
 } catch (e){}
 
 try{
