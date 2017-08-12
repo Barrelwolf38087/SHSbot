@@ -35,3 +35,7 @@ perm-overrides.json
 # bans
 
 /bans.json
+
+# temp file
+
+/temp.svg
