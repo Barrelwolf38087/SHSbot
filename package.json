@@ -1,15 +1,17 @@
 {
-  "name": "discord",
-  "version": "1.0.0",
-  "description": "",
+  "name": "SHSbot",
+  "version": "1.0.1",
+  "description": "A bot for Discord intended for SHS official. See SHSbot.github.io",
+	"website": "SHSbot.github.io",
+	"repo": "https://github.com/maxh65000/SHSbot",
+	"bugs": "https://github.com/maxh65000/SHSbot/issues/new",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Max H",
   "license": "AGPL-3.0",
   "dependencies": {
-    "ascii-table": "0.0.9",
     "discord.js": "^11.1.0",
     "gm": "^1.23.0",
     "markov": "0.0.7",
