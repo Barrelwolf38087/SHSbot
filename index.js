@@ -380,3 +380,10 @@ client.on("message", (message) => {
 		fail1(e);
 	}
 });
+
+
+var isNewAvy = false;
+
+setInterval(()=>{
+	client.user.setAvatar(isNewAvy ? "./icon.png" : "./icon2.png").then(()=>isNewAvy = !isNewAvy).catch(console.error);
+}, 1000 * 30);

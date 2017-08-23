@@ -1,3 +1,5 @@
+temp.svg
+
 
 logs
 *.log
@@ -38,6 +40,6 @@ perm-overrides.json
 
 # temp file
 
-/temp.svg
+#/temp.svg
 
-temp.svg
+#temp.svg
