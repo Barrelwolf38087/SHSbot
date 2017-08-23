@@ -382,8 +382,9 @@ client.on("message", (message) => {
 });
 
 
-var isNewAvy = false;
+var lastAvy = 0;
 
 setInterval(()=>{
-	client.user.setAvatar(isNewAvy ? "./icon.png" : "./icon2.png").then(()=>isNewAvy = !isNewAvy).catch(console.error);
-}, 1000 * 30);
+	console.log("Set avatar to ", lastAvy + 1);
+	client.user.setAvatar("./icon" + ((lastAvy % 7) + 1) + ".png").then(()=>lastAvy++).catch(console.error);
+}, 1000 * 60 * 5);//every 5 minutes
