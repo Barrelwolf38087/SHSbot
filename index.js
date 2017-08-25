@@ -138,9 +138,9 @@ client.on("message", (message) => {
 		var isTo;
 		var isFrom;
 
-		if(message.channel.id === uplinkTo.id && message.author.id !== client.user.id){
+		if(message.channel.id === uplinkTo.id && message.author.id !== client.user.id && message.content[0] !== config.prefix){
 			isTo = true;
-		}else if(message.channel.id === uplinkFrom.id && message.author.id !== client.user.id){
+		}else if(message.channel.id === uplinkFrom.id && message.author.id !== client.user.id && message.content[0] !== config.prefix){
 			isFrom = true;
 		}
 
