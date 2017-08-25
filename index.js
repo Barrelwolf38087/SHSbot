@@ -11,8 +11,8 @@ const EventEmitter = require("events");
 var coins = {};
 var bans = {};
 
-var uplinkFrom;
-var uplinkTo;
+var uplinkFrom = {};
+var uplinkTo = {};
 
 try {
 	coins = require("./coins.json");
@@ -109,6 +109,8 @@ client.on("messageReactionAdd", (reaction, user) => {
 	reactionEmitter.emit("reaction", reaction, user);
 });
 
+var lastErr = 0;
+
 client.on("message", (message) => {
 	const fail2 = e => {
 		console.error(e);
@@ -121,7 +123,8 @@ client.on("message", (message) => {
 
 	const fail1 = e => {
 		console.error(e);
-		if(message.channel && message.channel.guild && message.channel.guild.id){
+		if(message.channel && message.channel.guild && message.channel.guild.id && Date.now() - lastErr > 4000){
+			lastErr = Date.now();
 			try {
 				message.channel.send("Sorry, there was an unexpected error.").catch(fail2);
 				message.channel.stopTyping(true);
@@ -134,14 +137,18 @@ client.on("message", (message) => {
 	try{
 		var isTo;
 		var isFrom;
-		if(message.channel.guild.id + ":" + message.channel.id === uplinkTo){
+
+		if(message.channel.id === uplinkTo.id && message.author.id !== client.user.id){
 			isTo = true;
-		}else if(message.channel.guild.id + ":" + message.channel.id === uplinkFrom){
+		}else if(message.channel.id === uplinkFrom.id && message.author.id !== client.user.id){
 			isFrom = true;
 		}
 
-		if(isFrom || isTo){
-			log("uplink!");
+		if(isFrom){
+			uplinkTo.send(message + "");
+		}
+		if(isTo){
+			uplinkFrom.send("User " + message.author.username + " (" + message.author.id + ") sent " + message);
 		}
 
 		if(bans.global && bans.global[message.author.id] && message.author.id !== config.owner){
@@ -350,7 +357,9 @@ client.on("message", (message) => {
 				lastmessage: lastmessage,
 				sendMessage: msg=>message.channel.send(msg),
 				channelId: message.channel.id,
+				channel: message.channel,
 				msgHistory: msgHistory,
+				guilds: client.guilds,
 				guildId: message.channel.guild.id,
 				setUplinkFrom: str => uplinkFrom = str,
 				setUplinkTo: str => uplinkTo = str,
