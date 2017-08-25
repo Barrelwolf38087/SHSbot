@@ -11,6 +11,9 @@ const EventEmitter = require("events");
 var coins = {};
 var bans = {};
 
+var uplinkFrom;
+var uplinkTo;
+
 try {
 	coins = require("./coins.json");
 } catch (e){}
@@ -49,15 +52,13 @@ var advancedBackoff = {};
 var isRunning = {};
 
 const log = function(){
-	if(process.argv[2] === "--log"){
-		console.log.apply(undefined, ["index.js:"].concat(Array.from(arguments)));
-	}
+	console.log.apply(undefined, ["index.js:"].concat(Array.from(arguments)));
 };
 
 var files = fs.readdirSync(__dirname);
 
 files.forEach(function (file) {
-	if(file === "node_modules" || file === "temp" || file === ".git"){
+	if(file === "node_modules" || file === "temp" || file === ".git" || file === "profile_picts"){
 		return;
 	}
 	try{
@@ -131,6 +132,18 @@ client.on("message", (message) => {
 	};
 
 	try{
+		var isTo;
+		var isFrom;
+		if(message.channel.guild.id + ":" + message.channel.id === uplinkTo){
+			isTo = true;
+		}else if(message.channel.guild.id + ":" + message.channel.id === uplinkFrom){
+			isFrom = true;
+		}
+
+		if(isFrom || isTo){
+			log("uplink!");
+		}
+
 		if(bans.global && bans.global[message.author.id] && message.author.id !== config.owner){
 			log(message.author.id, "banned");
 			return;
@@ -339,6 +352,8 @@ client.on("message", (message) => {
 				channelId: message.channel.id,
 				msgHistory: msgHistory,
 				guildId: message.channel.guild.id,
+				setUplinkFrom: str => uplinkFrom = str,
+				setUplinkTo: str => uplinkTo = str,
 				delete: msg=>client.deleteMessage(msg),
 				id: message.id,
 				privateMessage: msg => message.author.send(msg).catch(console.error),
@@ -384,7 +399,12 @@ client.on("message", (message) => {
 
 var lastAvy = 0;
 
+var images = fs.readdirSync("profile_picts");
+
 setInterval(()=>{
-	console.log("Set avatar to ", lastAvy + 1);
-	client.user.setAvatar("./icon" + ((lastAvy % 7) + 1) + ".png").then(()=>lastAvy++).catch(console.error);
+	console.log("Set avatar to ", "./profile_picts/" + images[lastAvy]);
+	client.user.setAvatar("./profile_picts/" + images[lastAvy]).then(()=>{
+		lastAvy++;
+		lastAvy %= images.length;
+	}).catch(console.error);
 }, 1000 * 60 * 5);//every 5 minutes
