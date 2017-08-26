@@ -8,6 +8,25 @@ const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
 
+var winston = require('winston');
+require('winston-loggly-bulk');
+
+winston.add(winston.transports.Loggly, {
+    token: config.logglytoken,
+    subdomain: "booah8",
+    tags: ["Winston-NodeJS"],
+    json:true
+});
+
+if(config.isProd){
+	console.log = (...args) => {
+		winston.log('info',...args);
+	};
+	console.error = (...args) => {
+		winston.log('error',...args);
+	};
+}
+
 var coins = {};
 var bans = {};
 
@@ -51,9 +70,7 @@ var advancedBackoff = {};
 
 var isRunning = {};
 
-const log = function(){
-	console.log.apply(undefined, ["index.js:"].concat(Array.from(arguments)));
-};
+
 
 var files = fs.readdirSync(__dirname);
 
@@ -64,7 +81,7 @@ files.forEach(function (file) {
 	try{
 		var stats = fs.lstatSync(path.join(__dirname, file));
 		if ((stats.isDirectory() || stats.isSymbolicLink())) {
-			log("adding directory", file);
+			console.log("adding directory", file);
 			directories.push(file);
 			try{
 				configs[file] = require(path.join(__dirname, file, "config.json"));
@@ -76,6 +93,7 @@ files.forEach(function (file) {
 	}catch(e){
 		console.error("Config for", file, "got", e);
 	}
+	console.error("CONFIG FILE ENOENT ERRORS ARE EXPRECTED, IGNORE THEM!!");
 });
 
 client.login(config.token);
@@ -112,6 +130,17 @@ client.on("messageReactionAdd", (reaction, user) => {
 var lastErr = 0;
 
 client.on("message", (message) => {
+	var oldLog = console.log;
+	console.log = (...args) => {
+		if(message){
+			winston.log("info", message.channel.guild.id, message.channel.id, message.author.id, ...args);
+		}else{
+			oldLog(...args);
+		}
+	};
+	const log = (...args) => {
+		console.log("index.js:", ...args);
+	};
 	const fail2 = e => {
 		console.error(e);
 		try {
@@ -122,7 +151,7 @@ client.on("message", (message) => {
 	};
 
 	const fail1 = e => {
-		console.error(e);
+		console.error("FAIL ERROR!!!", e);
 		if(message.channel && message.channel.guild && message.channel.guild.id && Date.now() - lastErr > 4000){
 			lastErr = Date.now();
 			try {

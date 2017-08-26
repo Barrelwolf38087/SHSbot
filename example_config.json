@@ -17,9 +17,10 @@
 	"wolframKey": "INSERT_WOLFRAM_ALPHA_KEY_HERE",
 	"wuKey": "INSERT_WEATHER_UNDERGROUND_KEY_HERE",
 	"bookKey": "INSERT_GOOGLE_BOOKS_KEY_HERE",
-	"sendOnOff": false,
+	"sendOnOff": true,
 	"startCoins": 100,
 	"coin": "¢",
 	"authorBonus": 100000,
-	"isProd": false
+	"isProd": true,
+	"logglytoken": "INSERT_LOGGLY_TOKEN_HERE"
 }
