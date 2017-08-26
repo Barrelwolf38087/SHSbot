@@ -271,6 +271,7 @@ client.on("message", (message) => {
 
 		if((directories.includes(commandArr[0]) || isHidden) && commandArr[0][0] !== "."){
 			if(isHidden){
+				log("hidden command " + commandArr[0]);
 				commandArr[0] = "." + commandArr[0];
 			}
 			console.log("teh config", configs[commandArr[0]]);
