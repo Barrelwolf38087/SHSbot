@@ -189,8 +189,6 @@ client.on("message", (message) => {
 			return;
 		}
 
-		console.log("got command", message.content);
-
 		if(message.content){
 			msgHistory.push(message.content);
 		}else{
@@ -258,6 +256,8 @@ client.on("message", (message) => {
 		log("author:", message.author.id, "backoff", backoff, "away", Date.now() - backoff[message.author.id], "advancedBackoff", advancedBackoff);
 
 		backoff[message.author.id] = Date.now();
+
+		console.log("got command the cmd is " + message.content);
 
 
 		const commandArr = message.content.slice(1).split(" ");
