@@ -189,7 +189,7 @@ client.on("message", (message) => {
 			return;
 		}
 
-		console.log(message.content);
+		console.log("got command", message.content);
 
 		if(message.content){
 			msgHistory.push(message.content);
