@@ -6,7 +6,8 @@
 		"help": "Here are my commands:\n",
 		"nothing": "You actually need to specify a command (shocker). If you don't want your message to be treated as a command, add a \\\\ before it.",
 		"backoff": "You have been running too many commands at once. Please try again in a minute.",
-		"alreadyRunning": "You already have a command running. Try again later."
+		"alreadyRunning": "You already have a command running. Try again later.",
+		"startupMsg": "**SHSbot is back online!**\nSHSbot is Copyright (C) 2017 Max H, and licensed under the terms of the GNU AGPLv3, which can be found at <http://www.gnu.org/licenses/agpl.html>."
 	},
 	"timeout": 3000,
 	"advancedTimeout": 5000,
@@ -16,5 +17,9 @@
 	"wolframKey": "INSERT_WOLFRAM_ALPHA_KEY_HERE",
 	"wuKey": "INSERT_WEATHER_UNDERGROUND_KEY_HERE",
 	"bookKey": "INSERT_GOOGLE_BOOKS_KEY_HERE",
-	"sendOnOff": false
+	"sendOnOff": false,
+	"startCoins": 100,
+	"coin": "¢",
+	"authorBonus": 100000,
+	"isProd": false
 }
