@@ -66,11 +66,11 @@ module.exports = config => new Promise((resolve, reject)=>{
 					}
 					resolve(help);
 				}else{
-					reject("Error");
+					reject("Not found.");
 				}
 			}
 		}catch(e){
-			reject("Error");
+			reject("Not found.");
 		}
 	});
 });
