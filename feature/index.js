@@ -1,1 +1,1 @@
-module.exports = ()=>Promise.resolve("You can suggest a feature on github: https://github.com/SHSbot/SHSbotissues/new?title=Feature+Request:&body=I+have+an+idea+for+a+cool+feature: or private message or ping @maxh#1514 .");
+module.exports = ()=>Promise.resolve("You can suggest a feature on github: https://github.com/SHSbot/SHSbot/issues/new?title=Feature+Request:&body=I+have+an+idea+for+a+cool+feature: or private message or ping @maxh#1514 .");

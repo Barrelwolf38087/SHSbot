@@ -1,1 +1,1 @@
-module.exports = config=>Promise.resolve("https://github.com/maxh65000/discord-bot");
+module.exports = () => Promise.resolve("https://github.com/SHSbot/SHSbot");
