@@ -100,8 +100,7 @@ client.login(config.token);
 client.on("ready", () => {
 	client.user.setGame(`run $help for help`);
 	console.log("Ready!");
-	if(config.sendOnOff && !process.argv.includes("--no-msg")){
-		client.guilds.array().filter(g=>g.available).forEach(g=>g.defaultChannel.send(config.messages.startupMsg));
+	if(config.sendOnOff){
 		const die = ()=>{//jshint ignore: line
 			var promises = [];
 			client.guilds.array().filter(g=>g.available).forEach(g=>{
@@ -119,6 +118,7 @@ client.on("ready", () => {
 	}
 });
 
+client.on("guildCreate", guild => guild.defaultChannel.send(config.messages.startupMsg));
 
 class __class extends EventEmitter {}
 
