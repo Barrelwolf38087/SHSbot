@@ -100,7 +100,7 @@ client.login(config.token);
 client.on("ready", () => {
 	client.user.setGame(`run $help for help`);
 	console.log("Ready!");
-	if(config.sendOnOff){
+	if(config.sendOnOff && !process.argv.includes("--no-msg")){
 		client.guilds.array().filter(g=>g.available).forEach(g=>g.defaultChannel.send(config.messages.startupMsg));
 		const die = ()=>{//jshint ignore: line
 			var promises = [];
@@ -410,6 +410,7 @@ client.on("message", (message) => {
 				overrides: overrides,
 				setOvr: o=>overrides = o,
 				bans: bans,
+				client: client,
 				searchForUser: name=>message.channel.guild.members.filter(x=>{
 					return x.displayName.replace(/ /g, "").toLowerCase() === name;
 				}).first()
