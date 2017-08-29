@@ -132,8 +132,10 @@ var lastErr = 0;
 client.on("message", (message) => {
 	var oldLog = console.log;
 	console.log = (...args) => {
-		if(message){
+		if(message && message.channel && message.channel.guild.id && message.channel.id){
 			winston.log("info", message.channel.guild.id, message.channel.id, message.author.id, ...args);
+		}else if(message && message.channel && message.channel.id){
+			winston.log("info", "null", message.channel.id, message.author.id, ...args);
 		}else{
 			oldLog(...args);
 		}
