@@ -1,11 +1,12 @@
 const fetch = require("node-fetch");
-var parseString = require("xml2json").toJson;
+
+//var parseString = require("xml2json").toJson;
 
 
 var images = [];
 
 console.log("meow!");
-
+/*
 const refreshImgs = function(){
 	console.log("let's get some kitties!");
 	return new Promise(function(resolve, reject) {
@@ -21,12 +22,13 @@ const refreshImgs = function(){
 			}
 		}).catch(reject);
 	});
-};
+};*/
 
-refreshImgs();
+//refreshImgs();
 
 module.exports = config => new Promise(function(resolve) {
-	const reply = ()=>{
+	resolve("Sorry, $cat dosen't work now. I'll fix it.");
+	/*const reply = ()=>{
 		const picked = images[Math.floor(Math.random() * images.length)];
 		fetch(picked.img).then(()=>{
 			config.sendMessage({file: {attachment: picked.img}}).then(message=>{
@@ -41,7 +43,7 @@ module.exports = config => new Promise(function(resolve) {
 		reply();
 	}else{
 		refreshImgs().then(reply);
-	}
+	}*/
 });
 
-setTimeout(refreshImgs, 1000 * 60 * 60 * 6);//1000ms = 1s, 60s = 1m, 60m = 1h, so refresh our cat videos 4 times a day (every 6 hours)
+//setTimeout(refreshImgs, 1000 * 60 * 60 * 6);//1000ms = 1s, 60s = 1m, 60m = 1h, so refresh our cat videos 4 times a day (every 6 hours)
