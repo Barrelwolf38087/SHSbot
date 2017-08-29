@@ -2,7 +2,6 @@ const fetch = require("node-fetch");
 
 //var parseString = require("xml2json").toJson;
 
-
 var images = [];
 
 console.log("meow!");
