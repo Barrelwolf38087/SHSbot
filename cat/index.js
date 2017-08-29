@@ -26,7 +26,7 @@ const refreshImgs = function(){
 refreshImgs();
 
 module.exports = config => new Promise(function(resolve) {
-	resolve("Sorry, $cat dosen't work now. I'll fix it.");
+	//resolve("Sorry, $cat dosen't work now. I'll fix it.");
 	const reply = ()=>{
 		const picked = images[Math.floor(Math.random() * images.length)];
 		fetch(picked.img).then(()=>{
