@@ -132,12 +132,16 @@ var lastErr = 0;
 client.on("message", (message) => {
 	var oldLog = console.log;
 	console.log = (...args) => {
-		if(message && message.channel && message.channel.guild.id && message.channel.id){
-			winston.log("info", message.channel.guild.id, message.channel.id, message.author.id, ...args);
-		}else if(message && message.channel && message.channel.id){
-			winston.log("info", "null", message.channel.id, message.author.id, ...args);
-		}else{
-			oldLog(...args);
+		try{
+			if(message && message.channel && message.channel.guild && message.channel.guild.id && message.channel.id){
+				winston.log("info", message.channel.guild.id, message.channel.id, message.author.id, ...args);
+			}else if(message && message.channel && message.channel.id){
+				winston.log("info", null, message.channel.id, message.author.id, ...args);
+			}else{
+				winston.log("info", null, null, null, ...args);
+			}
+		}catch(e){
+			oldLog("ERRRRR", e, ...args);
 		}
 	};
 	const log = (...args) => {
@@ -446,7 +450,7 @@ const dir = config.isProd ? "./profile_picts/" : "./profile_picts_dev/";
 
 setInterval(()=>{
 	console.log("Set avatar to ", dir + images[lastAvy]);
-	client.user.setAvatar("./profile_picts/" + images[lastAvy]).then(()=>{
+	client.user.setAvatar(dir + images[lastAvy]).then(()=>{
 		lastAvy++;
 		lastAvy %= images.length;
 	}).catch(console.error);
