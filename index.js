@@ -442,8 +442,10 @@ var lastAvy = 0;
 
 var images = fs.readdirSync("profile_picts");
 
+const dir = config.isProd ? "./profile_picts/" : "./profile_picts_dev/";
+
 setInterval(()=>{
-	console.log("Set avatar to ", "./profile_picts/" + images[lastAvy]);
+	console.log("Set avatar to ", dir + images[lastAvy]);
 	client.user.setAvatar("./profile_picts/" + images[lastAvy]).then(()=>{
 		lastAvy++;
 		lastAvy %= images.length;
