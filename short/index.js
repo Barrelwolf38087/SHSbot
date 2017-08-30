@@ -12,7 +12,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 		return reject("Could not find the URL you want to shorten.");
 	}
 
-	fetch("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyD_ELdluust0G8E4GqFq7KtSHlMlN2dBQw&fields=id", { headers: {
+	fetch("https://www.googleapis.com/urlshortener/v1/url?key=" + config.config.shortURLKey + "&fields=id", { headers: {
 	  "Accept": "application/json",
 	  "Content-Type": "application/json"
 	},
