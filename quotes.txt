@@ -16,3 +16,4 @@ I challenge: $game
 #108: $photoshop
 $book Old Yeller
 $techhelp rm -rf /
+☁️ or ☀️ ? $weather
