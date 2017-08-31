@@ -1,4 +1,14 @@
+var reminded = false;
+
+setInterval(()=>reminded = false, 1000 * 60 * 60 * 24);
+
 module.exports = config => new Promise((resolve, reject) => {
+	if(reminded){
+		return resolve();
+	}
+
+	reminded = false;
+
 	var guild = config.client.guilds.get(config.commandArr[0]);
 	if(!config.commandArr[0] || !guild || !guild.available){
 		return reject("Could not find that guild!");
