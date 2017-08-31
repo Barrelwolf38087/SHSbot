@@ -98,8 +98,11 @@ files.forEach(function (file) {
 
 client.login(config.token);
 client.on("ready", () => {
-	client.user.setGame(`run $help for help`);
+	//client.user.setGame(`run $help for help`);
 	console.log("Ready!");
+
+	require("./setGame.js")(client);
+
 	if(config.sendOnOff){
 		const die = ()=>{//jshint ignore: line
 			var promises = [];
