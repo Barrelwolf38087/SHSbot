@@ -34,8 +34,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 			        var plaintext = pod.subpods[0].plaintext;
 							if(name && plaintext){
 								resp.embed.fields.push({name: name, value: plaintext});
-							}
-							if(pod.subpods && pod.subpods[0] && pod.subpods[0].img && pod.subpods[0].img.src && !resp.embed.image){
+							}else if(pod.subpods && pod.subpods[0] && pod.subpods[0].img && pod.subpods[0].img.src && !resp.embed.image){
 								resp.embed.image = {};
 								resp.embed.image.url = pod.subpods[0].img.src;
 							}
