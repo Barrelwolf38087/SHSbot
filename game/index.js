@@ -67,7 +67,7 @@ const func = config=>new Promise((resolve, reject)=>{
 		}
 		o.state = 1;
 		o.playerY = config.author;
-		console.log("ID:", o.playerX.id);
+		console.log("ID:", o.playerX.id + "");
 		config.sendMessage(`Starting Tick-Tack-Toe between ${o.playerX} ${config.coins[o.playerX.id]}¢ (X) and ${o.playerY} ${config.coins[o.playerY.id]}¢ (O)`);
 		o.isX = !o.isX;
 	}
@@ -85,13 +85,12 @@ const func = config=>new Promise((resolve, reject)=>{
 		}, {});
 
 		if(!emojis || Object.keys(emojis).length !== 9){
-			console.log(emojis);
 			return reject("YOU NO HAS TEH EMOJIZ!! Add them by following these instructions: https://shsbot.github.io/#youll-need-some-special-custom-emojis (you'll need to be an admin on this server)");
 		}
 
 		if(!emitter){
 			emitter = true;
-			console.log("got emitter!", config.reactions);
+			console.log("got emitter!");
 			config.reactions.on("reaction", (react, auth)=>{
 				console.log("reaction!");
 				var row;
@@ -104,7 +103,7 @@ const func = config=>new Promise((resolve, reject)=>{
 				});
 				const empty = /empty/.test(react.emoji.name);
 				if((o.isX && auth.tag !== o.playerX.tag) || (!o.isX && auth.tag !== o.playerY.tag)){
-					console.log("wrong player combo: ", auth.tag, "X", o.playerX.tag, "y",  o.playerY.tag);
+					console.log("wrong player combo: ", auth.tag + "", "X", o.playerX.tag, "y",  o.playerY.tag);
 					return;
 				}
 				if(auth.bot || !empty || !correctMsg){
@@ -144,7 +143,7 @@ const func = config=>new Promise((resolve, reject)=>{
 						loser = o.playerX;
 					}
 
-					console.log("loser", loser, "coins", config.coins[loser.id]);
+					console.log("loser", loser + "", "coins", config.coins[loser.id]);
 
 					const reward = coinReward(config.coins[loser.id]);
 
@@ -198,10 +197,10 @@ const func = config=>new Promise((resolve, reject)=>{
 					console.log("square", square, "column", column);
 					promise = promise.then(()=>msg.react((()=>{
 						if(!square.trim()){//empty
-							console.log("reacting with", emojis["empty" + (column + 1)], "empty" + (column + 1));
+							console.log("reacting with", emojis["empty" + (column + 1)] + "", "empty" + (column + 1));
 							return emojis["empty" + (column + 1)];
 						}else{
-							console.log("reacting with", emojis[square + "icon" + (column + 1)], square + "icon" + (column + 1));
+							console.log("reacting with", emojis[square + "icon" + (column + 1)] + "", square + "icon" + (column + 1));
 							return emojis[square + "icon" + (column + 1)];
 						}
 					})()).catch());
