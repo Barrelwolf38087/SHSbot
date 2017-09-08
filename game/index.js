@@ -185,7 +185,7 @@ const func = config=>new Promise((resolve, reject)=>{
 					return str + res + "\n";
 				}, msg + "\n```\n");
 				console.log("str", str);
-				config.sendMessage(str + "```Send `" + config.config.prefix + "game` for the next " + (won || draw ? "game!" : "turn!"));
+				config.sendMessage(str + "```" + ((draw || won) ? "" : (o.isX ? o.playerX : o.playerY) + ": ") + "Send `" + config.config.prefix + "game` for the next " + (won || draw ? "game!" : "turn!"));
 			});
 		}
 

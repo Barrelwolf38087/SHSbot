@@ -47,13 +47,13 @@ try{
 }catch(e){}
 
 const writeCoins = ()=>{
-	fs.writeFile("coins.json", JSON.stringify(coins), console.error);
+	fs.writeFile("coins.json", JSON.stringify(coins), err => err ? console.error : 0);
 };
 
 const writeGuildMsgs = g => {
 	console.log("wrote guild messages", g);
 	guildMsgs = g;
-	fs.writeFile("msgs.json", JSON.stringify(guildMsgs), console.error);
+	fs.writeFile("msgs.json", JSON.stringify(guildMsgs), err => err ? console.error : 0);
 };
 
 writeGuildMsgs();
