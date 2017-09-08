@@ -42,13 +42,21 @@ try{
 	bans = require("./bans.json");
 }catch(e){}
 
+try{
+	guildMsgs = require("./msgs.json");
+}catch(e){}
+
 const writeCoins = ()=>{
-	fs.writeFile("coins.json", JSON.stringify(coins), ()=>{});
+	fs.writeFile("coins.json", JSON.stringify(coins), console.error);
 };
 
-const writeGuildMsgs = ()=>{
-	fs.writeFile("msgs.json", JSON.stringify(guildMsgs), ()=>{});
+const writeGuildMsgs = g => {
+	console.log("wrote guild messages", g);
+	guildMsgs = g;
+	fs.writeFile("msgs.json", JSON.stringify(guildMsgs), console.error);
 };
+
+writeGuildMsgs();
 
 coins[config.owner] = coins[config.owner] || config.authorBonus;
 
@@ -140,6 +148,8 @@ var lastErr = 0;
 client.on("guildMemberAdd", guildMember => {
 	if(guildMsgs[guildMember.guild.id]){
 		guildMember.guild.defaultChannel.send("<@" + guildMember.user.id + ">: " + guildMsgs[guildMember.guild.id]);
+	}else{
+		console.log("No message");
 	}
 });
 
@@ -420,7 +430,7 @@ client.on("message", (message) => {
 				author: message.author,
 				reactions: file.listenForReactions ? reactionEmitter : undefined,
 				writeCoins: ()=>writeCoins(),
-				writeGuildMsgs: () => writeGuildMsgs(),
+				writeGuildMsgs: g => writeGuildMsgs(g),
 				guildMsgs,
 				coins,
 				overrides,
