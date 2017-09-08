@@ -29,6 +29,7 @@ if(config.isProd){
 
 var coins = {};
 var bans = {};
+var guildMsgs = {};
 
 var uplinkFrom = {};
 var uplinkTo = {};
@@ -43,6 +44,10 @@ try{
 
 const writeCoins = ()=>{
 	fs.writeFile("coins.json", JSON.stringify(coins), ()=>{});
+};
+
+const writeGuildMsgs = ()=>{
+	fs.writeFile("msgs.json", JSON.stringify(guildMsgs), ()=>{});
 };
 
 coins[config.owner] = coins[config.owner] || config.authorBonus;
@@ -131,6 +136,12 @@ client.on("messageReactionAdd", (reaction, user) => {
 });
 
 var lastErr = 0;
+
+client.on("guildMemberAdd", guildMember => {
+	if(guildMsgs[guildMember.guild.id]){
+		guildMember.guild.defaultChannel.send("<@" + guildMember.user.id + ">: " + guildMsgs[guildMember.guild.id]);
+	}
+});
 
 client.on("message", (message) => {
 	var oldLog = console.log;
@@ -388,16 +399,16 @@ client.on("message", (message) => {
 
 			message.channel.startTyping(1);
 			file({
-				directories: directories,
-				config: config,
-				configs: configs,
+				directories,
+				config,
+				configs,
 				commandArr: commandArr.slice(1),
-				template: template,
+				template,
 				lastmessage: lastmessage,
 				sendMessage: msg=>message.channel.send(msg),
 				channelId: message.channel.id,
 				channel: message.channel,
-				msgHistory: msgHistory,
+				msgHistory,
 				guilds: client.guilds,
 				guildId: message.channel.guild.id,
 				setUplinkFrom: str => uplinkFrom = str,
@@ -409,11 +420,13 @@ client.on("message", (message) => {
 				author: message.author,
 				reactions: file.listenForReactions ? reactionEmitter : undefined,
 				writeCoins: ()=>writeCoins(),
-				coins: coins,
-				overrides: overrides,
+				writeGuildMsgs: () => writeGuildMsgs(),
+				guildMsgs,
+				coins,
+				overrides,
 				setOvr: o=>overrides = o,
-				bans: bans,
-				client: client,
+				bans,
+				client,
 				searchForUser: name=>message.channel.guild.members.filter(x=>{
 					return x.displayName.replace(/ /g, "").toLowerCase() === name;
 				}).first()

@@ -1,0 +1,4 @@
+{
+	"description": "Set the welcome message for new users who join your guild! Try `{{prefix}}welcome Hello new user!`",
+	"permissions": "10"
+}
