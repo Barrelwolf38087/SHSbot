@@ -213,6 +213,8 @@ const func = config=>new Promise((resolve, reject)=>{
 		o.state = 0.5;
 		return resolve("Ok, you're X. The next person to send `$game` gets to be O.");
 	}
+
+	resolve();
 });
 
 func.listenForReactions = true;
