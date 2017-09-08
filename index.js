@@ -18,7 +18,7 @@ winston.add(winston.transports.Loggly, {
     json:true
 });
 
-if(config.isProd){
+if(config.isProd || false){
 	console.log = (...args) => {
 		winston.log('info',...args);
 	};
