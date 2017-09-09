@@ -146,7 +146,7 @@ client.on("messageReactionAdd", (reaction, user) => {
 var lastErr = 0;
 
 client.on("guildMemberAdd", guildMember => {
-	if(guildMsgs[guildMember.guild.id]){
+	if(guildMember.guild && guildMsgs[guildMember.guild.id]){
 		guildMember.guild.defaultChannel.send("<@" + guildMember.user.id + ">: " + guildMsgs[guildMember.guild.id]);
 	}else{
 		console.log("No message");
