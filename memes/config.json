@@ -48,6 +48,24 @@
 			"https://imgs.xkcd.com/comics/regular_expressions.png",
 			"https://imgs.xkcd.com/comics/regex_golf.png",
 			"https://imgs.xkcd.com/comics/perl_problems.png"
+		],
+		"gnu": [
+			"https://www.gnu.org/graphics/this-is-freedom-wallpaper.png",
+			"https://www.gnu.org/graphics/gnu-born-free-run-free-wallpaper.png",
+			"https://www.gnu.org/graphics/I_run_GNU_by_GNUlancer.png",
+			"https://www.gnu.org/graphics/einstein-gnu-think-freely.png",
+			"https://www.gnu.org/graphics/grab-your-freedom.jpg",
+			"https://www.gnu.org/graphics/gnulinux_rms_phrase.png",
+			"https://www.gnu.org/graphics/Free_as_in_Freedom_gnu-org_fsf-org.png",
+			"https://www.gnu.org/graphics/gnu-gives-freedom.png",
+			"https://www.gnu.org/graphics/skwid-free-side-wallpaper.jpg",
+			"https://www.gnu.org/graphics/free-your-soul-wallpaper.jpg#easteregg",
+			"https://www.gnu.org/graphics/free-software-dealers.png",
+			"https://www.gnu.org/graphics/fsf-wh.jpg",
+			"https://www.gnu.org/graphics/lpf/liberty-stops.png",
+			"https://www.gnu.org/graphics/ichain.png",
+			"https://www.gnu.org/graphics/plant-onion.png",
+			"https://www.gnu.org/graphics/give-me-freedom.png"
 		]
 	}
 }
