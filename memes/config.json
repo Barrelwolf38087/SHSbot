@@ -25,9 +25,24 @@
 			"https://cdn.discordapp.com/attachments/327661323347296256/329066634776150016/this-one-looks-a-bit-suspicious_c_4394559.png",
 			"https://cdn.discordapp.com/attachments/327661323347296256/329062525079650304/btup5.png",
 			"https://cdn.discordapp.com/attachments/327661323347296256/329062324843577354/latest.png",
+			"https://images.discordapp.net/attachments/327661323347296256/330713031996604428/image.jpg?width=523&height=633",
 			"https://imgs.xkcd.com/comics/machine_learning.png",
-			"https://imgs.xkcd.com/comics/refresh_types.png",
-			"https://images.discordapp.net/attachments/327661323347296256/330713031996604428/image.jpg?width=523&height=633"
+			"https://imgs.xkcd.com/comics/refresh_types.png"
+		],
+		"xkcd": [
+			"https://imgs.xkcd.com/comics/public_key.png",
+			"https://imgs.xkcd.com/comics/i_in_team.png",
+			"https://imgs.xkcd.com/comics/isolation.png",
+			"https://imgs.xkcd.com/comics/five_day_forecast.png",
+			"https://imgs.xkcd.com/comics/background_screens.png",
+			"https://imgs.xkcd.com/comics/worrying.png",
+			"https://imgs.xkcd.com/comics/geography.png",
+			"https://imgs.xkcd.com/comics/star_wars.png",
+			"https://imgs.xkcd.com/comics/orb_hammer.png",
+			"https://imgs.xkcd.com/comics/efficiency.png",
+			"https://imgs.xkcd.com/comics/tasks.png",
+			"https://imgs.xkcd.com/comics/move_fast_and_break_things.png",
+			"https://imgs.xkcd.com/comics/orbital_mechanics.png"
 		],
 		"regex": [
 			"https://imgs.xkcd.com/comics/regular_expressions.png",
