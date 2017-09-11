@@ -56,7 +56,7 @@ const writeGuildMsgs = g => {
 	fs.writeFile("msgs.json", JSON.stringify(guildMsgs), err => err ? console.error : 0);
 };
 
-writeGuildMsgs();
+writeCoins();
 
 coins[config.owner] = coins[config.owner] || config.authorBonus;
 
@@ -146,7 +146,7 @@ client.on("messageReactionAdd", (reaction, user) => {
 var lastErr = 0;
 
 client.on("guildMemberAdd", guildMember => {
-	if(guildMember.guild && guildMsgs[guildMember.guild.id]){
+	if(guildMember.guild && guildMsgs && guildMsgs[guildMember.guild.id]){
 		guildMember.guild.defaultChannel.send("<@" + guildMember.user.id + ">: " + guildMsgs[guildMember.guild.id]);
 	}else{
 		console.log("No message");

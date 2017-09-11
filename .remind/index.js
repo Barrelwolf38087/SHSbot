@@ -23,11 +23,11 @@ module.exports = config => new Promise((resolve, reject) => {
 			if(roles.length < 3){
 				setTimeout(()=>{
 					person.send(`**A Friendly Reminder from SHSbot:**
-Hello, I noticed that you have less than 3 roles on the SHS official server. Adding roles for your classes allows you to unlock special channels for help with a subject.
+Hello, I noticed that you have less than 3 roles on the SHS discord server. Adding roles for your classes allows you to unlock special channels for help with a subject.
 Copy/paste some of these commands in #bot-commands based on your classes:
 \`\`\`
-+giveme "10a"
-+giveme "10b"
++giveme "10y"
++giveme "10z"
 +giveme "9a"
 +giveme "9b"
 +giveme "band"
@@ -43,6 +43,7 @@ Copy/paste some of these commands in #bot-commands based on your classes:
 +giveme "sophomore"
 +giveme "spanish"
 +giveme "ss"
++giveme "teacher"
 \`\`\``);
 				}, Math.round(1000 * 60 * 60 + //add an hour
 					Math.random() *
