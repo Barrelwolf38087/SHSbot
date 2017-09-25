@@ -7,7 +7,8 @@ To install:
 ```bash
 git clone https://github.com/SHSbot/SHSbot.git
 cd SHSbot
-sudo apt install imagemagick magick
+sudo apt install imagemagick graphicsmagick
+npm install
 cp example_config.json config.json
 nano config.json # SHSbot needs a Discord auth key to work, as well as various other auth keys for other commands. Using nano or another editor, add in api keys.
 node . #When "Ready!" is logged, SHSbot is online!
