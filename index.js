@@ -78,12 +78,11 @@ var lastmessage;
 
 var backoff = {};
 var warned = {};
-
 var advancedBackoff = {};
 
 var isRunning = {};
 
-
+var conversations = [];
 
 var files = fs.readdirSync(__dirname);
 
@@ -214,7 +213,7 @@ client.on("message", (message) => {
 			log(message.author.id, "banned");
 			return;
 		}
-		if(bans[message.channel.guild.id] && bans[message.channel.guild.id][message.author.id] && message.author.id !== config.owner){
+		if(message.channel && message.channel.guild && message.channel.guild.id && bans[message.channel.guild.id] && bans[message.channel.guild.id][message.author.id] && message.author.id !== config.owner){
 			log(message.author.id, "banned");
 			return;
 		}
@@ -228,6 +227,11 @@ client.on("message", (message) => {
 		}
 
 		if(message.author.bot){ return; }
+
+		if((!message.channel || !message.channel.guild) && conversations[message.author.id]){
+			require("./conversations.js")(message, conversations[message.author.id]);
+			return;
+		}
 
 		if(message.content[0] !== config.prefix){
 			lastmessage = message.content;
