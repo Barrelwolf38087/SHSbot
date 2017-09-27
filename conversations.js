@@ -83,7 +83,9 @@ var done = (message, conversation) => {
 		newNickname = advisor;
 	}
 
-	newNickname = newNickname.split(" ").map(x=>x[0].toUpperCase() + x.slice(1)).join(" ");
+	if(newNickname){
+		newNickname = newNickname.split(" ").map(x=>x[0].toUpperCase() + x.slice(1)).join(" ");
+	}
 
 	channels.push(latin && "latin");
 	channels.push(spanish && "spanish");
