@@ -83,6 +83,8 @@ var done = (message, conversation) => {
 		newNickname = advisor;
 	}
 
+	newNickname = newNickname.split(" ").map(x=>x[0].toUpperCase() + x.slice(1)).join(" ");
+
 	channels.push(latin && "latin");
 	channels.push(spanish && "spanish");
 	channels.push(french && "french");
@@ -93,7 +95,7 @@ var done = (message, conversation) => {
 	channels = channels.filter(x=>x);
 	console.log(channels, newNickname);
 
-	message.author.send("Your channels are: " + channels.join(", "));
+	message.author.send("Your roles are: " + channels.join(", "));
 	if(newNickname){
 		message.author.send("Your new nickname is " + newNickname);
 	}
@@ -113,8 +115,10 @@ module.exports = (message, conversation) => {
 			}
 			message.author.send(data.result.fulfillment.speech || "I'm sorry, I didn't get that. Please try repeating that in a diffrent way or \"start over\"");
 
-			if(data.result.fulfillment.messages[1] && data.result.fulfillment.messages[1].done){
+			if((data.result.fulfillment.messages[1] && data.result.fulfillment.messages[1].done) || data.result.fulfillment.speech.includes("I'm done")){
+				console.log("conversation is done!");
 				done(message, conversation);
+				conversation = undefined;
 			}
 		});
 	};

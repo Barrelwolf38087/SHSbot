@@ -5,5 +5,7 @@ try{
 }catch(e){}
 
 module.exports = config => {
-	if(rules[config.guildId] && rules[config.guildId][parseInt(config.commandArr[0])])
+	if(rules[config.guildId] && rules[config.guildId][parseInt(config.commandArr[0])]){
+		
+	}
 };

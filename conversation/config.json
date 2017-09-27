@@ -1,3 +1,4 @@
 {
-	"description": "Talk to SHSbot and get the roles you need!"
+	"description": "Talk to SHSbot and get the roles you need!",
+	"permissions": "10"
 }

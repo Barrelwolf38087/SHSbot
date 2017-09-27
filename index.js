@@ -8,17 +8,18 @@ const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
 
-var winston = require('winston');
-require('winston-loggly-bulk');
-
-winston.add(winston.transports.Loggly, {
-    token: config.logglytoken,
-    subdomain: "booah8",
-    tags: ["Winston-NodeJS"],
-    json:true
-});
 
 if(config.isProd || false){
+	var winston = require('winston');
+	require('winston-loggly-bulk');
+
+	winston.add(winston.transports.Loggly, {
+	    token: config.logglytoken,
+	    subdomain: "booah8",
+	    tags: ["Winston-NodeJS"],
+	    json:true
+	});
+
 	console.log = (...args) => {
 		winston.log('info',...args);
 	};
@@ -153,20 +154,22 @@ client.on("guildMemberAdd", guildMember => {
 });
 
 client.on("message", (message) => {
-	var oldLog = console.log;
-	console.log = (...args) => {
-		try{
-			if(message && message.channel && message.channel.guild && message.channel.guild.id && message.channel.id){
-				winston.log("info", message.channel.guild.id, message.channel.id, message.author.id, ...args);
-			}else if(message && message.channel && message.channel.id){
-				winston.log("info", null, message.channel.id, message.author.id, ...args);
-			}else{
-				winston.log("info", null, null, null, ...args);
+	if(false){
+		var oldLog = console.log;
+		console.log = (...args) => {
+			try{
+				if(message && message.channel && message.channel.guild && message.channel.guild.id && message.channel.id){
+					winston.log("info", message.channel.guild.id, message.channel.id, message.author.id, ...args);
+				}else if(message && message.channel && message.channel.id){
+					winston.log("info", null, message.channel.id, message.author.id, ...args);
+				}else{
+					winston.log("info", null, null, null, ...args);
+				}
+			}catch(e){
+				oldLog("ERRRRR", e, ...args);
 			}
-		}catch(e){
-			oldLog("ERRRRR", e, ...args);
-		}
-	};
+		};
+	}
 	const log = (...args) => {
 		console.log("index.js:", ...args);
 	};
@@ -441,6 +444,7 @@ client.on("message", (message) => {
 				setOvr: o=>overrides = o,
 				bans,
 				client,
+				conversations,
 				searchForUser: name=>message.channel.guild.members.filter(x=>{
 					return x.displayName.replace(/ /g, "").toLowerCase() === name;
 				}).first()
