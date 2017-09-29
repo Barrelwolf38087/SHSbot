@@ -61,6 +61,9 @@ var done = (message, conversation) => {
 		if(intent === "Teaches advisory"){
 			teachesAdvisory = !!params.yes;
 		}
+		if(intent === "Name"){
+			newNickname = resp.result.resolvedQuery;
+		}
 	});
 
 	var channels = [];
@@ -110,19 +113,19 @@ module.exports = (message, conversation) => {
 	conversation.sessionId, {headers:
 		{"Authorization": "Bearer " + require("./config.json").apiAiToken}})
 		.then(x=>x.json()).then(data => {
-			console.log("got response", data.result.fulfillment.speech);
+			
 			conversation.responses.push(data);
 
 			if(!data || !data.status || !data.status.code || data.status.code >= 400 || !data.result){
 				return console.error("ERROR: " + (data && data.status && data.status.errorDetails));
 			}
-
+			
 			if((data.result.fulfillment.messages[1] && data.result.fulfillment.messages[1].done) || data.result.fulfillment.speech.includes("I'm done")){
 				console.log("conversation is done!");
 				done(message, conversation);
 				conversation = undefined;
 			}
-
+			console.log("got response", data.result.fulfillment.speech);
 
 			message.author.send(data.result.fulfillment.speech || "I'm sorry, I didn't get that. Please try repeating that in a diffrent way or \"start over\"");
 		});
