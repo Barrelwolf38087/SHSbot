@@ -232,7 +232,7 @@ client.on("message", (message) => {
 		if(message.author.bot){ return; }
 
 		if((!message.channel || !message.channel.guild) && conversations[message.author.id]){
-			require("./conversations.js")(message, conversations[message.author.id]);
+			require("./conversations.js")(message, conversations[message.author.id], client);
 			return;
 		}
 
