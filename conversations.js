@@ -117,9 +117,11 @@ const done = (message, conversation, client) => {
 			member.addRole(
 				guild.roles.find(x=>x.name.toLowerCase().trim() === role.toLowerCase().trim())
 			).catch(()=>{
-				if(hasError) return;
+				if(hasError){
+					return;
+				}
 				hasError = true;
-				message.author.send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin.");
+				message.author.send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin. Or just manually assign roles.");
 			})
 		);
 	}

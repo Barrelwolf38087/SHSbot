@@ -9,5 +9,6 @@
 	"undef": true,
 	"unused": true,
 	"node": true,
-	"devel": true
+	"devel": true,
+	"indent": 1
 }
