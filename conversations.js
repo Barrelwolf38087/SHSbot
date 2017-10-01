@@ -107,7 +107,7 @@ const done = (message, conversation, client) => {
 
 	if(conversation.setVars){
 		var guild = client.guilds.get(conversation.guildId);
-		var member = guild.members.get(conversation.message.author.id);
+		var member = guild.members.get(message.author.id);
 		if(newNickname){
 				member.setNickname(newNickname);
 		}
