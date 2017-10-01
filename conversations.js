@@ -1,7 +1,6 @@
-
 const fetch = require("node-fetch");
 
-const done = (message, conversation) => {
+const done = (message, conversation, client) => {
 	var grade;
 	var team;
 	var advisor;
@@ -106,10 +105,27 @@ const done = (message, conversation) => {
 		message.author.send("Your new nickname is " + newNickname);
 	}
 
-	
+	if(conversation.setVars){
+		var guild = client.guilds.get(conversation.guildId);
+		var member = guild.members.get(conversation.message.author.id);
+		if(newNickname){
+				member.setNickname(newNickname);
+		}
+
+		var hasError = false;
+		channels.forEach(role=>
+			member.addRole(
+				guild.roles.find(x=>x.name.toLowerCase().trim() === role.toLowerCase().trim())
+			).catch(()=>{
+				if(hasError) return;
+				hasError = true;
+				message.author.send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin.");
+			})
+		);
+	}
 };
 
-module.exports = (message, conversation) => {
+module.exports = (message, conversation, client) => {
 	var value = message.toString().trim();
 
 	fetch("https://api.api.ai/v1/query?v=20150910&lang=en&query=" + encodeURIComponent(value) + "&sessionId=" +
@@ -125,7 +141,7 @@ module.exports = (message, conversation) => {
 
 			if((data.result.fulfillment.messages[1] && data.result.fulfillment.messages[1].done) || data.result.fulfillment.speech.includes("I'm done")){
 				console.log("conversation is done!");
-				done(message, conversation);
+				done(message, conversation, client);
 				conversation = undefined;
 			}
 			console.log("got response", data.result.fulfillment.speech);
