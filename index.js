@@ -106,8 +106,8 @@ files.forEach(function (file) {
 	}catch(e){
 		console.error("Config for", file, "got", e);
 	}
-	console.error("CONFIG FILE ENOENT ERRORS ARE EXPRECTED, IGNORE THEM!!");
 });
+console.error("CONFIG FILE ENOENT ERRORS ARE EXPRECTED, IGNORE THEM!!");
 
 client.login(config.token);
 client.on("ready", () => {

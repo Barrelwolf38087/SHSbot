@@ -113,6 +113,9 @@ const done = (message, conversation, client) => {
 		}
 
 		var hasError = false;
+
+		var author = message.author;
+		const send = str => author.send(str);
 		channels.forEach(role=>
 			member.addRole(
 				guild.roles.find(x=>x.name.toLowerCase().trim() === role.toLowerCase().trim())
@@ -121,7 +124,7 @@ const done = (message, conversation, client) => {
 					return;
 				}
 				hasError = true;
-				message.author.send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin. Or just manually assign roles.");
+				send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin. Or just manually assign roles.");
 			})
 		);
 	}
@@ -141,13 +144,14 @@ module.exports = (message, conversation, client) => {
 				return console.error("ERROR: " + (data && data.status && data.status.errorDetails));
 			}
 
+			console.log("got response", data.result.fulfillment.speech);
+
+			message.author.send(data.result.fulfillment.speech || "I'm sorry, I didn't get that. Please try repeating that in a diffrent way or \"start over\"");
+
 			if((data.result.fulfillment.messages[1] && data.result.fulfillment.messages[1].done) || data.result.fulfillment.speech.includes("I'm done")){
 				console.log("conversation is done!");
 				done(message, conversation, client);
 				conversation = undefined;
 			}
-			console.log("got response", data.result.fulfillment.speech);
-
-			message.author.send(data.result.fulfillment.speech || "I'm sorry, I didn't get that. Please try repeating that in a diffrent way or \"start over\"");
 		});
 	};
