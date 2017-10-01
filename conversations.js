@@ -1,6 +1,7 @@
+
 const fetch = require("node-fetch");
 
-var done = (message, conversation) => {
+const done = (message, conversation) => {
 	var grade;
 	var team;
 	var advisor;
@@ -104,6 +105,8 @@ var done = (message, conversation) => {
 	if(newNickname){
 		message.author.send("Your new nickname is " + newNickname);
 	}
+
+	
 };
 
 module.exports = (message, conversation) => {
@@ -113,13 +116,13 @@ module.exports = (message, conversation) => {
 	conversation.sessionId, {headers:
 		{"Authorization": "Bearer " + require("./config.json").apiAiToken}})
 		.then(x=>x.json()).then(data => {
-			
+
 			conversation.responses.push(data);
 
 			if(!data || !data.status || !data.status.code || data.status.code >= 400 || !data.result){
 				return console.error("ERROR: " + (data && data.status && data.status.errorDetails));
 			}
-			
+
 			if((data.result.fulfillment.messages[1] && data.result.fulfillment.messages[1].done) || data.result.fulfillment.speech.includes("I'm done")){
 				console.log("conversation is done!");
 				done(message, conversation);
