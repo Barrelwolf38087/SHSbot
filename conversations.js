@@ -100,9 +100,9 @@ const done = (message, conversation, client) => {
 	channels = channels.filter(x=>x);
 	console.log(channels, newNickname);
 
-	message.author.send("Your roles are: " + channels.join(", "));
+	//message.author.send("Your roles are: " + channels.join(", "));
 	if(newNickname){
-		message.author.send("Your new nickname is " + newNickname);
+		//message.author.send("Your new nickname is " + newNickname);
 	}
 
 	if(conversation.setVars){
@@ -110,6 +110,7 @@ const done = (message, conversation, client) => {
 		var member = guild.members.get(message.author.id);
 		if(newNickname){
 				member.setNickname(newNickname);
+				console.log("set nickname to", newNickname);
 		}
 
 		var hasError = false;
@@ -124,7 +125,7 @@ const done = (message, conversation, client) => {
 					return;
 				}
 				hasError = true;
-				send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin. Or just manually assign roles.");
+				send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin. Or just manually assign the roles yourself.. Your roles should be " + channels.join(", "));
 			})
 		);
 	}
