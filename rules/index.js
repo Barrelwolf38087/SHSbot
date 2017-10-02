@@ -6,6 +6,6 @@ try{
 
 module.exports = config => {
 	if(rules[config.guildId] && rules[config.guildId][parseInt(config.commandArr[0])]){
-		
+		return Promise.resolve(rules[config.guildId][parseInt(config.commandArr[0])]);
 	}
 };

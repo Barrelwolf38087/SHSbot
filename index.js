@@ -151,6 +151,11 @@ client.on("guildMemberAdd", guildMember => {
 	}else{
 		console.log("No message");
 	}
+	try{
+		require("./conversation_loader.js")(guildMember, guildMember.guild, conversations).then(guildMember.guild.defaultChannel.send).catch(guildMember.guild.defaultChannel.sends);
+	}catch(e){
+		console.error("./conversation_loader.js:", e);
+	}
 });
 
 client.on("message", (message) => {
