@@ -16,7 +16,7 @@ $memes
 $question 1+1*i^e
 $help
 TickTackToe: $game
-💰 $money
+💰 $coins
 #108: $photoshop
 $help
 $book Old Yeller
