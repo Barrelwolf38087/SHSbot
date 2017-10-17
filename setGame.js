@@ -25,13 +25,13 @@ module.exports = client => {
 	var counter = 0;
 
 	const func = () => {
-		console.log("setGame to ", quotes[counter]);
+		//console.log("setGame to ", quotes[counter]);
 		setGame(quotes[counter]);
 
 		counter ++;
 		if(counter === quotes.length){
 			newQuotes();
-			console.log("new quotes are", newQuotes);
+			//console.log("new quotes are", newQuotes);
 			counter = 0;
 		}
 	};
