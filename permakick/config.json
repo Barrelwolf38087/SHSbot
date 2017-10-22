@@ -1,0 +1,4 @@
+{
+	"description": "Kick a user and prevent them from ever coming back. Like a ban but not by IP. Example: `{{prefix}}permakick 123456789`",
+	"permissions": "10"
+}

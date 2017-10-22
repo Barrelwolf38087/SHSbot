@@ -451,7 +451,9 @@ client.on("message", (message) => {
 				client,
 				conversations,
 				searchForUser: name=>message.channel.guild.members.filter(x=>{
-					return x.displayName.replace(/ /g, "").toLowerCase() === name;
+					return x.displayName.replace(/ /g, "").toLowerCase() === name ||
+					x.user.username.replace(/ /g, "").toLowerCase() === name ||
+					x.user.id.toString() === name.toString();
 				}).first()
 			}).then(reply=>{
 				isRunning[message.author.id] = false;
