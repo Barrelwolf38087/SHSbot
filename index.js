@@ -32,6 +32,8 @@ var coins = {};
 var bans = {};
 var guildMsgs = {};
 
+var permakicks = [];
+
 var uplinkFrom = {};
 var uplinkTo = {};
 
@@ -47,8 +49,23 @@ try{
 	guildMsgs = require("./msgs.json");
 }catch(e){}
 
+try{
+	permakicks = require("./permakicks.json");
+}catch(e){}
+
 const writeCoins = ()=>{
 	fs.writeFile("coins.json", JSON.stringify(coins), err => err ? console.error : 0);
+};
+
+const addPermakick = id => {
+  if(permakicks.includes(id)){
+    console.log("permakick of " + id + " removed", permakicks);
+    permakicks.splice(permakicks.indexOf(id), 1);
+  }else{
+    console.log("permakick of " + id + " added", permakicks);
+    permakicks.push(id);
+  }
+	fs.writeFile("permakicks.json", JSON.stringify(permakicks), err => err ? console.error : 0);
 };
 
 const writeGuildMsgs = g => {
@@ -146,6 +163,9 @@ client.on("messageReactionAdd", (reaction, user) => {
 var lastErr = 0;
 
 client.on("guildMemberAdd", guildMember => {
+  if(permakicks.includes(guildMember.user.id)){
+    return guildMember.kick("permakicked!").catch(()=>guildMember.guild.defaultChannel.send("Couldn't kick! Please check permissions."));
+  }
 	if(guildMember.guild && guildMsgs && guildMsgs[guildMember.guild.id]){
 		guildMember.guild.defaultChannel.send("<@" + guildMember.user.id + ">: " + guildMsgs[guildMember.guild.id]);
 	}else{
@@ -454,7 +474,8 @@ client.on("message", (message) => {
 					return x.displayName.replace(/ /g, "").toLowerCase() === name ||
 					x.user.username.replace(/ /g, "").toLowerCase() === name ||
 					x.user.id.toString() === name.toString();
-				}).first()
+				}).first(),
+        addPermakick
 			}).then(reply=>{
 				isRunning[message.author.id] = false;
 				if(!reply){
