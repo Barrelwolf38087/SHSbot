@@ -3,6 +3,7 @@ const allofthem = [].concat.apply([], Object.entries(cfg.memes).map(x=>x[1]));
 const randElem = arr=>arr[Math.floor(Math.random() * arr.length)];
 
 module.exports = config => new Promise(function(resolve, reject) {
+	config.commandArr[0] = config.commandArr[0] || "misc";
 	if(!config.commandArr[0]){
 		const picked = randElem(allofthem);
 		console.log("Sending meme", picked);
