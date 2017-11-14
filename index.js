@@ -132,6 +132,7 @@ client.on("ready", () => {
 	console.log("Ready!");
 
 	require("./setGame.js")(client);
+	require("./reactions.js")(client);
 
 	if(config.sendOnOff){
 		const die = ()=>{//jshint ignore: line
