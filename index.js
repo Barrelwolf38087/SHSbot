@@ -132,7 +132,6 @@ client.on("ready", () => {
 	console.log("Ready!");
 
 	require("./setGame.js")(client);
-	require("./reactions.js")(client);
 
 	if(config.sendOnOff){
 		const die = ()=>{//jshint ignore: line
@@ -159,6 +158,11 @@ class __class extends EventEmitter {}
 const reactionEmitter = new __class();
 client.on("messageReactionAdd", (reaction, user) => {
 	reactionEmitter.emit("reaction", reaction, user);
+    console.log("Got reaction " + reaction.emoji.identifier, reaction.emoji.name + " of " + user.tag + ":" + user.id);
+    if(reaction.emoji.toString().codePointAt().toString(16) === "1f346" && !reaction.message.channel.guild.members.get(user.id).hasPermission("ADMINISTRATOR")){
+    console.log("remove");
+      reaction.remove(user).catch(console.error);
+    }
 });
 
 var lastErr = 0;
