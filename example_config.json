@@ -22,5 +22,6 @@
 	"coin": "¢",
 	"authorBonus": 100000,
 	"isProd": true,
-	"logglytoken": "INSERT_LOGGLY_TOKEN_HERE"
+	"logglytoken": "INSERT_LOGGLY_TOKEN_HERE",
+  "espToken": "INSERT_ESP_TOKEN_HERE"
 }
