@@ -128,6 +128,14 @@ console.error("CONFIG FILE ENOENT ERRORS ARE EXPRECTED, IGNORE THEM!!");
 
 client.login(config.token);
 client.on("ready", () => {
+	client.on("messageReactionAdd", (reaction, user) => {
+		reactionEmitter.emit("reaction", reaction, user);
+	    console.log("Got reaction " + reaction.emoji.identifier, reaction.emoji.name + " of " + user.tag + ":" + user.id);
+	    if(reaction.emoji.toString().codePointAt().toString(16) === "1f346" && !reaction.message.channel.guild.members.get(user.id).hasPermission("ADMINISTRATOR")){
+	    console.log("remove");
+	      reaction.remove(user).catch(console.error);
+	    }
+	});
 	//client.user.setGame(`run $help for help`);
 	console.log("Ready!");
 
@@ -156,9 +164,7 @@ client.on("guildCreate", guild => guild.defaultChannel.send(config.messages.star
 class __class extends EventEmitter {}
 
 const reactionEmitter = new __class();
-client.on("messageReactionAdd", (reaction, user) => {
-	reactionEmitter.emit("reaction", reaction, user);
-});
+
 
 var lastErr = 0;
 
