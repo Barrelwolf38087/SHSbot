@@ -82,7 +82,7 @@ const writeGuildMsgs = g => {
 const rulesSet = newRules => {
 	console.log("wrote rules messages", newRules);
 	rules = newRules;
-	fs.writeFile("msgs.json", JSON.stringify(newRules), err => err ? console.error : 0);
+	fs.writeFile("rules.json", JSON.stringify(newRules), err => err ? console.error : 0);
 };
 
 writeCoins();
