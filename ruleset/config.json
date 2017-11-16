@@ -1,0 +1,4 @@
+{
+  "description": "Set a rule: `{{prefix}}ruleset 1 Rule description here...` or `{{prefix}}ruleset 1` to clear the rule",
+  "permissions": "10"
+}

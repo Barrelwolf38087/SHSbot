@@ -31,6 +31,7 @@ if(config.isProd || false){
 var coins = {};
 var bans = {};
 var guildMsgs = {};
+var rules = {};
 
 var permakicks = [];
 
@@ -51,6 +52,10 @@ try{
 
 try{
 	permakicks = require("./permakicks.json");
+}catch(e){}
+
+try{
+	rules = require("./rules.json");
 }catch(e){}
 
 const writeCoins = ()=>{
@@ -74,7 +79,14 @@ const writeGuildMsgs = g => {
 	fs.writeFile("msgs.json", JSON.stringify(guildMsgs), err => err ? console.error : 0);
 };
 
+const rulesSet = newRules => {
+	console.log("wrote rules messages", newRules);
+	rules = newRules;
+	fs.writeFile("msgs.json", JSON.stringify(newRules), err => err ? console.error : 0);
+};
+
 writeCoins();
+rulesSet(rules);
 
 coins[config.owner] = coins[config.owner] || config.authorBonus;
 
@@ -174,7 +186,7 @@ client.on("guildMemberAdd", guildMember => {
   guildMember.guild.fetchInvites.then(invites=>{
     invites.get();
   }).catch(console.error);
-  
+
   if(permakicks.includes(guildMember.user.id)){
     return guildMember.kick("permakicked!").catch(()=>guildMember.guild.defaultChannel.send("Couldn't kick! Please check permissions."));
   }
@@ -487,7 +499,9 @@ client.on("message", (message) => {
 					x.user.username.replace(/ /g, "").toLowerCase() === name ||
 					x.user.id.toString() === name.toString();
 				}).first(),
-        addPermakick
+        addPermakick,
+        rules,
+        rulesSet
 			}).then(reply=>{
 				isRunning[message.author.id] = false;
 				if(!reply){
