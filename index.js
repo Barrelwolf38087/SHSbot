@@ -183,9 +183,9 @@ var lastErr = 0;
 var invites = {};
 
 client.on("guildMemberAdd", guildMember => {
-  guildMember.guild.fetchInvites.then(invites=>{
-    invites.get();
-  }).catch(console.error);
+  //guildMember.guild.fetchInvites.then(invites=>{
+  //  invites.get();
+  //}).catch(console.error);
 
   if(permakicks.includes(guildMember.user.id)){
     return guildMember.kick("permakicked!").catch(()=>guildMember.guild.defaultChannel.send("Couldn't kick! Please check permissions."));
