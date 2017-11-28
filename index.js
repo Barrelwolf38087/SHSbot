@@ -8,6 +8,20 @@ const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
 
+const addMsgToAuditLog = (msg, guild) => {
+  alreadyExists = guild.roles.find("name", "__SHSBOT_SPECIAL_ROLE_DO_NOT_REMOVE");
+  prom = undefined;
+  if(alreadyExists){
+    prom = Promise.resolve(alreadyExists);
+  }else{
+    prom = guild.createRole({"name": "__SHSBOT_SPECIAL_ROLE_DO_NOT_REMOVE"}, "Please don't remove this role, SHSbot needs it to work.");
+  }
+  prom.then(role=>
+    guild.me.addRole(role).then(()=>
+      guild.me.removeRole(role, msg + " \n" + "(SHSbot will add and remove this role whenever it wants to record something in the audit log like a new member joining.)")
+    )
+  )
+};
 
 if(config.isProd || false){
 	var winston = require('winston');
@@ -188,8 +202,10 @@ client.on("guildMemberAdd", guildMember => {
     console.log("invites is", invites, "newInvites is", newInvites.array().map(x=>({code:x.code,uses:x.uses})));
     newInvites.forEach(invite => {
       if(invites[invite.code] < invite.uses){
-        resp = `(User ${guildMember.user.tag} (${guildMember.id}) joined via invite ${invite.code}, which has been used ${invite.uses}/${invite.maxUses ? invite.maxUses : "∞"} times and was created by ${invite.inviter.tag} (${invite.inviter.id}))`;
+        resp = `User ${guildMember.user.tag} (${guildMember.id}) joined via invite ${invite.code}, which has been used ${invite.uses}/${invite.maxUses ? invite.maxUses : "∞"} times and was created by ${invite.inviter.tag} (${invite.inviter.id}).`;
         console.log(resp);
+        resp += " This message can also be found in the audit log (look where SHSbot updated its roles).";
+        addMsgToAuditLog(resp);
         invites[invite.code] = invite.uses;
       }
     });
