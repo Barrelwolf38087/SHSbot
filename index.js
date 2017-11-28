@@ -2,7 +2,7 @@
 //shbangs for the win
 
 const Discord = require("discord.js");
-const client = new Discord.Client();
+const client = new Discord.Client({disableEveryone: true, disabledEvents: ["TYPING_START"]});
 const config = require("./config.json");
 const fs = require("fs");
 const path = require("path");
@@ -139,6 +139,9 @@ files.forEach(function (file) {
 console.error("CONFIG FILE ENOENT ERRORS ARE EXPRECTED, IGNORE THEM!!");
 
 client.login(config.token);
+
+var invites = {};
+
 client.on("ready", () => {
 	client.on("messageReactionAdd", (reaction, user) => {
 		reactionEmitter.emit("reaction", reaction, user);
@@ -148,21 +151,21 @@ client.on("ready", () => {
 	      reaction.remove(user).catch(console.error);
 	    }
 	});
-	//client.user.setGame(`run $help for help`);
 	console.log("Ready!");
+
+  client.guilds.array().filter(g=>g.available).forEach(g => {
+    g.fetchInvites().then(newInvites=>{
+      newInvites.forEach(invite => {
+        invites[invite.code] = invite.uses;
+      });
+    }).catch(console.error);
+  });
 
 	require("./setGame.js")(client);
 
 	if(config.sendOnOff){
 		const die = ()=>{//jshint ignore: line
-			var promises = [];
-			client.guilds.array().filter(g=>g.available).forEach(g=>{
-				promises.push(g.defaultChannel.send("Going down :("));
-			});
-			Promise.all(promises).then(()=>process.exit(0)).catch(e=>{
-				console.error(e);
-				process.exit(1);
-			});
+			process.exit(1);
 		};
 		process.on("SIGINT", die);
 		process.on("SIGTERM", die);
@@ -177,29 +180,43 @@ class __class extends EventEmitter {}
 
 const reactionEmitter = new __class();
 
-
 var lastErr = 0;
 
-var invites = {};
-
 client.on("guildMemberAdd", guildMember => {
-  //guildMember.guild.fetchInvites.then(invites=>{
-  //  invites.get();
-  //}).catch(console.error);
+  let resp = "";
+  guildMember.guild.fetchInvites().then(newInvites=>{
+    console.log("invites is", invites, "newInvites is", newInvites.array().map(x=>({code:x.code,uses:x.uses})));
+    newInvites.forEach(invite => {
+      if(invites[invite.code] < invite.uses){
+        resp = `(User ${guildMember.user.tag} (${guildMember.id}) joined via invite ${invite.code}, which has been used ${invite.uses}/${invite.maxUses ? invite.maxUses : "∞"} times and was created by ${invite.inviter.tag} (${invite.inviter.id}))`;
+        console.log(resp);
+        invites[invite.code] = invite.uses;
+      }
+    });
 
-  if(permakicks.includes(guildMember.user.id)){
-    return guildMember.kick("permakicked!").catch(()=>guildMember.guild.defaultChannel.send("Couldn't kick! Please check permissions."));
-  }
-	if(guildMember.guild && guildMsgs && guildMsgs[guildMember.guild.id]){
-		guildMember.guild.defaultChannel.send("<@" + guildMember.user.id + ">: " + guildMsgs[guildMember.guild.id]);
-	}else{
-		console.log("No message");
-	}
-	try{
-		require("./conversation_loader.js")(guildMember, guildMember.guild, conversations).then(guildMember.guild.defaultChannel.send).catch(guildMember.guild.defaultChannel.sends);
-	}catch(e){
-		console.error("./conversation_loader.js:", e);
-	}
+  	if(guildMember.guild && guildMsgs && guildMsgs[guildMember.guild.id]){
+  		guildMember.guild.channels.find("name", "general").send("<@" + guildMember.user.id + ">: " + guildMsgs[guildMember.guild.id]);
+  	}else{
+  		guildMember.guild.channels.find("name", "general").send(resp).catch(console.error);
+  	}
+
+    if(resp){
+      const channels = guildMember.guild.channels;
+      const adminChannel = channels.find("name", "admin-updates") || channels.find("name", "admin-land") || channels.get("327814074543112193") || channels.find("name", "general");
+      adminChannel.send(resp);
+    }
+
+    if(permakicks.includes(guildMember.user.id)){
+      return guildMember.kick("permakicked!").catch(()=>guildMember.guild.defaultChannel.send("Couldn't kick! Please check permissions."));
+    }
+
+  	try{
+  		//require("./conversation_loader.js")(guildMember, guildMember.guild, conversations).then(guildMember.guild.defaultChannel.send).catch(guildMember.guild.defaultChannel.sends);
+  	}catch(e){
+  		//console.error("./conversation_loader.js:", e);
+  	}
+
+  }).catch(console.error);
 });
 
 client.on("message", (message) => {
