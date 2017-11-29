@@ -167,13 +167,12 @@ client.on("ready", () => {
 	});
 	console.log("Ready!");
 
-  client.guilds.array().filter(g=>g.available).forEach(g => {
-    g.fetchInvites().then(newInvites=>{
-      newInvites.forEach(invite => {
-        invites[invite.code] = invite.uses;
-      });
-    }).catch(console.error);
-  });
+  const g = client.guilds.get(config.guildId);
+  g.fetchInvites().then(newInvites=>{
+    newInvites.forEach(invite => {
+      invites[invite.code] = invite.uses;
+    });
+  }).catch(console.error);
 
 	require("./setGame.js")(client);
 
