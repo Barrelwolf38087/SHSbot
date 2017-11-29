@@ -196,6 +196,12 @@ const reactionEmitter = new __class();
 
 var lastErr = 0;
 
+client.on("guildMemberRemove", guildMember => {
+  const adminChannel = guildMember.guild.channels.find("name", "admin-updates") || channels.find("name", "admin-land") || channels.get("327814074543112193") || channels.find("name", "general");
+  addMsgToAuditLog(`User ${guildMember.user.tag} (${guildMember.id}) left.`);
+  adminChannel.send(`User ${guildMember.user.tag} (${guildMember.id}) left.`);
+});
+
 client.on("guildMemberAdd", guildMember => {
   let resp = "";
   guildMember.guild.fetchInvites().then(newInvites=>{
@@ -227,9 +233,9 @@ client.on("guildMemberAdd", guildMember => {
     }
 
   	try{
-  		//require("./conversation_loader.js")(guildMember, guildMember.guild, conversations).then(guildMember.guild.defaultChannel.send).catch(guildMember.guild.defaultChannel.sends);
+  		require("./conversation_loader.js")(guildMember, guildMember.guild, conversations);
   	}catch(e){
-  		//console.error("./conversation_loader.js:", e);
+  		console.error("./conversation_loader.js:", e);
   	}
 
   }).catch(console.error);
