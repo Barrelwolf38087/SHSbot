@@ -133,6 +133,7 @@ var files = fs.readdirSync(__dirname);
 files.forEach(function (file) {
 	if(file === "node_modules" || file === "temp" || file === ".git" || file === "profile_picts"){
 		return;
+
 	}
 	try{
 		var stats = fs.lstatSync(path.join(__dirname, file));
@@ -151,7 +152,6 @@ files.forEach(function (file) {
 	}
 });
 console.error("CONFIG FILE ENOENT ERRORS ARE EXPRECTED, IGNORE THEM!!");
-
 client.login(config.token);
 
 var invites = {};
@@ -197,7 +197,7 @@ var lastErr = 0;
 
 client.on("guildMemberRemove", guildMember => {
   const adminChannel = guildMember.guild.channels.find("name", "admin-updates") || channels.find("name", "admin-land") || channels.get("327814074543112193") || channels.find("name", "general");
-  addMsgToAuditLog(`User ${guildMember.user.tag} (${guildMember.id}) left.`);
+  addMsgToAuditLog(`User ${guildMember.user.tag} (${guildMember.id}) left.`, guildMember.guild);
   adminChannel.send(`User ${guildMember.user.tag} (${guildMember.id}) left.`);
 });
 
@@ -210,7 +210,7 @@ client.on("guildMemberAdd", guildMember => {
         resp = `User ${guildMember.user.tag} (${guildMember.id}) joined via invite ${invite.code}, which has been used ${invite.uses}/${invite.maxUses ? invite.maxUses : "∞"} times and was created by ${invite.inviter.tag} (${invite.inviter.id}).`;
         console.log(resp);
         resp += " This message can also be found in the audit log (look where SHSbot updated its roles).";
-        addMsgToAuditLog(resp);
+        addMsgToAuditLog(resp, guildMember.guild);
         invites[invite.code] = invite.uses;
       }
     });
