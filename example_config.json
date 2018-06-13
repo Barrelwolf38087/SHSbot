@@ -23,5 +23,6 @@
 	"authorBonus": 100000,
 	"isProd": true,
 	"logglytoken": "INSERT_LOGGLY_TOKEN_HERE",
-  "espToken": "INSERT_ESP_TOKEN_HERE"
+  "espToken": "INSERT_ESP_TOKEN_HERE",
+	"guildId": "INSERT_MAIN_GUILD_ID_HERE"
 }
