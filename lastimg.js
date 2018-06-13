@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
-fs.mkdirSync("temp");
+try{fs.mkdirSync("temp");}catch(e){}//eslint-disable-line no-empty
 const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&"\(\)\*\+,;=.]+$/;//eslint-disable-line no-useless-escape
 
 //https://github.com/aheckmann/gm/issues/572#issuecomment-293768810
