@@ -10,38 +10,38 @@ module.exports = config => new Promise((resolve, reject) => {
 			}
 
 			var from;
-	    if(commandArr[0] === "detect"){
+			if(commandArr[0] === "detect"){
 				from = {language: ""};
 			}else{
-	        from = resp.data.languages.find(x=>x.language.toLowerCase() === commandArr[0].toLowerCase() || x.name.toLowerCase() === commandArr[0].toLowerCase());
-	        if(!from || !from.language){
-	            return reject("The language " + commandArr[0] + " could not be found.");
-	        }
-	    }
+				from = resp.data.languages.find(x=>x.language.toLowerCase() === commandArr[0].toLowerCase() || x.name.toLowerCase() === commandArr[0].toLowerCase());
+				if(!from || !from.language){
+					return reject("The language " + commandArr[0] + " could not be found.");
+				}
+			}
 
 			var to = resp.data.languages.find(x=>x.language.toLowerCase() === commandArr[1].toLowerCase() || x.name.toLowerCase() === commandArr[1].toLowerCase());
 			if(!to || !to.language){
 				return reject("The language " + commandArr[1] + " could not be found.");
 			}
-	    fetch("https://content-translation.googleapis.com/language/translate/v2?key=" + config.config.shortURLKey,
-	    {
-	        headers: {
-	          "Accept": "application/json",
-	          "Content-Type": "application/json"
-	        },
-	        method: "POST",
-	        body: JSON.stringify({
-	         "q": [
-	          commandArr.slice(2).join(" ")
-	         ],
-	         "target": to.language,
-	         "source": from.language
-	        })
-	    })
-	    .then(x=>x.json()).then(data => {
-	        if(data.error || !data.data || !data.data.translations || !data.data.translations[0] || !data.data.translations[0].translatedText){
-	            return reject(data.error.message || "Could not translate text!");
-	        }
+			fetch("https://content-translation.googleapis.com/language/translate/v2?key=" + config.config.shortURLKey,
+				{
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					},
+					method: "POST",
+					body: JSON.stringify({
+						"q": [
+							commandArr.slice(2).join(" ")
+						],
+						"target": to.language,
+						"source": from.language
+					})
+				})
+				.then(x=>x.json()).then(data => {
+					if(data.error || !data.data || !data.data.translations || !data.data.translations[0] || !data.data.translations[0].translatedText){
+						return reject(data.error.message || "Could not translate text!");
+					}
 
 					var text = data.data.translations[0].translatedText;
 

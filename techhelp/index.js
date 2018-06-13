@@ -11,15 +11,15 @@ const init = () => new Promise((resolve)=>{
 	}else{
 		var s = fs.readFileSync(__dirname + "/seed.txt", "utf-8");
 		m.seed(s, ()=>{
-		   resolve();
+			resolve();
 		});
 	}
 });
 
 module.exports = config => new Promise((resolve, reject)=>{
 	init().then(()=>{
-		 var res = m.respond(config.commandArr.join(" ")).join(" ");
-		 console.log("tech help", res);
-		 config.sendMessage("Consulting the experts...").then(()=>setTimeout(resolve, ~~(Math.random() * 5000), res.slice(0, 2000)));
+		var res = m.respond(config.commandArr.join(" ")).join(" ");
+		console.log("tech help", res);
+		config.sendMessage("Consulting the experts...").then(()=>setTimeout(resolve, ~~(Math.random() * 5000), res.slice(0, 2000)));
 	}).catch(reject);
 });

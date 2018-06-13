@@ -13,8 +13,8 @@ module.exports = config => new Promise((resolve, reject)=>{
 	}
 
 	fetch("https://www.googleapis.com/urlshortener/v1/url?key=" + config.config.shortURLKey + "&fields=id", { headers: {
-	  "Accept": "application/json",
-	  "Content-Type": "application/json"
+		"Accept": "application/json",
+		"Content-Type": "application/json"
 	},
 	method: "POST",
 	body: JSON.stringify({
