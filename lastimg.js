@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
+fs.mkdirSync("temp");
 const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&"\(\)\*\+,;=.]+$/;//eslint-disable-line no-useless-escape
 
 //https://github.com/aheckmann/gm/issues/572#issuecomment-293768810
@@ -54,6 +55,9 @@ module.exports = (config, prom, hush) => new Promise(function(resolve, reject) {
 				file = "temp/TEMP.jpeg";
 				return resp.buffer();
 			}else if(type === "image/gif"){
+				file = "temp/TEMP.gif";
+				return resp.buffer();
+			}else if(type === "image/webp"){
 				file = "temp/TEMP.gif";
 				return resp.buffer();
 			}else{
