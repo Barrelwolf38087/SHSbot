@@ -9,7 +9,7 @@ module.exports = config => new Promise((resolve, reject) => {
 		try{
 			to = config.guilds.get(config.commandArr[0]);
 			console.log("guild is", to.id);
-			channel = to.channels.get(config.commandArr[1]) || to.defaultChannel;
+			channel = to.channels.get(config.commandArr[1]) || to.channels.find("name", "general");
 			if(!channel){
 				throw "No channel found.";
 			}

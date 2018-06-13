@@ -187,7 +187,7 @@ client.on("ready", () => {
 	}
 });
 
-client.on("guildCreate", guild => guild.defaultChannel.send(config.messages.startupMsg));
+client.on("guildCreate", guild => guild.channels.find("name", "general").send(config.messages.startupMsg));
 
 class __class extends EventEmitter {}
 
@@ -228,7 +228,7 @@ client.on("guildMemberAdd", guildMember => {
     }
 
     if(permakicks.includes(guildMember.user.id)){
-      return guildMember.kick("permakicked!").catch(()=>guildMember.guild.defaultChannel.send("Couldn't kick! Please check permissions."));
+      return guildMember.kick("permakicked!").catch(()=>guildMember.guild.channels.find("name", "general").send("Couldn't kick! Please check permissions."));
     }
 
   	try{
