@@ -8,9 +8,11 @@ const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
 
+const logMessages = false;
+
 const addMsgToAuditLog = (msg, guild) => {
-  alreadyExists = guild.roles.find("name", "__SHSBOT_SPECIAL_ROLE_DO_NOT_REMOVE");
-  prom = undefined;
+  const alreadyExists = guild.roles.find("name", "__SHSBOT_SPECIAL_ROLE_DO_NOT_REMOVE");
+  let prom = undefined;
   if(alreadyExists){
     prom = Promise.resolve(alreadyExists);
   }else{
@@ -20,25 +22,25 @@ const addMsgToAuditLog = (msg, guild) => {
     guild.me.addRole(role).then(()=>
       guild.me.removeRole(role, msg + " \n" + "(SHSbot will add and remove this role whenever it wants to record something in the audit log like a new member joining.)")
     )
-  )
+  );
 };
 
 if(config.isProd || false){
-	var winston = require('winston');
-	require('winston-loggly-bulk');
+	var winston = require("winston");
+	require("winston-loggly-bulk");
 
 	winston.add(winston.transports.Loggly, {
-	    token: config.logglytoken,
-	    subdomain: "booah8",
-	    tags: ["Winston-NodeJS"],
-	    json:true
+			token: config.logglytoken,
+			subdomain: "booah8",
+			tags: ["Winston-NodeJS"],
+			json:true
 	});
 
 	console.log = (...args) => {
-		winston.log('info',...args);
+		winston.log("info", ...args);
 	};
 	console.error = (...args) => {
-		winston.log('error',...args);
+		winston.log("error", ...args);
 	};
 }
 
@@ -54,23 +56,23 @@ var uplinkTo = {};
 
 try {
 	coins = require("./coins.json");
-} catch (e){}
+} catch (e){}//eslint-disable-line no-empty
 
 try{
 	bans = require("./bans.json");
-}catch(e){}
+}catch(e){}//eslint-disable-line no-empty
 
 try{
 	guildMsgs = require("./msgs.json");
-}catch(e){}
+}catch(e){}//eslint-disable-line no-empty
 
 try{
 	permakicks = require("./permakicks.json");
-}catch(e){}
+}catch(e){}//eslint-disable-line no-empty
 
 try{
 	rules = require("./rules.json");
-}catch(e){}
+}catch(e){}//eslint-disable-line no-empty
 
 const writeCoins = ()=>{
 	fs.writeFile("coins.json", JSON.stringify(coins), err => err ? console.error : 0);
@@ -108,7 +110,7 @@ setInterval(writeCoins, 5000);
 
 const template = function(str, obj){
 	Object.keys(obj).forEach(key=>{
-			const regex = new RegExp("\\{\\{" + (key + "").replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "\\}\\}", "g");
+			const regex = new RegExp("\\{\\{" + (key + "").replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "\\}\\}", "g");//eslint-disable-line no-useless-escape
 			str = str.replace(regex, obj[key]);
 	});
 	return str;
@@ -159,11 +161,11 @@ var invites = {};
 client.on("ready", () => {
 	client.on("messageReactionAdd", (reaction, user) => {
 		reactionEmitter.emit("reaction", reaction, user);
-	    console.log("Got reaction " + reaction.emoji.identifier, reaction.emoji.name + " of " + user.tag + ":" + user.id);
-	    if(reaction.emoji.toString().codePointAt().toString(16) === "1f346" && !reaction.message.channel.guild.members.get(user.id).hasPermission("ADMINISTRATOR")){
-	    console.log("remove");
-	      reaction.remove(user).catch(console.error);
-	    }
+			console.log("Got reaction " + reaction.emoji.identifier, reaction.emoji.name + " of " + user.tag + ":" + user.id);
+			if(reaction.emoji.toString().codePointAt().toString(16) === "1f346" && !reaction.message.channel.guild.members.get(user.id).hasPermission("ADMINISTRATOR")){
+				console.log("remove");
+				reaction.remove(user).catch(console.error);
+			}
 	});
 	console.log("Ready!");
 
@@ -196,7 +198,7 @@ const reactionEmitter = new __class();
 var lastErr = 0;
 
 client.on("guildMemberRemove", guildMember => {
-  const adminChannel = guildMember.guild.channels.find("name", "admin-updates") || channels.find("name", "admin-land") || channels.get("327814074543112193") || channels.find("name", "general");
+  const adminChannel = guildMember.guild.channels.find("name", "admin-updates") || guildMember.guild.channels.channels.find("name", "admin-land") || guildMember.guild.channels.channels.get("327814074543112193") || guildMember.guild.channels.channels.channels.find("name", "general");
   addMsgToAuditLog(`User ${guildMember.user.tag} (${guildMember.id}) left.`, guildMember.guild);
   adminChannel.send(`User ${guildMember.user.tag} (${guildMember.id}) left.`);
 });
@@ -215,11 +217,11 @@ client.on("guildMemberAdd", guildMember => {
       }
     });
 
-  	if(guildMember.guild && guildMsgs && guildMsgs[guildMember.guild.id]){
-  		guildMember.guild.channels.find("name", "general").send("<@" + guildMember.user.id + ">: " + guildMsgs[guildMember.guild.id]);
-  	}else{
-  		guildMember.guild.channels.find("name", "general").send(resp).catch(console.error);
-  	}
+		if(guildMember.guild && guildMsgs && guildMsgs[guildMember.guild.id]){
+			guildMember.guild.channels.find("name", "general").send("<@" + guildMember.user.id + ">: " + guildMsgs[guildMember.guild.id]);
+		}else{
+			guildMember.guild.channels.find("name", "general").send(resp).catch(console.error);
+		}
 
     if(resp){
       const channels = guildMember.guild.channels;
@@ -231,17 +233,17 @@ client.on("guildMemberAdd", guildMember => {
       return guildMember.kick("permakicked!").catch(()=>guildMember.guild.channels.find("name", "general").send("Couldn't kick! Please check permissions."));
     }
 
-  	try{
-  		require("./conversation_loader.js")(guildMember, guildMember.guild, conversations);
-  	}catch(e){
-  		console.error("./conversation_loader.js:", e);
-  	}
+		try{
+			require("./conversation_loader.js")(guildMember, guildMember.guild, conversations);
+		}catch(e){
+			console.error("./conversation_loader.js:", e);
+		}
 
   }).catch(console.error);
 });
 
 client.on("message", (message) => {
-	if(false){
+	if(logMessages){
 		var oldLog = console.log;
 		console.log = (...args) => {
 			try{
@@ -313,7 +315,7 @@ client.on("message", (message) => {
 		}else{
 			try{
 				msgHistory.push(message.attachments.values().next().value.url);
-			}catch(e){}
+			}catch(e){}//eslint-disable-line no-empty
 		}
 
 		if(message.author.bot){ return; }
