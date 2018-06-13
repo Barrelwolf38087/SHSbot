@@ -162,7 +162,7 @@ const func = config=>new Promise((resolve, reject)=>{
 					msg = "The winning board:";
 				}
 
-				const draw = o.board.every(row=>row.every(sq=>sq.trim()));
+				const draw = o.board.every(row=>row.every(sq=>sq.trim())) && !won;
 
 				o.isX = !o.isX;
 
