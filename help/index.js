@@ -21,18 +21,18 @@ module.exports = config => new Promise((resolve, reject)=>{
 		console.log("less than 2000!");
 		resolve(str);
 	}else{
-		async function doit (str){//jshint ignore: line
+		const doit = async function (str){
 			if(str.length > 2000){
 				console.log(str.slice(0, 2000).length);
-				await config.sendMessage(str.slice(0, 2000));//jshint ignore: line
-				await doit(str.slice(2000));//jshint ignore: line
+				await config.sendMessage(str.slice(0, 2000));
+				await doit(str.slice(2000));
 				return;
 			}else{
 				console.log(str.length);
-				await config.sendMessage(str);//jshint ignore: line
+				await config.sendMessage(str);
 				return;
 			}
-		}
+		};
 		doit(str).then(resolve);
 	}
 });

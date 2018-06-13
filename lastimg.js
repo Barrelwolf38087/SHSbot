@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
-const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&"\(\)\*\+,;=.]+$/;
+const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&"\(\)\*\+,;=.]+$/;//eslint-disable-line no-useless-escape
 
 //https://github.com/aheckmann/gm/issues/572#issuecomment-293768810
 function gmToBuffer(data) {
@@ -67,7 +67,7 @@ module.exports = (config, prom, hush) => new Promise(function(resolve, reject) {
 			fs.writeFile(file, buffer, (err)=>{
 				if(err){
 					return reject(err);
-			 	}
+				}
 				log("done!");
 				prom(file).then(gmObj=>{
 					gmToBuffer(gmObj).then(buff=>{

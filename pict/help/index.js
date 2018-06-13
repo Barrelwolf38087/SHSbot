@@ -36,7 +36,7 @@ const getDirs = () => new Promise(function(resolve, reject) {
 });
 
 module.exports = config => new Promise((resolve, reject)=>{
-	if(Math.random() <= 1 / 10 || true){
+	if(Math.random() <= 3 / 10){
 		config.privateMessage(":tada: Congradulations! You found an easter egg! (Code #1ecd64890a6e4)");
 	}
 	const main = ()=>{

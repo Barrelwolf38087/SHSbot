@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const fs = require("fs");
 const cfg = require("./config.json");
 const gm = require("gm");
-const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+const URLregex = /^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;//eslint-disable-line no-useless-escape
 
 module.exports = config => new Promise(function(resolve, reject) {
 	var msg;

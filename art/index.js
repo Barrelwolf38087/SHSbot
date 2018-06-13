@@ -20,7 +20,7 @@ const getFiles = function(){
 				});
 			});
 			var promises = [];
-			files.forEach(file=>promises.push(readFileProm(file)));
+			files.forEach(file=>promises.push(readFileProm(file).catch(reject)));
 
 			Promise.all(promises).then(data=>{
 				console.log("got data", data);
