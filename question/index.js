@@ -32,12 +32,12 @@ module.exports = config => new Promise((resolve, reject)=>{
 			        }
 			        var name = pod.title;
 			        var plaintext = pod.subpods[0].plaintext;
-							if(name && plaintext){
-								resp.embed.fields.push({name: name, value: plaintext});
-							}else if(pod.subpods && pod.subpods[0] && pod.subpods[0].img && pod.subpods[0].img.src && !resp.embed.image){
-								resp.embed.image = {};
-								resp.embed.image.url = pod.subpods[0].img.src;
-							}
+						if(name && plaintext){
+							resp.embed.fields.push({name: name, value: plaintext});
+						}else if(pod.subpods && pod.subpods[0] && pod.subpods[0].img && pod.subpods[0].img.src && !resp.embed.image){
+							resp.embed.image = {};
+							resp.embed.image.url = pod.subpods[0].img.src;
+						}
 				   }catch(e){
 						console.error(e, pod);
 					}

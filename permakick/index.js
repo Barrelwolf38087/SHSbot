@@ -7,6 +7,6 @@ module.exports = config => new Promise((resolve, reject) => {
 		return reject("I couldn't find that user.");
 	}
 	config.addPermakick(user.user.id);
-  user.kick("Permakicked");
-  return resolve("Done!");
+	user.kick("Permakicked");
+	return resolve("Done!");
 });

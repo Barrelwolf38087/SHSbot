@@ -7,11 +7,11 @@ module.exports = config => new Promise(resolve=>{
 		var moon = emojiz[~~(obj.moon_phase.ageOfMoon * emojiz.length / 30)];
 		config.sendMessage("It's " + obj.current_observation.icon + " today, and it feels like " + obj.current_observation.feelslike_string + (obj.current_observation.feelslike_string === obj.current_observation.temperature_string ?
 		 ""
-		: ", even though it's " + obj.current_observation.temperature_string) +
+			: ", even though it's " + obj.current_observation.temperature_string) +
 		 ". " + (obj.alerts && obj.alerts[0] && obj.alerts[0].type ?
 			"Looks like there's a " + obj.alerts[0].description.toLowerCase() + "! Yikes!"
 			: "(Un)fortunately, there's no extreme weather nearby." ) +
 			" The moon is a " + moon.replace(/_/g, " ") + " :" + moon + ":.");
-			resolve({file: {attachment: "https://cdn.discordapp.com/attachments/340940153424052225/342008111801958401/WU.png"}});
-		});
+		resolve({file: {attachment: "https://cdn.discordapp.com/attachments/340940153424052225/342008111801958401/WU.png"}});
+	});
 });

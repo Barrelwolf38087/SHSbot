@@ -109,8 +109,8 @@ const done = (message, conversation, client) => {
 		var guild = client.guilds.get(conversation.guildId);
 		var member = guild.members.get(message.author.id);
 		if(newNickname){
-				member.setNickname(newNickname);
-				console.log("set nickname to", newNickname);
+			member.setNickname(newNickname);
+			console.log("set nickname to", newNickname);
 		}
 
 		var hasError = false;
@@ -155,4 +155,4 @@ module.exports = (message, conversation, client) => {
 				conversation = undefined;
 			}
 		});
-	};
+};
