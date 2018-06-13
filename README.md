@@ -14,7 +14,7 @@ nano config.json # SHSbot needs a Discord auth key to work, as well as various o
 node . #When "Ready!" is logged, SHSbot is online!
 ```
 
-You may need Node.js & npm:
+If you don't have it, you will need Node.js & npm:
 
 ```bash
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
