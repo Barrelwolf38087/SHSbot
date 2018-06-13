@@ -449,10 +449,16 @@ client.on("message", (message) => {
 				bans,
 				client,
 				conversations,
-				searchForUser: name=>message.channel.guild.members.filter(x=>{
+				searchForUser: name => message.channel.guild.members.filter(x=>{
 					return x.displayName.replace(/ /g, "").toLowerCase() === name ||
 					x.user.username.replace(/ /g, "").toLowerCase() === name ||
-					x.user.id.toString() === name.toString();
+					x.user.id.toString() === name.toString() ||
+					(
+						name.slice(0, 2) === "<@" &&
+						name.slice(-1) === ">" &&
+						name.length === 21 &&
+						x.user.id === name.slice(2, -1)
+					);
 				}).first(),
 				addPermakick,
 				rules,
