@@ -10,7 +10,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 	).forEach(dir=>{
 		try{
 			hasFound = true;
-			str += `\`${config.config.prefix}${dir}\`: ${config.template(config.configs[dir].description, config.config)}\n\n`;
+			str += `\`${config.config.prefix}${dir}\`: ${config.template(config.configs[dir].description, config.config)}\n`;
 		}catch(e){}//eslint-disable-line no-empty
 	});
 
