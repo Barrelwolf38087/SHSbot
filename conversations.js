@@ -1,4 +1,5 @@
 const fetch = require("node-fetch");
+const debugStr = "___ENABLE_DEBUGGING";
 
 const done = (message, conversation, client) => {
 	var grade;
@@ -28,6 +29,10 @@ const done = (message, conversation, client) => {
 			}
 		});
 
+		if(conversation.debug){
+			author.send();
+		}
+
 		if(intent === "Grade"){
 			grade = params.grade9or10 || params.grade11or12 || params.teacher;
 		}
@@ -52,7 +57,7 @@ const done = (message, conversation, client) => {
 		if(intent === "Teacher wants support" || intent === "Support"){
 			support = !!params.yes;
 		}
-		if((intent === "Teaches advisory - name" && teachesAdvisory) || intent === "Advisor"){
+		if(((intent === "Teaches advisory - name" && teachesAdvisory) || intent === "Advisor") && params.advisory){
 			advisor = params.advisory;
 		}
 		if(intent === "Team"){
@@ -65,6 +70,21 @@ const done = (message, conversation, client) => {
 			newNickname = resp.result.resolvedQuery;
 		}
 	});
+
+	if(conversation.debug){
+		message.author.send(JSON.stringify({
+			grade,
+			team,
+			advisor,
+			teachesAdvisory,
+			support,
+			band,
+			chorus,
+			spanish,
+			french,
+			latin
+		}));
+	}
 
 	var channels = [];
 	if(grade){
@@ -98,11 +118,11 @@ const done = (message, conversation, client) => {
 	channels.push(support && "support");
 
 	channels = channels.filter(x=>x);
-	console.log(channels, newNickname);
+	console.log("channels", channels, "newNickname", newNickname);
 
-	//message.author.send("Your roles are: " + channels.join(", "));
-	if(newNickname){
-		//message.author.send("Your new nickname is " + newNickname);
+	if(conversation.debug) message.author.send("Your roles are: " + channels.join(", "));
+	if(newNickname && conversation.debug){
+		message.author.send("Your new nickname is " + newNickname);
 	}
 
 	if(conversation.setVars){
@@ -125,14 +145,19 @@ const done = (message, conversation, client) => {
 					return;
 				}
 				hasError = true;
-				send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin. Or just manually assign the roles yourself.. Your roles should be " + channels.join(", "));
+				send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin. Or, if you can, manually assign the roles yourself. Your roles should be " + channels.join(", "));
 			})
 		);
 	}
 };
 
 module.exports = (message, conversation, client) => {
-	var value = message.toString().trim();
+	let value = message.toString().trim();
+	if(value.includes(debugStr)){
+		conversation.debug = true;
+		value = value.replace(debugStr, "").trim();
+		message.author.send("Debugging enabled!");
+	}
 
 	fetch("https://api.api.ai/v1/query?v=20150910&lang=en&query=" + encodeURIComponent(value) + "&sessionId=" +
 	conversation.sessionId, {headers:
