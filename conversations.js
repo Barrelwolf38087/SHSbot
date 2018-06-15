@@ -29,10 +29,6 @@ const done = (message, conversation, client) => {
 			}
 		});
 
-		if(conversation.debug){
-			author.send();
-		}
-
 		if(intent === "Grade"){
 			grade = params.grade9or10 || params.grade11or12 || params.teacher;
 		}
@@ -120,7 +116,9 @@ const done = (message, conversation, client) => {
 	channels = channels.filter(x=>x);
 	console.log("channels", channels, "newNickname", newNickname);
 
-	if(conversation.debug) message.author.send("Your roles are: " + channels.join(", "));
+	if(conversation.debug){
+		message.author.send("Your roles are: " + channels.join(", "));
+	}
 	if(newNickname && conversation.debug){
 		message.author.send("Your new nickname is " + newNickname);
 	}
@@ -158,6 +156,8 @@ module.exports = (message, conversation, client) => {
 		value = value.replace(debugStr, "").trim();
 		message.author.send("Debugging enabled!");
 	}
+
+	if(conversation.debug) console.log("debugging conversation");
 
 	fetch("https://api.api.ai/v1/query?v=20150910&lang=en&query=" + encodeURIComponent(value) + "&sessionId=" +
 	conversation.sessionId, {headers:
