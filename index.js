@@ -20,7 +20,7 @@ const addMsgToAuditLog = (msg, guild) => {
 		)
 	);
 };
-if(config.isProd || false){
+if(config.isProd){
 	var winston = require("winston");
 	require("winston-loggly-bulk");
 	winston.add(winston.transports.Loggly, {
