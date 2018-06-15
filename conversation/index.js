@@ -1,5 +1,4 @@
 module.exports = data => new Promise((resolve, reject) => {
-	console.log(data);
 	let user = data.commandArr[0];
 	if(user){
 		user = data.searchForUser(user);
