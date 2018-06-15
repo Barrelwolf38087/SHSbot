@@ -3,7 +3,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 
 	var hasFound = false;
 
-	config.directories.filter(x=>x[0] !== ".").filter(x=>!config.commandArr[0] || config.commandArr[0] === x ).forEach(dir=>{
+	config.directories.filter(x=>x[0] !== ".").filter(x=>!config.commandArr[0] || config.commandArr[0] === x && config.configs[dir].description && config.configs[dir].description.length).forEach(dir=>{
 		try{
 			hasFound = true;
 			str += `\`${config.config.prefix}${dir}\`: ${config.template(config.configs[dir].description, config.config)}\n\n`;
@@ -18,7 +18,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 	if(str.length <= 2000){
 		console.log("less than 2000!");
 		resolve(str);
-	}else{
+	}else if(str.length){
 		const doit = async function (str){
 			if(str.length > 2000){
 				console.log(str.slice(0, 2000).length);
@@ -32,5 +32,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 			}
 		};
 		doit(str).then(resolve);
+	}else{
+		resolve("Sorry, that command has no help");
 	}
 });
