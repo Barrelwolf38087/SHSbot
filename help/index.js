@@ -3,7 +3,11 @@ module.exports = config => new Promise((resolve, reject)=>{
 
 	var hasFound = false;
 
-	config.directories.filter(x=>x[0] !== ".").filter(x=>!config.commandArr[0] || config.commandArr[0] === x && config.configs[dir].description && config.configs[dir].description.length).forEach(dir=>{
+	config.directories.filter(x=>x[0] !== ".").filter(x=>
+		(!config.commandArr[0] || config.commandArr[0] === x) &&
+		config.configs[x].description &&
+		config.configs[x].description.length
+	).forEach(dir=>{
 		try{
 			hasFound = true;
 			str += `\`${config.config.prefix}${dir}\`: ${config.template(config.configs[dir].description, config.config)}\n\n`;
@@ -32,7 +36,5 @@ module.exports = config => new Promise((resolve, reject)=>{
 			}
 		};
 		doit(str).then(resolve);
-	}else{
-		resolve("Sorry, that command has no help");
 	}
 });

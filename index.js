@@ -1,5 +1,4 @@
 #!/usr/bin/node
-//shbangs for the win
 const Discord = require("discord.js");
 const client = new Discord.Client({disableEveryone: true, disabledEvents: ["TYPING_START"]});
 const config = require("./config.json");
