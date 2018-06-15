@@ -3,13 +3,11 @@ module.exports = config => new Promise((resolve, reject)=>{
 
 	var hasFound = false;
 
-	config.directories.filter(x=>x[0] !== ".").filter(x=>!config.commandArr[0] || config.commandArr[0] === x).forEach(dir=>{
+	config.directories.filter(x=>x[0] !== ".").filter(x=>!config.commandArr[0] || config.commandArr[0] === x ).forEach(dir=>{
 		try{
 			hasFound = true;
 			str += `\`${config.config.prefix}${dir}\`: ${config.template(config.configs[dir].description, config.config)}\n\n`;
-		}catch(e){
-			console.error(e);
-		}
+		}catch(e){}//eslint-disable-line no-empty
 	});
 
 	if(!hasFound){
