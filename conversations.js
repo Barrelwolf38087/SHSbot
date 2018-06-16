@@ -135,9 +135,11 @@ const done = (message, conversation, client) => {
 
 		var author = message.author;
 		const send = str => author.send(str);
-		channels.forEach(role=>
+		channels.forEach(role=>{
+			const foundRole = guild.roles.find(x=>x.name.toLowerCase().trim() === role.toLowerCase().trim());
+			console.log("found role", typeof foundRole, "with id", foundRole && foundRole.id, "and name", foundRole && foundRole.name, "for role", role);
 			member.addRole(
-				guild.roles.find(x=>x.name.toLowerCase().trim() === role.toLowerCase().trim())
+				foundRole
 			).catch(e=>{
 				console.error(e);
 				if(hasError){
@@ -145,8 +147,8 @@ const done = (message, conversation, client) => {
 				}
 				hasError = true;
 				send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin. Or, if you can, manually assign the roles yourself. Your roles should be " + channels.join(", "));
-			})
-		);
+			});
+		});
 	}
 };
 
