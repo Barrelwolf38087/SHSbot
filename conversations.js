@@ -131,10 +131,10 @@ const done = (message, conversation, client) => {
 			console.log("set nickname to", newNickname);
 		}
 
-		var hasError = false;
-
-		var author = message.author;
+		let author = message.author;
 		const send = str => author.send(str);
+		const notAppliedRoles = [];
+
 		channels.forEach(role=>{
 			const foundRole = guild.roles.find(x=>
 				x.name.toLowerCase().trim().includes(role.toLowerCase().trim()) ||
@@ -145,13 +145,13 @@ const done = (message, conversation, client) => {
 				foundRole
 			).catch(e=>{
 				console.error(e);
-				if(hasError){
-					return;
-				}
-				hasError = true;
-				send("Looks like I couldn't set your roles in the SHS Discord server. SHSbot needs permissions to manage roles, and SHSbot's highest role must be lower than your highest role. Fix this yourself or talk to an admin. Or, if you can, manually assign the roles yourself. Your roles should be " + channels.join(", "));
+
+				notAppliedRoles.push(role);
 			});
 		});
+		if(notAppliedRoles.length){
+			send(`Looks like I couldn't give you some roles in the SHS Discord server. Please ask an admin to give you these roles \`${notAppliedRoles.join("\n")}\``);
+		}
 	}
 };
 
