@@ -116,14 +116,14 @@ files.forEach(function (file) {
 				configs[file] = require(path.join(__dirname, file, "config.json"));
 				overrides[file] = require(path.join(__dirname, file, "perm-overrides.json"));
 			}catch(e){
-				console.error("Config for", file, "got", e);
+				// console.error("Config for", file, "got", e);
 			}
 		}
 	}catch(e){
-		console.error("Config for", file, "got", e);
+		// console.error("Config for", file, "got", e);
 	}
 });
-console.error("CONFIG FILE ENOENT ERRORS ARE EXPRECTED, IGNORE THEM!!");
+// console.error("CONFIG FILE ENOENT ERRORS ARE EXPRECTED, IGNORE THEM!!");
 client.login(config.token);
 var invites = {};
 client.on("ready", () => {
