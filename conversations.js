@@ -85,10 +85,10 @@ const done = (message, conversation, client) => {
 	var channels = [];
 	if(grade){
 		channels.push({
-			"9th grade": "Cringy Freshmen",
-			"10th grade": "Decent Sophomores",
-			"11th grade": "Pretty Dank Juniors",
-			"12th grade": "Spicy Seniors",
+			"9th grade": "Freshmen",
+			"10th grade": "Sophomores",
+			"11th grade": "Juniors",
+			"12th grade": "Seniors",
 			"teacher": "teachers"
 		}[grade.toLowerCase()]);
 	}
@@ -136,7 +136,10 @@ const done = (message, conversation, client) => {
 		var author = message.author;
 		const send = str => author.send(str);
 		channels.forEach(role=>{
-			const foundRole = guild.roles.find(x=>x.name.toLowerCase().trim() === role.toLowerCase().trim());
+			const foundRole = guild.roles.find(x=>
+				x.name.toLowerCase().trim().includes(role.toLowerCase().trim()) ||
+				x.id.toString() === role.trim()
+			);
 			console.log("found role", typeof foundRole, "with id", foundRole && foundRole.id, "and name", foundRole && foundRole.name, "for role", role);
 			member.addRole(
 				foundRole
