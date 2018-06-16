@@ -138,7 +138,8 @@ const done = (message, conversation, client) => {
 		channels.forEach(role=>
 			member.addRole(
 				guild.roles.find(x=>x.name.toLowerCase().trim() === role.toLowerCase().trim())
-			).catch(()=>{
+			).catch(e=>{
+				console.error(e);
 				if(hasError){
 					return;
 				}
