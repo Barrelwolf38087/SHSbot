@@ -121,7 +121,7 @@ const done = (message, conversation, client) => {
 	channels.push(support && "support");
 
 	channels = channels.filter(x=>x);
-	console.log("channels", channels, "newNickname", newNickname);
+	console.log("channels", channels);
 
 	if(conversation.debug){
 		message.author.send("Your roles are: " + channels.join(", "));
@@ -192,7 +192,7 @@ module.exports = (message, conversation, client) => {
 
 			conversation.responses.push(response);
 
-			console.log("got response", response.fulfillmentText, response);
+			console.log("got response", response.fulfillmentText);
 
 			message.author.send(response.fulfillmentText);
 
