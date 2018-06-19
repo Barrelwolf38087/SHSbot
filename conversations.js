@@ -167,7 +167,7 @@ module.exports = (message, conversation, client) => {
 
 	fetch("https://api.api.ai/v1/query?v=20150910&lang=en&query=" + encodeURIComponent(value) + "&sessionId=" +
 	conversation.sessionId, {headers:
-		{"Authorization": "Bearer " + require("./config.json").apiAiToken}})
+		{"Authorization": "Bearer " + require("./config.json").dialogflowToken}})
 		.then(x=>x.json()).then(data => {
 
 			conversation.responses.push(data);
