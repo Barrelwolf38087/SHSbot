@@ -1,4 +1,10 @@
-const fetch = require("node-fetch");
+const config = require("./config.json");
+const dialogflow = require("dialogflow");
+
+const sessionClient = new dialogflow.SessionsClient();
+const languageCode = "en-US";
+const projectId = config.dialogflowProjectId;
+
 const debugStr = "___ENABLE_DEBUGGING";
 
 const done = (message, conversation, client) => {
@@ -16,16 +22,17 @@ const done = (message, conversation, client) => {
 	var newNickname;
 
 	conversation.responses.forEach(resp => {
-		var intent = resp.result.metadata.intentName;
-		var params = resp.result.parameters;
+		var intent = resp.intent.displayName;
+		var params = resp.parameters.fields;
 
 		console.log(intent, params);
 
 		Object.keys(params).forEach(key => {
+			console.log(params[key]);
 			if(params[key].map){
-				params[key] = params[key].map(x=>x.toLowerCase());
+				params[key] = params[key].stringValue.map(x=>x.toLowerCase());
 			}else{
-				params[key] = params[key].toLowerCase();
+				params[key] = params[key].stringValue.toLowerCase();
 			}
 		});
 
@@ -63,7 +70,7 @@ const done = (message, conversation, client) => {
 			teachesAdvisory = !!params.yes;
 		}
 		if(intent === "Name"){
-			newNickname = resp.result.resolvedQuery;
+			newNickname = resp.queryText;
 		}
 	});
 
@@ -156,34 +163,46 @@ const done = (message, conversation, client) => {
 };
 
 module.exports = (message, conversation, client) => {
-	let value = message.toString().trim();
-	if(value.includes(debugStr)){
+	let query = message.toString().trim();
+	if(query.includes(debugStr)){
 		conversation.debug = true;
-		value = value.replace(debugStr, "").trim();
+		query = query.replace(debugStr, "").trim();
 		message.author.send("Debugging enabled!");
 	}
 
 	if(conversation.debug) console.log("debugging conversation");
 
-	fetch("https://api.api.ai/v1/query?v=20150910&lang=en&query=" + encodeURIComponent(value) + "&sessionId=" +
-	conversation.sessionId, {headers:
-		{"Authorization": "Bearer " + require("./config.json").dialogflowToken}})
-		.then(x=>x.json()).then(data => {
+	const sessionId = message.author.id;
+	const sessionPath = sessionClient.sessionPath(projectId, sessionId);
 
-			conversation.responses.push(data);
+	const request = {
+		session: sessionPath,
+		queryInput: {
+			text: {
+				text: query,
+				languageCode: languageCode,
+			},
+		},
+	};
 
-			if(!data || !data.status || !data.status.code || data.status.code >= 400 || !data.result){
-				return console.error("ERROR: " + (data && data.status && data.status.errorDetails));
-			}
+	sessionClient
+		.detectIntent(request)
+		.then(responses => {
+			const response = responses[0].queryResult;
 
-			console.log("got response", data.result.fulfillment.speech);
+			conversation.responses.push(response);
 
-			message.author.send(data.result.fulfillment.speech || "I'm sorry, I didn't get that. Please try repeating that in a diffrent way or \"start over\"");
+			console.log("got response", response.fulfillmentText, response);
 
-			if((data.result.fulfillment.messages[1] && data.result.fulfillment.messages[1].done) || data.result.fulfillment.speech.includes("I'm done")){
+			message.author.send(response.fulfillmentText);
+
+			if(response.fulfillmentText.includes("I'm done")){
 				console.log("conversation is done!");
 				done(message, conversation, client);
 				conversation = undefined;
 			}
+		})
+		.catch(e => {
+			return console.error("ERROR: " + e);
 		});
 };
