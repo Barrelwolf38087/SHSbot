@@ -1,6 +1,5 @@
 temp.svg
 
-
 logs
 *.log
 test.js
@@ -38,13 +37,12 @@ perm-overrides.json
 
 /bans.json
 
-# temp file
-
-#/temp.svg
-
 #temp.svg
 
 msgs.json
 permakicks.json
 
 rules.json
+
+# you don't get my google cloud platform key
+/google-cloud-key.json

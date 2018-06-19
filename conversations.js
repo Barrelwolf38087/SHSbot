@@ -1,7 +1,7 @@
 const config = require("./config.json");
 const dialogflow = require("dialogflow");
 
-const sessionClient = new dialogflow.SessionsClient();
+const sessionClient = new dialogflow.SessionsClient({keyFilename: "google-cloud-key.json"});
 const languageCode = "en-US";
 const projectId = config.dialogflowProjectId;
 
