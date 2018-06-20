@@ -30,8 +30,12 @@ const done = (message, conversation, client) => {
 		Object.keys(params).forEach(key => {
 			console.log(params[key]);
 			if(params[key].listValue){
-				params[key] = params[key].listValue.map(x=>x.toLowerCase());
+				params[key] = params[key].listValue.map(x=>{
+					console.log("lowercasing", x);
+					return x.toLowerCase();
+				});
 			}else{
+				console.log("lowercasing", params[key].stringValue);
 				params[key] = params[key].stringValue.toLowerCase();
 			}
 		});
