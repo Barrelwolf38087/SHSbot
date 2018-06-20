@@ -28,6 +28,7 @@ const done = (message, conversation, client) => {
 		console.log("intent", intent, "params", params);
 
 		Object.keys(params).forEach(key => {
+			if(key === "timestamp") return;
 			console.log(key, JSON.stringify(params[key]));
 			if(!params[key]) return;
 			if(params[key].listValue){
