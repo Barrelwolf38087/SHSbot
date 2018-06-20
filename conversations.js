@@ -25,7 +25,7 @@ const done = (message, conversation, client) => {
 		var intent = resp.intent.displayName;
 		var params = resp.parameters.fields;
 
-		console.log(intent, params);
+		console.log("intent", intent, "params", params);
 
 		Object.keys(params).forEach(key => {
 			console.log(key, JSON.stringify(params[key]));
@@ -43,6 +43,8 @@ const done = (message, conversation, client) => {
 				params[key] = value;
 			}
 		});
+
+		console.log("intent", intent, "lowercased params", params);
 
 		if(intent === "Grade"){
 			grade = params.grade9or10 || params.grade11or12 || params.teacher;
