@@ -28,15 +28,15 @@ const done = (message, conversation, client) => {
 		console.log(intent, params);
 
 		Object.keys(params).forEach(key => {
-			console.log(key, params[key]);
+			console.log(key, JSON.stringify(params[key]));
 			if(!params[key]) return;
 			if(params[key].listValue){
 				params[key] = params[key].listValue.map(x=>{
-					console.log("lowercasing", x);
+					console.log("lowercasing", JSON.stringify(x));
 					return x.toLowerCase();
 				});
 			}else{
-				console.log("lowercasing", params[key].stringValue);
+				console.log("lowercasing", JSON.stringify(params[key].stringValue));
 				params[key] = params[key].stringValue.toLowerCase();
 			}
 		});
