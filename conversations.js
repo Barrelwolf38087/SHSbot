@@ -28,7 +28,8 @@ const done = (message, conversation, client) => {
 		console.log(intent, params);
 
 		Object.keys(params).forEach(key => {
-			console.log(params[key]);
+			console.log(key, params[key]);
+			if(!params[key]) return;
 			if(params[key].listValue){
 				params[key] = params[key].listValue.map(x=>{
 					console.log("lowercasing", x);
