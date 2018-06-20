@@ -129,7 +129,7 @@ const done = (message, conversation, client) => {
 	channels.push(chorus && "chorus");
 	channels.push(support && "support");
 
-	channels = channels.filter(x=>x);
+	channels = channels.filter(Boolean);
 	console.log("channels", channels);
 
 	if(conversation.debug){
@@ -151,23 +151,32 @@ const done = (message, conversation, client) => {
 		const send = str => author.send(str);
 		const notAppliedRoles = [];
 
+		const promises = [];
+
 		channels.forEach(role=>{
 			const foundRole = guild.roles.find(x=>
 				x.name.toLowerCase().trim().includes(role.toLowerCase().trim()) ||
 				x.id.toString() === role.trim()
 			);
 			console.log("found role", typeof foundRole, "with id", foundRole && foundRole.id, "and name", foundRole && foundRole.name, "for role", role);
-			member.addRole(
+			if(!foundRole || !foundRole.id){
+				notAppliedRoles.push(role);
+				return;
+			}
+			promises.push(member.addRole(
 				foundRole
 			).catch(e=>{
 				console.error(e);
 
 				notAppliedRoles.push(role);
-			});
+			}));
 		});
-		if(notAppliedRoles.length){
-			send(`Looks like I couldn't give you some roles in the SHS Discord server. Please ask an admin to give you these roles \`${notAppliedRoles.join("\n")}\``);
-		}
+
+		Promise.all(promises).then(() => {
+			if(notAppliedRoles.length){
+				send(`Looks like I couldn't give you some roles in the SHS Discord server. Please ask an admin to give you these roles: \`${notAppliedRoles.join(", ")}\``);
+			}
+		});
 	}
 };
 
