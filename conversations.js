@@ -32,12 +32,15 @@ const done = (message, conversation, client) => {
 			if(!params[key]) return;
 			if(params[key].listValue){
 				params[key] = params[key].listValue.map(x=>{
+					if(!x) return;
 					console.log("lowercasing", JSON.stringify(x));
 					return x.toLowerCase();
 				});
 			}else{
-				console.log("lowercasing", JSON.stringify(params[key].stringValue));
-				params[key] = params[key].stringValue.toLowerCase();
+				const value = params[key].stringValue;
+				if(!value) return;
+				console.log("lowercasing", JSON.stringify(value));
+				params[key] = value;
 			}
 		});
 
