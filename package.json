@@ -15,6 +15,7 @@
     "dialogflow": "^0.5.0",
     "discord.js": "^11.2.1",
     "gm": "^1.23.1",
+    "isnowillegal": "^1.0.3",
     "markov": "0.0.7",
     "node-fetch": "^1.7.3",
     "winston-loggly-bulk": "^2.0.0",
