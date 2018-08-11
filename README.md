@@ -20,9 +20,3 @@ If you don't already have it, you will need Node.js & npm:
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt install nodejs
 ```
-
-and git:
-
-```bash
-sudo apt install git
-```
