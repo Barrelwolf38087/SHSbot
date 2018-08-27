@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-module.exports = config => new Promise((resolve, reject) => {
+module.exports = config => new Promise((resolve) => {
 	fs.readFile("purgeroles.txt", (err, data) => {
 		if(err) console.error(err);
 		data = data.toString();
