@@ -1,0 +1,4 @@
+{
+	"permissions": "000",
+	"description": "Remove all roles specified in purgeroles.txt from all users"
+}

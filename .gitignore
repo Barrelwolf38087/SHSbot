@@ -46,3 +46,6 @@ rules.json
 
 # you don't get my google cloud platform key
 /google-cloud-key.json
+
+# roles to remove with $purgeroles
+/purgeroles.txt
