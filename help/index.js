@@ -5,6 +5,7 @@ module.exports = config => new Promise((resolve, reject)=>{
 
 	config.directories.filter(x=>x[0] !== ".").filter(x=>
 		(!config.commandArr[0] || config.commandArr[0] === x) &&
+		config.configs[x] &&
 		config.configs[x].description &&
 		config.configs[x].description.length
 	).forEach(dir=>{
