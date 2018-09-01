@@ -64,10 +64,10 @@ Removing role ${role.name} (${role.id})`;
 				});
 			});
 		if(dryRun){
-			if(report.length > 2000){
-				return resolve(config.channel.send(new require("discord.js").Attachment(Buffer.from(report), "report.txt").then()));
+			if(report.length > 1990){
+				return resolve(config.channel.send(new require("discord.js").Attachment(Buffer.from(report), "report.txt")).then(() => "Done!"));
 			}
-			return resolve(config.channel.send(report).then());
+			return resolve(config.channel.send(report).then(() => "Done!"));
 		}
 	});
 });
