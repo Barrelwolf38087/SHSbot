@@ -11,28 +11,16 @@ module.exports = config => new Promise((resolve) => {
 	}
 	fs.readFile("purgeroles.txt", (err, data) => {
 		if(err) console.error(err);
-		data = data.toString();
-		const roles = data.split("\n").filter(Boolean).map(role => {
-			console.log(role);
-			try{
-				const newRole = config.channel.guild.roles.get(role);
-				if(!newRole){
-					config.sendMessage("Could not get role " + role);
-					return;
-				}
-				return newRole;
-			}catch(e){
-				config.sendMessage("Could not get role " + role + " " + e);
-			}
-		}).filter(Boolean);
-
-		config.channel.guild.roles.forEach(role => {
-			if(role.name.toLowerCase().includes("advisory")){
+		data = data.toString().split("\n").filter(Boolean);
+		const roles = config.channel.guild.roles.filter(role => {
+			if(data.some(dataRole => role.id === dataRole)){
 				report += `
-Found advisory role ${role.name} (${role.id})`;
-				console.log("it has advisory");
-				roles.push(role);
+Role ${role.name} (${role.id}) is blacklisted`;
+				return false;
 			}
+			report += `
+Adding role ${role.name} (${role.id})`;
+			return true;
 		});
 
 		if(dryRun){
