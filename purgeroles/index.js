@@ -9,6 +9,11 @@ module.exports = config => new Promise((resolve) => {
 	}else if(config.commandArr[0] !== "IREALLYKNOWWHATIAMDOING"){
 		return resolve("$purgeroles can be a very destructive command. Please run $purgeroles dry-run for a dry run or $purgeroles IREALLYKNOWWHATIAMDOING for the real thing.");
 	}
+	let conversation = false;
+	if(config.commandArr[1] === "true" || config.commandArr[1] === "1"){
+		conversation = true;
+		config.sendMessage("Conversation enabled.");
+	}
 	fs.readFile("purgeroles.txt", (err, data) => {
 		if(err) console.error(err);
 		data = data.toString().split("\n").filter(Boolean);
@@ -62,6 +67,14 @@ Removing role ${role.name} (${role.id})`;
 						});
 					}
 				});
+				if(conversation){
+					if(dryRun){
+						report += `
+Sending conversation (if not for a dry run).`;
+					}else{
+						require("../conversation_loader")(member, config.channel.guild, config.conversations);
+					}
+				}
 			});
 		if(dryRun){
 			if(report.length > 1990){
@@ -69,5 +82,6 @@ Removing role ${role.name} (${role.id})`;
 			}
 			return resolve(config.channel.send(report).then(() => "Done!"));
 		}
+
 	});
 });
