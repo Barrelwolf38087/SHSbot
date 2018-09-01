@@ -66,7 +66,7 @@ Removing role ${role.name} (${role.id})`;
 			});
 		if(dryRun){
 			if(report.length > 2000){
-				return resolve(config.channel.send(new Discord.Attachment(Buffer.from(report), "report.txt").then());
+				return resolve(config.channel.send(new require("discord.js").Attachment(Buffer.from(report), "report.txt").then()));
 			}
 			return resolve(config.channel.send(report).then());
 		}
