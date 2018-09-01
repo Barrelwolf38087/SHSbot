@@ -1,4 +1,4 @@
 {
 	"permissions": "000",
-	"description": "Remove all roles specified in purgeroles.txt from all users. Run `{{prefix}}purgeroles true` to do a dry run."
+	"description": "Remove all roles specified in purgeroles.txt from all users. Run `{{prefix}}purgeroles dry-run` to do a dry run."
 }

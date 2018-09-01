@@ -3,9 +3,11 @@ const fs = require("fs");
 module.exports = config => new Promise((resolve) => {
 	let dryRun = false;
 	let report = "";
-	if(config.commandArr[0] === "true" || config.commandArr[0] === "0"){
+	if(config.commandArr[1] === "dry-run"){
 		config.channel.send("Debugging & dry-run enabled!");
 		dryRun = true;
+	}else if(config.commandArr[1] !== "IREALLYKNOWWHATIAMDOING"){
+		return resolve("$purgeroles can be a very destructive command. Please run $purgeroles dry-run for a dry run or $purgeroles IREALLYKNOWWHATIAMDOING for the real thing.");
 	}
 	fs.readFile("purgeroles.txt", (err, data) => {
 		if(err) console.error(err);
