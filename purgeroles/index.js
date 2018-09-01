@@ -3,7 +3,7 @@ const fs = require("fs");
 module.exports = config => new Promise((resolve) => {
 	let dryRun = false;
 	let report = "";
-	if(config.commandArr[0] === "true"){
+	if(config.commandArr[0] === "true" || config.commandArr[0] === "0"){
 		config.channel.send("Debugging & dry-run enabled!");
 		dryRun = true;
 	}
@@ -63,7 +63,10 @@ Removing role ${role.name} (${role.id})`;
 				});
 			});
 		if(dryRun){
-			config.channel.send(report);
+			if(report.length > 2000){
+				return resolve(config.channel.send(new Discord.Attachment(Buffer.from(report), "report.txt").then());
+			}
+			return resolve(config.channel.send(report).then());
 		}
 	});
 });
