@@ -40,9 +40,14 @@ ${role.name} (${role.id})`;
 		}
 
 		config.channel.guild.members.array().
-			filter(member =>
-				member.roles.some(role => /freshmen|sophomores|juniors|seniors/.test(role.name.toLowerCase()))
-			).
+			filter(member => {
+				const isStudent = member.roles.some(role => /freshmen|sophomores|juniors|seniors/.test(role.name.toLowerCase()));
+				if(!isStudent){
+					report += `
+${member.user.tag} (${member.id}) is not a student.`;
+				}
+				return isStudent;
+			}).
 			forEach(member => {
 				report += `
 
