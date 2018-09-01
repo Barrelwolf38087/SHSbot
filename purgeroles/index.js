@@ -14,6 +14,11 @@ module.exports = config => new Promise((resolve) => {
 		data = data.toString().split("\n").filter(Boolean);
 		const roles = config.channel.guild.roles.filter(role => {
 			if(role.name === "@everyone") return false;
+			if(role.managed){
+				report += `
+Role ${role.name} (${role.id}) was added by a bot or integration and can't be removed.`;
+				return false;
+			}
 			if(data.some(dataRole => role.id === dataRole)){
 				report += `
 Role ${role.name} (${role.id}) is blacklisted`;
