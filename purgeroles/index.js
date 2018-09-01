@@ -13,6 +13,7 @@ module.exports = config => new Promise((resolve) => {
 		if(err) console.error(err);
 		data = data.toString().split("\n").filter(Boolean);
 		const roles = config.channel.guild.roles.filter(role => {
+			if(role.name === "@everyone") return false;
 			if(data.some(dataRole => role.id === dataRole)){
 				report += `
 Role ${role.name} (${role.id}) is blacklisted`;
