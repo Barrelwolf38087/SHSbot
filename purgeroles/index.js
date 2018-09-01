@@ -81,7 +81,8 @@ Sending conversation (if not for a dry run).`;
 				return resolve(config.channel.send(new require("discord.js").Attachment(Buffer.from(report), "report.txt")).then(() => "Done!"));
 			}
 			return resolve(config.channel.send(report).then(() => "Done!"));
+		}else{
+			resolve("Done!");
 		}
-
 	});
 });
