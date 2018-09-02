@@ -62,12 +62,12 @@ ${member.user.tag} (${member.id}) is not a student.`;
 
 Member ${member.user.tag}`;
 				roles.forEach(role => {
+					if(!member.roles.has(role.id)) return;
 					report += `
 Removing role ${role.name} (${role.id})`;
 					if(!dryRun){
 						member.removeRole(role).catch(() => {
 							config.sendMessage(`Could not remove role ${role} from ${member.user.tag} (${member.user.id})`);
-							resolve("Done!");
 						});
 					}
 				});
