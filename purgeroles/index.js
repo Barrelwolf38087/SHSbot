@@ -1,6 +1,7 @@
 const fs = require("fs");
+const path = require("path");
 
-module.exports = config => new Promise((resolve) => {
+module.exports = config => new Promise((resolve, reject) => {
 	let dryRun = false;
 	let report = "";
 	if(config.commandArr[0] === "dry-run"){
@@ -14,8 +15,11 @@ module.exports = config => new Promise((resolve) => {
 		conversation = true;
 		config.sendMessage("Conversation enabled.");
 	}
-	fs.readFile("purgeroles.txt", (err, data) => {
-		if(err) console.error(err);
+	fs.readFile(path.join(__dirname, "purgeroles.txt"), (err, data) => {
+		if(err){
+			reject("Could not find purgeroles.txt");
+			console.error(err);
+		}
 		data = data.toString().split("\n").filter(Boolean);
 		const roles = config.channel.guild.roles.filter(role => {
 			if(role.name === "@everyone") return false;
