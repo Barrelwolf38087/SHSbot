@@ -15,7 +15,7 @@ module.exports = config => new Promise((resolve, reject) => {
 		conversation = true;
 		config.sendMessage("Conversation enabled.");
 	}
-	fs.readFile(path.join(__dirname, "purgeroles.txt"), (err, data) => {
+	fs.readFile(path.join(__dirname, "..", "purgeroles.txt"), (err, data) => {
 		if(err){
 			reject("Could not find purgeroles.txt");
 			console.error(err);
