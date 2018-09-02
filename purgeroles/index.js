@@ -17,8 +17,8 @@ module.exports = config => new Promise((resolve, reject) => {
 	}
 	fs.readFile(path.join(__dirname, "..", "purgeroles.txt"), (err, data) => {
 		if(err){
-			reject("Could not find purgeroles.txt");
 			console.error(err);
+			return reject("Could not find purgeroles.txt");
 		}
 		data = data.toString().split("\n").filter(Boolean);
 		const roles = config.channel.guild.roles.filter(role => {
