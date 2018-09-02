@@ -82,7 +82,7 @@ Sending conversation (if not for a dry run).`;
 			});
 		if(dryRun){
 			if(report.length > 1990){
-				return resolve(config.channel.send(new require("discord.js").Attachment(Buffer.from(report), "report.txt")).then(() => "Done!"));
+				return resolve(config.channel.send(new (require("discord.js").Attachment)(Buffer.from(report), "report.txt")).then(() => "Done!"));
 			}
 			return resolve(config.channel.send(report).then(() => "Done!"));
 		}else{
