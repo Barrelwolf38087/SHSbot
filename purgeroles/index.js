@@ -48,6 +48,8 @@ ${role.name} (${role.id})`;
 			});
 		}
 
+		report += "\n";
+
 		config.channel.guild.members.array().
 			filter(member => {
 				const isStudent = member.roles.some(role => /freshmen|sophomores|juniors|seniors/.test(role.name.toLowerCase()));
