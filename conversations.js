@@ -108,6 +108,7 @@ const done = (message, conversation, client) => {
 		channels.push(team);
 	}
 	if(advisor){
+		console.log("advisor", typeof advisor, advisor);
 		channels.push(advisor.replace("'", "").replace(/ /g, "-") + "-advisory");
 	}
 	if(grade === "teacher" && teachesAdvisory){
