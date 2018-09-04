@@ -36,7 +36,7 @@ const done = (message, conversation, client) => {
 				});
 			}else{
 				const value = params[key].stringValue;
-				if(!value) return;
+				if(!value && value !== "") return;
 				params[key] = value;
 			}
 		});
@@ -77,6 +77,7 @@ const done = (message, conversation, client) => {
 		if(intent === "Name"){
 			newNickname = resp.queryText;
 		}
+		if(params.advisor)
 	});
 
 	if(conversation.debug){
