@@ -77,7 +77,6 @@ const done = (message, conversation, client) => {
 		if(intent === "Name"){
 			newNickname = resp.queryText;
 		}
-		if(params.advisor)
 	});
 
 	if(conversation.debug){
