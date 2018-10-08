@@ -137,6 +137,7 @@ client.on("ready", () => {
 	});
 	console.log("Ready!");
 	const g = client.guilds.get(config.guildId);
+	console.log("Getting", config.guildId, "from", config.guilds.array(), "got", g);
 	g.fetchInvites().then(newInvites=>{
 		newInvites.forEach(invite => {
 			invites[invite.code] = invite.uses;
