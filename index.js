@@ -196,6 +196,10 @@ client.on("guildMemberAdd", guildMember => {
 	}).catch(console.error);
 });
 client.on("message", (message) => {
+	if (message.content.toLowerCase().startsWith("who is joe") || message.content.toLowerCase().startsWith("who's joe")) {
+		message.channel.send("Joe Mama!")
+	}
+
 	if(logMessages){
 		var oldLog = console.log;
 		console.log = (...args) => {
