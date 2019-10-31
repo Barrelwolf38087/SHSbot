@@ -7,7 +7,7 @@
 		"nothing": "You actually need to specify a command (shocker). If you don't want your message to be treated as a command, add a \\\\ before it.",
 		"backoff": "You have been running too many commands at once. Please try again in a minute.",
 		"alreadyRunning": "You already have a command running. Try again later.",
-		"startupMsg": "**SHSbot is back online!**\nSHSbot is Copyright (C) 2017 Max H, and licensed under the terms of the GNU AGPLv3, which can be found at <http://www.gnu.org/licenses/agpl.html>."
+		"startupMsg": "**SHSbot is back online!**\nSHSbot is Copyright (C) 2017-18 Max H, and licensed under the terms of the GNU AGPLv3, which can be found at <http://www.gnu.org/licenses/agpl.html>."
 	},
 	"timeout": 3000,
 	"advancedTimeout": 5000,

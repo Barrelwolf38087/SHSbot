@@ -25,8 +25,6 @@ const done = (message, conversation, client) => {
 		var intent = resp.intent.displayName;
 		var params = resp.parameters.fields;
 
-		console.log("intent", intent, "params", params);
-
 		Object.keys(params).forEach(key => {
 			if(key === "timestamp") return;
 			console.log(key, JSON.stringify(params[key]));
@@ -38,12 +36,10 @@ const done = (message, conversation, client) => {
 				});
 			}else{
 				const value = params[key].stringValue;
-				if(!value) return;
+				if(!value && value !== "") return;
 				params[key] = value;
 			}
 		});
-
-		console.log("intent", intent, "lowercased params", params);
 
 		if(intent === "Grade"){
 			grade = params.grade9or10 || params.grade11or12 || params.teacher;
@@ -53,9 +49,9 @@ const done = (message, conversation, client) => {
 			chorus = params.music.includes("chorus");
 		}
 		if(intent === "Teaches language"){
-			latin = params.Language.includes("latin");
-			spanish = params.Language.includes("spanish");
-			french = params.Language.includes("french");
+			latin = params.Language && params.Language.includes("latin");
+			spanish = params.Language && params.Language.includes("spanish");
+			french = params.Language && params.Language.includes("french");
 		}
 		if(intent === "Language"){
 			latin = params.Language === "latin";
@@ -63,8 +59,8 @@ const done = (message, conversation, client) => {
 			french = params.Language === "french";
 		}
 		if(intent === "Band, chorus or none of the above"){
-			band = params.music.includes("band");
-			chorus = params.music.includes("chorus");
+			band = params.music && params.music.includes("band");
+			chorus = params.music && params.music.includes("chorus");
 		}
 		if(intent === "Teacher wants support" || intent === "Support"){
 			support = !!params.yes;
@@ -112,6 +108,7 @@ const done = (message, conversation, client) => {
 		channels.push(team);
 	}
 	if(advisor){
+		console.log("advisor", typeof advisor, advisor);
 		channels.push(advisor.replace("'", "").replace(/ /g, "-") + "-advisory");
 	}
 	if(grade === "teacher" && teachesAdvisory){
@@ -130,7 +127,6 @@ const done = (message, conversation, client) => {
 	channels.push(support && "support");
 
 	channels = channels.filter(Boolean);
-	console.log("channels", channels);
 
 	if(conversation.debug){
 		message.author.send("Your roles are: " + channels.join(", "));
@@ -144,7 +140,7 @@ const done = (message, conversation, client) => {
 		var member = guild.members.get(message.author.id);
 		if(newNickname){
 			member.setNickname(newNickname);
-			console.log("set nickname to", newNickname);
+			console.log("set nickname of", message.author.tag, "to", newNickname);
 		}
 
 		let author = message.author;
@@ -158,7 +154,7 @@ const done = (message, conversation, client) => {
 				x.name.toLowerCase().trim().includes(role.toLowerCase().trim()) ||
 				x.id.toString() === role.trim()
 			);
-			console.log("found role", typeof foundRole, "with id", foundRole && foundRole.id, "and name", foundRole && foundRole.name, "for role", role);
+			//console.log("found role", typeof foundRole, "with id", foundRole && foundRole.id, "and name", foundRole && foundRole.name, "for role", role);
 			if(!foundRole || !foundRole.id){
 				notAppliedRoles.push(role);
 				return;
@@ -188,6 +184,8 @@ module.exports = (message, conversation, client) => {
 		message.author.send("Debugging enabled!");
 	}
 
+	console.log(message.author.tag + "> " + message.content);
+
 	if(conversation.debug) console.log("debugging conversation");
 
 	const sessionId = message.author.id;
@@ -210,12 +208,12 @@ module.exports = (message, conversation, client) => {
 
 			conversation.responses.push(response);
 
-			console.log("got response", response.fulfillmentText);
+			console.log("SHSbot> ", response.fulfillmentText);
 
 			message.author.send(response.fulfillmentText);
 
 			if(response.fulfillmentText.includes("I'm done")){
-				console.log("conversation is done!");
+				console.log("conversation completed!");
 				done(message, conversation, client);
 				conversation = undefined;
 			}
